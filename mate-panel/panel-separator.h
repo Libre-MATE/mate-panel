@@ -33,37 +33,40 @@
 extern "C" {
 #endif
 
-#define PANEL_TYPE_SEPARATOR         (panel_separator_get_type ())
-#define PANEL_SEPARATOR(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), PANEL_TYPE_SEPARATOR, PanelSeparator))
-#define PANEL_SEPARATOR_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), PANEL_TYPE_SEPARATOR, PanelSeparatorClass))
-#define PANEL_IS_SEPARATOR(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), PANEL_TYPE_SEPARATOR))
-#define PANEL_IS_SEPARATOR_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), PANEL_TYPE_SEPARATOR))
-#define PANEL_SEPARATOR_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), PANEL_TYPE_SEPARATOR, PanelSeparatorClass))
+#define PANEL_TYPE_SEPARATOR (panel_separator_get_type())
+#define PANEL_SEPARATOR(o) \
+  (G_TYPE_CHECK_INSTANCE_CAST((o), PANEL_TYPE_SEPARATOR, PanelSeparator))
+#define PANEL_SEPARATOR_CLASS(k) \
+  (G_TYPE_CHECK_CLASS_CAST((k), PANEL_TYPE_SEPARATOR, PanelSeparatorClass))
+#define PANEL_IS_SEPARATOR(o) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((o), PANEL_TYPE_SEPARATOR))
+#define PANEL_IS_SEPARATOR_CLASS(k) \
+  (G_TYPE_CHECK_CLASS_TYPE((k), PANEL_TYPE_SEPARATOR))
+#define PANEL_SEPARATOR_GET_CLASS(o) \
+  (G_TYPE_INSTANCE_GET_CLASS((o), PANEL_TYPE_SEPARATOR, PanelSeparatorClass))
 
-typedef struct _PanelSeparator        PanelSeparator;
-typedef struct _PanelSeparatorClass   PanelSeparatorClass;
+typedef struct _PanelSeparator PanelSeparator;
+typedef struct _PanelSeparatorClass PanelSeparatorClass;
 typedef struct _PanelSeparatorPrivate PanelSeparatorPrivate;
 
 struct _PanelSeparator {
-	GtkEventBox             parent;
+  GtkEventBox parent;
 
-	PanelSeparatorPrivate  *priv;
+  PanelSeparatorPrivate *priv;
 };
 
 struct _PanelSeparatorClass {
-	GtkEventBoxClass        parent_class;
+  GtkEventBoxClass parent_class;
 };
 
-GType  panel_separator_get_type          (void) G_GNUC_CONST;
-void   panel_separator_create            (PanelToplevel    *toplevel,
-					  int               position);
-void   panel_separator_load_from_gsettings   (PanelWidget      *panel_widget,
-					  gboolean          locked,
-					  gint              position,
-					  const char       *id);
-void   panel_separator_set_orientation   (PanelSeparator   *separator,
-					  PanelOrientation  orientation);
-void   panel_separator_change_background (PanelSeparator   *separator);
+GType panel_separator_get_type(void) G_GNUC_CONST;
+void panel_separator_create(PanelToplevel *toplevel, int position);
+void panel_separator_load_from_gsettings(PanelWidget *panel_widget,
+                                         gboolean locked, gint position,
+                                         const char *id);
+void panel_separator_set_orientation(PanelSeparator *separator,
+                                     PanelOrientation orientation);
+void panel_separator_change_background(PanelSeparator *separator);
 
 #ifdef __cplusplus
 }

@@ -31,61 +31,54 @@
  *	Vincent Untz <vuntz@gnome.org>
  */
 
-#include <glib/gi18n.h>
-
-#include <gtk/gtk.h>
-
 #include "panel-error.h"
 
-GtkWidget *
-panel_error_dialog (GtkWindow  *parent,
-		    GdkScreen  *screen,
-		    const char *dialog_class,
-		    gboolean    auto_destroy,
-		    const char *primary_text,
-		    const char *secondary_text)
-{
-	GtkWidget *dialog;
-	char      *freeme;
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
-	freeme = NULL;
+GtkWidget *panel_error_dialog(GtkWindow *parent, GdkScreen *screen,
+                              const char *dialog_class, gboolean auto_destroy,
+                              const char *primary_text,
+                              const char *secondary_text) {
+  GtkWidget *dialog;
+  char *freeme;
 
-	if (primary_text == NULL) {
-		g_warning ("NULL dialog");
-		 /* No need to translate this, this should NEVER happen */
-		freeme = g_strdup_printf ("Error with displaying error "
-					  "for dialog of class %s",
-					  dialog_class);
-		primary_text = freeme;
-	}
+  freeme = NULL;
 
-	dialog = gtk_message_dialog_new (parent, 0, GTK_MESSAGE_ERROR,
-					 GTK_BUTTONS_CLOSE, "%s", primary_text);
-	if (secondary_text != NULL)
-		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-							  "%s", secondary_text);
+  if (primary_text == NULL) {
+    g_warning("NULL dialog");
+    /* No need to translate this, this should NEVER happen */
+    freeme = g_strdup_printf(
+        "Error with displaying error "
+        "for dialog of class %s",
+        dialog_class);
+    primary_text = freeme;
+  }
 
-	if (screen)
-		gtk_window_set_screen (GTK_WINDOW (dialog), screen);
+  dialog = gtk_message_dialog_new(parent, 0, GTK_MESSAGE_ERROR,
+                                  GTK_BUTTONS_CLOSE, "%s", primary_text);
+  if (secondary_text != NULL)
+    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s",
+                                             secondary_text);
 
-	if (!parent) {
-		gtk_window_set_skip_taskbar_hint (GTK_WINDOW (dialog), FALSE);
-		/* FIXME: We need a title in this case, but we don't know what
-		 * the format should be. Let's put something simple until
-		 * the following bug gets fixed:
-		 * http://bugzilla.gnome.org/show_bug.cgi?id=165132 */
-		gtk_window_set_title (GTK_WINDOW (dialog), _("Error"));
-	}
+  if (screen) gtk_window_set_screen(GTK_WINDOW(dialog), screen);
 
-	gtk_widget_show_all (dialog);
+  if (!parent) {
+    gtk_window_set_skip_taskbar_hint(GTK_WINDOW(dialog), FALSE);
+    /* FIXME: We need a title in this case, but we don't know what
+     * the format should be. Let's put something simple until
+     * the following bug gets fixed:
+     * http://bugzilla.gnome.org/show_bug.cgi?id=165132 */
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+  }
 
-	if (auto_destroy)
-		g_signal_connect_swapped (dialog, "response",
-		                          G_CALLBACK (gtk_widget_destroy),
-		                          dialog);
+  gtk_widget_show_all(dialog);
 
-	if (freeme)
-		g_free (freeme);
+  if (auto_destroy)
+    g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_destroy),
+                             dialog);
 
-	return dialog;
+  if (freeme) g_free(freeme);
+
+  return dialog;
 }

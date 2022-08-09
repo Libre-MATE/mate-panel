@@ -37,7 +37,7 @@
 
 #include "panel-toplevel.h"
 
-void wayland_panel_toplevel_init (PanelToplevel* toplevel);
-void wayland_panel_toplevel_update_placement (PanelToplevel* toplevel);
+void wayland_panel_toplevel_init(PanelToplevel* toplevel);
+void wayland_panel_toplevel_update_placement(PanelToplevel* toplevel);
 
 #endif /* __WAYLAND_BACKEND_H__ */

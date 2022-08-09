@@ -5,9 +5,8 @@
 
 G_BEGIN_DECLS
 
-void gtk_style_shade (GdkRGBA *a, GdkRGBA *b, gdouble k);
+void gtk_style_shade(GdkRGBA *a, GdkRGBA *b, gdouble k);
 
 G_END_DECLS
 
 #endif
-

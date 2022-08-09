@@ -27,23 +27,23 @@
 #ifndef __PANEL_RESET_C__
 #define __PANEL_RESET_C__
 
-#include <stdlib.h>
-#include <gio/gio.h>
 #include "panel-reset.h"
+
+#include <gio/gio.h>
+#include <stdlib.h>
+
 #include "panel-schemas.h"
 
-void
-panel_reset()
-{
-	GSettings *settings;
+void panel_reset() {
+  GSettings *settings;
 
-	settings = g_settings_new (PANEL_SCHEMA);
-	g_settings_set_strv (settings, PANEL_OBJECT_ID_LIST_KEY, NULL);
-	g_settings_sync ();
-	g_settings_set_strv (settings, PANEL_TOPLEVEL_ID_LIST_KEY, NULL);
-	g_settings_sync ();
+  settings = g_settings_new(PANEL_SCHEMA);
+  g_settings_set_strv(settings, PANEL_OBJECT_ID_LIST_KEY, NULL);
+  g_settings_sync();
+  g_settings_set_strv(settings, PANEL_TOPLEVEL_ID_LIST_KEY, NULL);
+  g_settings_sync();
 
-	g_object_unref (settings);
+  g_object_unref(settings);
 }
 
 #endif /* !__PANEL_RESET_C__ */

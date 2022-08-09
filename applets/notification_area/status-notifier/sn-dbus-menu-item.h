@@ -22,42 +22,38 @@
 
 G_BEGIN_DECLS
 
-typedef struct
-{
-  guint           key;
+typedef struct {
+  guint key;
   GdkModifierType mask;
 } SnShortcut;
 
-typedef struct
-{
-  gchar       *accessible_desc;
-  gchar       *children_display;
-  gchar       *disposition;
-  gboolean     enabled;
-  gchar       *icon_name;
-  GdkPixbuf   *icon_data;
-  gchar       *label;
+typedef struct {
+  gchar *accessible_desc;
+  gchar *children_display;
+  gchar *disposition;
+  gboolean enabled;
+  gchar *icon_name;
+  GdkPixbuf *icon_data;
+  gchar *label;
   SnShortcut **shortcuts;
-  gchar       *toggle_type;
-  gint32       toggle_state;
-  gchar       *type;
-  gboolean     visible;
+  gchar *toggle_type;
+  gint32 toggle_state;
+  gchar *type;
+  gboolean visible;
 
-  GtkWidget   *item;
-  GtkMenu     *submenu;
+  GtkWidget *item;
+  GtkMenu *submenu;
 
-  gulong       activate_id;
+  gulong activate_id;
 } SnDBusMenuItem;
 
-SnDBusMenuItem *sn_dbus_menu_item_new          (GVariant       *props);
+SnDBusMenuItem *sn_dbus_menu_item_new(GVariant *props);
 
-void            sn_dubs_menu_item_free         (gpointer        data);
+void sn_dubs_menu_item_free(gpointer data);
 
-void            sn_dbus_menu_item_update_props (SnDBusMenuItem *item,
-                                                GVariant       *props);
+void sn_dbus_menu_item_update_props(SnDBusMenuItem *item, GVariant *props);
 
-void            sn_dbus_menu_item_remove_props (SnDBusMenuItem *item,
-                                                GVariant       *props);
+void sn_dbus_menu_item_remove_props(SnDBusMenuItem *item, GVariant *props);
 
 G_END_DECLS
 

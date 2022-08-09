@@ -30,10 +30,9 @@
 
 G_BEGIN_DECLS
 
-void panel_run_dialog_present           (GdkScreen  *screen,
-					 guint32    activate_time);
+void panel_run_dialog_present(GdkScreen *screen, guint32 activate_time);
 
-void panel_run_dialog_quit_on_destroy (void);
+void panel_run_dialog_quit_on_destroy(void);
 
 G_END_DECLS
 

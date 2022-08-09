@@ -29,16 +29,18 @@
 
 G_BEGIN_DECLS
 
-#define PANEL_TYPE_APPLET_FACTORY mate_panel_applet_factory_get_type ()
-G_DECLARE_FINAL_TYPE (MatePanelAppletFactory, mate_panel_applet_factory, MATE_PANEL, APPLET_FACTORY, GObject)
+#define PANEL_TYPE_APPLET_FACTORY mate_panel_applet_factory_get_type()
+G_DECLARE_FINAL_TYPE(MatePanelAppletFactory, mate_panel_applet_factory,
+                     MATE_PANEL, APPLET_FACTORY, GObject)
 
-MatePanelAppletFactory *mate_panel_applet_factory_new               (const gchar            *applet_id,
-                                                                     gboolean                out_of_process,
-                                                                     GType                   applet_type,
-                                                                     GClosure               *closure);
-gboolean                mate_panel_applet_factory_register_service  (MatePanelAppletFactory *factory);
-GtkWidget              *mate_panel_applet_factory_get_applet_widget (const gchar            *id,
-                                                                     guint                   uid);
+MatePanelAppletFactory *mate_panel_applet_factory_new(const gchar *applet_id,
+                                                      gboolean out_of_process,
+                                                      GType applet_type,
+                                                      GClosure *closure);
+gboolean mate_panel_applet_factory_register_service(
+    MatePanelAppletFactory *factory);
+GtkWidget *mate_panel_applet_factory_get_applet_widget(const gchar *id,
+                                                       guint uid);
 
 G_END_DECLS
 

@@ -8,1389 +8,1222 @@
  */
 
 #include <config.h>
-#include <string.h>
-#include <signal.h>
-#include <unistd.h>
-
-#include <glib/gi18n.h>
 #include <gio/gio.h>
-
-#include <libpanel-util/panel-show.h>
+#include <glib/gi18n.h>
 #include <libpanel-util/panel-gtk.h>
+#include <libpanel-util/panel-show.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "button-widget.h"
 #include "drawer.h"
 #include "launcher.h"
-#include "panel-addto.h"
-#include "panel-config-global.h"
-#include "panel-applet-frame.h"
 #include "panel-action-button.h"
+#include "panel-addto.h"
+#include "panel-applet-frame.h"
+#include "panel-config-global.h"
+#include "panel-globals.h"
+#include "panel-lockdown.h"
 #include "panel-menu-bar.h"
+#include "panel-menu-button.h"
+#include "panel-profile.h"
+#include "panel-properties-dialog.h"
+#include "panel-schemas.h"
 #include "panel-separator.h"
 #include "panel-toplevel.h"
 #include "panel-util.h"
-#include "panel-profile.h"
-#include "panel-menu-button.h"
-#include "panel-globals.h"
-#include "panel-properties-dialog.h"
-#include "panel-lockdown.h"
-#include "panel-schemas.h"
 
 static GSList *registered_applets = NULL;
 static GSList *queued_position_saves = NULL;
-static guint   queued_position_source = 0;
+static guint queued_position_source = 0;
 
 static GtkCheckMenuItem *checkbox_id = NULL;
 
-static void applet_menu_show (GtkWidget *w, AppletInfo *info);
-static void applet_menu_deactivate (GtkWidget *w, AppletInfo *info);
+static void applet_menu_show(GtkWidget *w, AppletInfo *info);
+static void applet_menu_deactivate(GtkWidget *w, AppletInfo *info);
 
-static inline PanelWidget *
-mate_panel_applet_get_panel_widget (AppletInfo *info)
-{
-	return PANEL_WIDGET (gtk_widget_get_parent (info->widget));
+static inline PanelWidget *mate_panel_applet_get_panel_widget(
+    AppletInfo *info) {
+  return PANEL_WIDGET(gtk_widget_get_parent(info->widget));
 }
 
-static void
-mate_panel_applet_set_dnd_enabled (AppletInfo *info,
-			      gboolean    dnd_enabled)
-{
-	switch (info->type) {
-	case PANEL_OBJECT_DRAWER:
-		panel_drawer_set_dnd_enabled (info->data, dnd_enabled);
-		break;
-	case PANEL_OBJECT_MENU:
-		panel_menu_button_set_dnd_enabled (PANEL_MENU_BUTTON (info->widget),
-						   dnd_enabled);
-		break;
-	case PANEL_OBJECT_LAUNCHER:
-		panel_launcher_set_dnd_enabled (info->data, dnd_enabled);
-		break;
-	case PANEL_OBJECT_APPLET:
-		break;
-	case PANEL_OBJECT_ACTION:
-		panel_action_button_set_dnd_enabled (PANEL_ACTION_BUTTON (info->widget),
-						     dnd_enabled);
-		break;
-	case PANEL_OBJECT_MENU_BAR:
-	case PANEL_OBJECT_SEPARATOR:
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
-	}
-
+static void mate_panel_applet_set_dnd_enabled(AppletInfo *info,
+                                              gboolean dnd_enabled) {
+  switch (info->type) {
+    case PANEL_OBJECT_DRAWER:
+      panel_drawer_set_dnd_enabled(info->data, dnd_enabled);
+      break;
+    case PANEL_OBJECT_MENU:
+      panel_menu_button_set_dnd_enabled(PANEL_MENU_BUTTON(info->widget),
+                                        dnd_enabled);
+      break;
+    case PANEL_OBJECT_LAUNCHER:
+      panel_launcher_set_dnd_enabled(info->data, dnd_enabled);
+      break;
+    case PANEL_OBJECT_APPLET:
+      break;
+    case PANEL_OBJECT_ACTION:
+      panel_action_button_set_dnd_enabled(PANEL_ACTION_BUTTON(info->widget),
+                                          dnd_enabled);
+      break;
+    case PANEL_OBJECT_MENU_BAR:
+    case PANEL_OBJECT_SEPARATOR:
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+  }
 }
 
-gboolean
-mate_panel_applet_toggle_locked (AppletInfo *info)
-{
-	PanelWidget *panel_widget;
-	gboolean     locked;
+gboolean mate_panel_applet_toggle_locked(AppletInfo *info) {
+  PanelWidget *panel_widget;
+  gboolean locked;
 
-	panel_widget = mate_panel_applet_get_panel_widget (info);
+  panel_widget = mate_panel_applet_get_panel_widget(info);
 
-	locked = panel_widget_toggle_applet_locked (panel_widget, info->widget);
+  locked = panel_widget_toggle_applet_locked(panel_widget, info->widget);
 
-	mate_panel_applet_save_position (info, info->id, TRUE);
-	mate_panel_applet_set_dnd_enabled (info, !locked);
+  mate_panel_applet_save_position(info, info->id, TRUE);
+  mate_panel_applet_set_dnd_enabled(info, !locked);
 
-	return locked;
+  return locked;
 }
 
-static void
-checkbox_status (GtkCheckMenuItem *menuitem,
-		 AppletInfo       *info)
-{
-	checkbox_id = GTK_CHECK_MENU_ITEM (menuitem);
+static void checkbox_status(GtkCheckMenuItem *menuitem, AppletInfo *info) {
+  checkbox_id = GTK_CHECK_MENU_ITEM(menuitem);
 }
 
-static void
-mate_panel_applet_lock (GtkMenuItem *menuitem,
-			AppletInfo  *info)
-{
-	gboolean locked;
+static void mate_panel_applet_lock(GtkMenuItem *menuitem, AppletInfo *info) {
+  gboolean locked;
 
-	locked = mate_panel_applet_toggle_locked (info);
+  locked = mate_panel_applet_toggle_locked(info);
 
-	gtk_check_menu_item_set_active (checkbox_id, locked);
+  gtk_check_menu_item_set_active(checkbox_id, locked);
 
-	if (info->move_item)
-		gtk_widget_set_sensitive (info->move_item, !locked);
+  if (info->move_item) gtk_widget_set_sensitive(info->move_item, !locked);
 }
 
-static void
-move_applet_callback (GtkWidget *widget, AppletInfo *info)
-{
-	GtkWidget   *parent;
-	PanelWidget *panel;
+static void move_applet_callback(GtkWidget *widget, AppletInfo *info) {
+  GtkWidget *parent;
+  PanelWidget *panel;
 
-	g_return_if_fail (info != NULL);
-	g_return_if_fail (info->widget != NULL);
+  g_return_if_fail(info != NULL);
+  g_return_if_fail(info->widget != NULL);
 
-	parent = gtk_widget_get_parent (info->widget);
+  parent = gtk_widget_get_parent(info->widget);
 
-	g_return_if_fail (parent != NULL);
-	g_return_if_fail (PANEL_IS_WIDGET (parent));
+  g_return_if_fail(parent != NULL);
+  g_return_if_fail(PANEL_IS_WIDGET(parent));
 
-	panel = PANEL_WIDGET (parent);
+  panel = PANEL_WIDGET(parent);
 
-	panel_widget_applet_drag_start (panel, info->widget,
-					PW_DRAG_OFF_CENTER,
-					GDK_CURRENT_TIME);
+  panel_widget_applet_drag_start(panel, info->widget, PW_DRAG_OFF_CENTER,
+                                 GDK_CURRENT_TIME);
 }
 
 /* permanently remove an applet - all non-permanent
  * cleanups should go in mate_panel_applet_destroy()
  */
-void
-mate_panel_applet_clean (AppletInfo *info)
-{
-	g_return_if_fail (info != NULL);
+void mate_panel_applet_clean(AppletInfo *info) {
+  g_return_if_fail(info != NULL);
 
-	if (info->type == PANEL_OBJECT_LAUNCHER)
-		panel_launcher_delete (info->data);
+  if (info->type == PANEL_OBJECT_LAUNCHER) panel_launcher_delete(info->data);
 
-	if (info->widget) {
-		GtkWidget *widget = info->widget;
+  if (info->widget) {
+    GtkWidget *widget = info->widget;
 
-		info->widget = NULL;
-		gtk_widget_destroy (widget);
-	}
+    info->widget = NULL;
+    gtk_widget_destroy(widget);
+  }
 }
 
-static void
-mate_panel_applet_recreate_menu (AppletInfo	*info)
-{
-	GList *l;
+static void mate_panel_applet_recreate_menu(AppletInfo *info) {
+  GList *l;
 
-	if (!info->menu)
-		return;
+  if (!info->menu) return;
 
-	for (l = info->user_menu; l; l = l->next) {
-		AppletUserMenu *menu = l->data;
+  for (l = info->user_menu; l; l = l->next) {
+    AppletUserMenu *menu = l->data;
 
-		menu->menuitem =NULL;
-		menu->submenu =NULL;
-	}
+    menu->menuitem = NULL;
+    menu->submenu = NULL;
+  }
 
-	g_signal_handlers_disconnect_by_func (info->menu, G_CALLBACK (applet_menu_show), info);
-	g_signal_handlers_disconnect_by_func (info->menu, G_CALLBACK (applet_menu_deactivate), info);
+  g_signal_handlers_disconnect_by_func(info->menu, G_CALLBACK(applet_menu_show),
+                                       info);
+  g_signal_handlers_disconnect_by_func(
+      info->menu, G_CALLBACK(applet_menu_deactivate), info);
 
-	g_object_unref (info->menu);
-	info->menu = mate_panel_applet_create_menu (info);
+  g_object_unref(info->menu);
+  info->menu = mate_panel_applet_create_menu(info);
 }
 
-static void
-mate_panel_applet_locked_change_notify (GSettings *settings,
-									    gchar *key,
-									    GtkWidget   *applet)
-{
-	gboolean     locked;
-	gboolean     applet_locked;
-	AppletInfo  *info;
-	PanelWidget *panel_widget;
+static void mate_panel_applet_locked_change_notify(GSettings *settings,
+                                                   gchar *key,
+                                                   GtkWidget *applet) {
+  gboolean locked;
+  gboolean applet_locked;
+  AppletInfo *info;
+  PanelWidget *panel_widget;
 
-	if (applet == NULL || !GTK_IS_WIDGET (applet))
-		return;
+  if (applet == NULL || !GTK_IS_WIDGET(applet)) return;
 
-	info = (AppletInfo  *) g_object_get_data (G_OBJECT (applet),
-						  "applet_info");
-	if (info == NULL)
-		return;
+  info = (AppletInfo *)g_object_get_data(G_OBJECT(applet), "applet_info");
+  if (info == NULL) return;
 
-	locked = g_settings_get_boolean (settings, key);
+  locked = g_settings_get_boolean(settings, key);
 
-	panel_widget = mate_panel_applet_get_panel_widget (info);
-	applet_locked = panel_widget_get_applet_locked (panel_widget,
-							info->widget);
+  panel_widget = mate_panel_applet_get_panel_widget(info);
+  applet_locked = panel_widget_get_applet_locked(panel_widget, info->widget);
 
-	if ((locked && applet_locked) || !(locked || applet_locked))
-		return;
+  if ((locked && applet_locked) || !(locked || applet_locked)) return;
 
-	mate_panel_applet_toggle_locked (info);
+  mate_panel_applet_toggle_locked(info);
 
-	if (info->type == PANEL_OBJECT_APPLET)
-		mate_panel_applet_frame_sync_menu_state (MATE_PANEL_APPLET_FRAME (info->widget));
-	else
-		mate_panel_applet_recreate_menu (info);
+  if (info->type == PANEL_OBJECT_APPLET)
+    mate_panel_applet_frame_sync_menu_state(
+        MATE_PANEL_APPLET_FRAME(info->widget));
+  else
+    mate_panel_applet_recreate_menu(info);
 }
 
-static void
-applet_remove_callback (GtkWidget  *widget,
-			AppletInfo *info)
-{
-
-	if (info->type == PANEL_OBJECT_DRAWER)
-		drawer_query_deletion (info->data);
-	else
-		panel_profile_delete_object (info);
+static void applet_remove_callback(GtkWidget *widget, AppletInfo *info) {
+  if (info->type == PANEL_OBJECT_DRAWER)
+    drawer_query_deletion(info->data);
+  else
+    panel_profile_delete_object(info);
 }
 
-static inline GdkScreen *
-applet_user_menu_get_screen (AppletUserMenu *menu)
-{
-	PanelWidget *panel_widget;
+static inline GdkScreen *applet_user_menu_get_screen(AppletUserMenu *menu) {
+  PanelWidget *panel_widget;
 
-	panel_widget = mate_panel_applet_get_panel_widget (menu->info);
+  panel_widget = mate_panel_applet_get_panel_widget(menu->info);
 
-	return gtk_window_get_screen (GTK_WINDOW (panel_widget->toplevel));
+  return gtk_window_get_screen(GTK_WINDOW(panel_widget->toplevel));
 }
 
-static void
-applet_callback_callback (GtkWidget      *widget,
-			  AppletUserMenu *menu)
-{
-	GdkScreen *screen;
+static void applet_callback_callback(GtkWidget *widget, AppletUserMenu *menu) {
+  GdkScreen *screen;
 
-	g_return_if_fail (menu->info != NULL);
+  g_return_if_fail(menu->info != NULL);
 
-	screen = applet_user_menu_get_screen (menu);
+  screen = applet_user_menu_get_screen(menu);
 
-	switch (menu->info->type) {
-	case PANEL_OBJECT_LAUNCHER:
-		if (!strcmp (menu->name, "launch"))
-			launcher_launch (menu->info->data, NULL);
-		else if (!strcmp (menu->name, "properties"))
-			launcher_properties (menu->info->data);
-		else if (g_str_has_prefix (menu->name, "launch-action_")) {
-			const gchar *action;
-			action = menu->name + (sizeof("launch-action_") - 1);
-			launcher_launch (menu->info->data, action);
-		}
-		break;
-	case PANEL_OBJECT_DRAWER:
-		if (strcmp (menu->name, "add") == 0) {
-			Drawer *drawer = menu->info->data;
+  switch (menu->info->type) {
+    case PANEL_OBJECT_LAUNCHER:
+      if (!strcmp(menu->name, "launch"))
+        launcher_launch(menu->info->data, NULL);
+      else if (!strcmp(menu->name, "properties"))
+        launcher_properties(menu->info->data);
+      else if (g_str_has_prefix(menu->name, "launch-action_")) {
+        const gchar *action;
+        action = menu->name + (sizeof("launch-action_") - 1);
+        launcher_launch(menu->info->data, action);
+      }
+      break;
+    case PANEL_OBJECT_DRAWER:
+      if (strcmp(menu->name, "add") == 0) {
+        Drawer *drawer = menu->info->data;
 
-			panel_addto_present (GTK_MENU_ITEM (widget),
-					     panel_toplevel_get_panel_widget (drawer->toplevel));
-		} else if (strcmp (menu->name, "properties") == 0) {
-			Drawer *drawer = menu->info->data;
+        panel_addto_present(GTK_MENU_ITEM(widget),
+                            panel_toplevel_get_panel_widget(drawer->toplevel));
+      } else if (strcmp(menu->name, "properties") == 0) {
+        Drawer *drawer = menu->info->data;
 
-			panel_properties_dialog_present (drawer->toplevel);
-		} else if (strcmp (menu->name, "help") == 0) {
-			panel_show_help (screen,
-					 "mate-user-guide", "gospanel-18", NULL);
-		}
-		break;
-	case PANEL_OBJECT_MENU:
-		panel_menu_button_invoke_menu (
-			PANEL_MENU_BUTTON (menu->info->widget), menu->name);
-		break;
-	case PANEL_OBJECT_ACTION:
-		panel_action_button_invoke_menu (
-			PANEL_ACTION_BUTTON (menu->info->widget), menu->name);
-		break;
-	case PANEL_OBJECT_MENU_BAR:
-		panel_menu_bar_invoke_menu (
-			PANEL_MENU_BAR (menu->info->widget), menu->name);
-		break;
+        panel_properties_dialog_present(drawer->toplevel);
+      } else if (strcmp(menu->name, "help") == 0) {
+        panel_show_help(screen, "mate-user-guide", "gospanel-18", NULL);
+      }
+      break;
+    case PANEL_OBJECT_MENU:
+      panel_menu_button_invoke_menu(PANEL_MENU_BUTTON(menu->info->widget),
+                                    menu->name);
+      break;
+    case PANEL_OBJECT_ACTION:
+      panel_action_button_invoke_menu(PANEL_ACTION_BUTTON(menu->info->widget),
+                                      menu->name);
+      break;
+    case PANEL_OBJECT_MENU_BAR:
+      panel_menu_bar_invoke_menu(PANEL_MENU_BAR(menu->info->widget),
+                                 menu->name);
+      break;
 
-	case PANEL_OBJECT_APPLET:
-		/*
-		 * Applet's menu's are handled differently
-		 */
-		break;
-	case PANEL_OBJECT_SEPARATOR:
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
-	}
+    case PANEL_OBJECT_APPLET:
+      /*
+       * Applet's menu's are handled differently
+       */
+      break;
+    case PANEL_OBJECT_SEPARATOR:
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+  }
 }
 
-static void
-applet_menu_show (GtkWidget *w,
-		  AppletInfo *info)
-{
-	PanelWidget *panel_widget;
+static void applet_menu_show(GtkWidget *w, AppletInfo *info) {
+  PanelWidget *panel_widget;
 
-	panel_widget = mate_panel_applet_get_panel_widget (info);
+  panel_widget = mate_panel_applet_get_panel_widget(info);
 
-	panel_toplevel_push_autohide_disabler (panel_widget->toplevel);
+  panel_toplevel_push_autohide_disabler(panel_widget->toplevel);
 }
 
-static void
-applet_menu_deactivate (GtkWidget *w,
-			AppletInfo *info)
-{
-	PanelWidget *panel_widget;
+static void applet_menu_deactivate(GtkWidget *w, AppletInfo *info) {
+  PanelWidget *panel_widget;
 
-	panel_widget = mate_panel_applet_get_panel_widget (info);
+  panel_widget = mate_panel_applet_get_panel_widget(info);
 
-	panel_toplevel_pop_autohide_disabler (panel_widget->toplevel);
+  panel_toplevel_pop_autohide_disabler(panel_widget->toplevel);
 }
 
-AppletUserMenu *
-mate_panel_applet_get_callback (GList      *user_menu,
-			   const char *name)
-{
-	GList *l;
+AppletUserMenu *mate_panel_applet_get_callback(GList *user_menu,
+                                               const char *name) {
+  GList *l;
 
-	for (l = user_menu; l; l = l->next) {
-		AppletUserMenu *menu = l->data;
+  for (l = user_menu; l; l = l->next) {
+    AppletUserMenu *menu = l->data;
 
-		if (strcmp (menu->name, name) == 0)
-			return menu;
-	}
+    if (strcmp(menu->name, name) == 0) return menu;
+  }
 
-	return NULL;
+  return NULL;
 }
 
-void
-mate_panel_applet_add_callback (AppletInfo          *info,
-			   const char          *callback_name,
-			   const char          *icon_name,
-			   const char          *menuitem_text,
-			   CallbackEnabledFunc  is_enabled_func)
-{
-	AppletUserMenu *menu;
+void mate_panel_applet_add_callback(AppletInfo *info, const char *callback_name,
+                                    const char *icon_name,
+                                    const char *menuitem_text,
+                                    CallbackEnabledFunc is_enabled_func) {
+  AppletUserMenu *menu;
 
-	g_return_if_fail (info != NULL);
-	g_return_if_fail (mate_panel_applet_get_callback (info->user_menu,
-						     callback_name) == NULL);
+  g_return_if_fail(info != NULL);
+  g_return_if_fail(
+      mate_panel_applet_get_callback(info->user_menu, callback_name) == NULL);
 
-	menu                  = g_new0 (AppletUserMenu, 1);
-	menu->name            = g_strdup (callback_name);
-	menu->gicon           = panel_gicon_from_icon_name (icon_name);
-	menu->text            = g_strdup (menuitem_text);
-	menu->is_enabled_func = is_enabled_func;
-	menu->sensitive       = TRUE;
-	menu->info            = info;
-	menu->menuitem        = NULL;
-	menu->submenu         = NULL;
+  menu = g_new0(AppletUserMenu, 1);
+  menu->name = g_strdup(callback_name);
+  menu->gicon = panel_gicon_from_icon_name(icon_name);
+  menu->text = g_strdup(menuitem_text);
+  menu->is_enabled_func = is_enabled_func;
+  menu->sensitive = TRUE;
+  menu->info = info;
+  menu->menuitem = NULL;
+  menu->submenu = NULL;
 
-	info->user_menu = g_list_append (info->user_menu, menu);
+  info->user_menu = g_list_append(info->user_menu, menu);
 
-	mate_panel_applet_recreate_menu (info);
+  mate_panel_applet_recreate_menu(info);
 }
 
-void
-mate_panel_applet_clear_user_menu (AppletInfo *info)
-{
-	GList *l;
+void mate_panel_applet_clear_user_menu(AppletInfo *info) {
+  GList *l;
 
-	for (l = info->user_menu; l != NULL; l = l->next) {
-		AppletUserMenu *umenu = l->data;
+  for (l = info->user_menu; l != NULL; l = l->next) {
+    AppletUserMenu *umenu = l->data;
 
-		g_free (umenu->name);
-		g_clear_object (&(umenu->gicon));
-		g_free (umenu->text);
-		g_free (umenu);
-	}
+    g_free(umenu->name);
+    g_clear_object(&(umenu->gicon));
+    g_free(umenu->text);
+    g_free(umenu);
+  }
 
-	g_list_free (info->user_menu);
-	info->user_menu = NULL;
+  g_list_free(info->user_menu);
+  info->user_menu = NULL;
 }
 
-static void
-setup_an_item (AppletUserMenu *menu,
-	       GtkWidget      *submenu,
-	       int             is_submenu)
-{
-	menu->menuitem = panel_image_menu_item_new_from_gicon (menu->gicon, menu->text);
+static void setup_an_item(AppletUserMenu *menu, GtkWidget *submenu,
+                          int is_submenu) {
+  menu->menuitem =
+      panel_image_menu_item_new_from_gicon(menu->gicon, menu->text);
 
-	gtk_widget_show (menu->menuitem);
+  gtk_widget_show(menu->menuitem);
 
-	g_signal_connect (menu->menuitem, "destroy",
-	                  G_CALLBACK (gtk_widget_destroyed),
-	                  &menu->menuitem);
+  g_signal_connect(menu->menuitem, "destroy", G_CALLBACK(gtk_widget_destroyed),
+                   &menu->menuitem);
 
-	if(submenu)
-		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), menu->menuitem);
+  if (submenu) gtk_menu_shell_append(GTK_MENU_SHELL(submenu), menu->menuitem);
 
-	/*if an item not a submenu*/
-	if (!is_submenu) {
-		g_signal_connect (menu->menuitem, "activate",
-		                  G_CALLBACK (applet_callback_callback),
-		                  menu);
-		g_signal_connect (submenu, "destroy",
-		                  G_CALLBACK (gtk_widget_destroyed),
-		                  &menu->submenu);
-	/* if the item is a submenu and doesn't have it's menu
-	   created yet*/
-	} else if (!menu->submenu) {
-		menu->submenu = gtk_menu_new ();
-	}
+  /*if an item not a submenu*/
+  if (!is_submenu) {
+    g_signal_connect(menu->menuitem, "activate",
+                     G_CALLBACK(applet_callback_callback), menu);
+    g_signal_connect(submenu, "destroy", G_CALLBACK(gtk_widget_destroyed),
+                     &menu->submenu);
+    /* if the item is a submenu and doesn't have it's menu
+       created yet*/
+  } else if (!menu->submenu) {
+    menu->submenu = gtk_menu_new();
+  }
 
-	if(menu->submenu) {
-		gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu->menuitem),
-					  menu->submenu);
-		g_signal_connect (menu->submenu, "destroy",
-		                  G_CALLBACK (gtk_widget_destroyed),
-		                  &menu->submenu);
-	}
+  if (menu->submenu) {
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu->menuitem), menu->submenu);
+    g_signal_connect(menu->submenu, "destroy", G_CALLBACK(gtk_widget_destroyed),
+                     &menu->submenu);
+  }
 
-	gtk_widget_set_sensitive(menu->menuitem,menu->sensitive);
+  gtk_widget_set_sensitive(menu->menuitem, menu->sensitive);
 }
 
-static void
-add_to_submenus (AppletInfo *info,
-		 const char *path,
-		 const char *name,
-		 AppletUserMenu *menu,
-		 GtkWidget *submenu,
-		 GList *user_menu)
-{
-	char *n = g_strdup (name);
-	char *p = strchr (n, '/');
-	char *t;
-	AppletUserMenu *s_menu;
+static void add_to_submenus(AppletInfo *info, const char *path,
+                            const char *name, AppletUserMenu *menu,
+                            GtkWidget *submenu, GList *user_menu) {
+  char *n = g_strdup(name);
+  char *p = strchr(n, '/');
+  char *t;
+  AppletUserMenu *s_menu;
 
-	/*this is the last one*/
-	if (p == NULL) {
-		g_free (n);
-		setup_an_item (menu, submenu, FALSE);
-		return;
-	}
+  /*this is the last one*/
+  if (p == NULL) {
+    g_free(n);
+    setup_an_item(menu, submenu, FALSE);
+    return;
+  }
 
-	/*this is the last one and we are a submenu, we have already been
-	  set up*/
-	if(p==(n + strlen(n) - 1)) {
-		g_free(n);
-		return;
-	}
+  /*this is the last one and we are a submenu, we have already been
+    set up*/
+  if (p == (n + strlen(n) - 1)) {
+    g_free(n);
+    return;
+  }
 
-	*p = '\0';
-	p++;
+  *p = '\0';
+  p++;
 
-	t = g_strconcat (path, n, "/", NULL);
-	s_menu = mate_panel_applet_get_callback (user_menu, t);
-	/*the user did not give us this sub menu, whoops, will create an empty
-	  one then*/
-	if (s_menu == NULL) {
-		s_menu = g_new0 (AppletUserMenu,1);
-		s_menu->name = g_strdup (t);
-		s_menu->gicon = NULL;
-		s_menu->text = g_strdup (_("???"));
-		s_menu->sensitive = TRUE;
-		s_menu->info = info;
-		s_menu->menuitem = NULL;
-		s_menu->submenu = NULL;
-		info->user_menu = g_list_append (info->user_menu,s_menu);
-		user_menu = info->user_menu;
-	}
+  t = g_strconcat(path, n, "/", NULL);
+  s_menu = mate_panel_applet_get_callback(user_menu, t);
+  /*the user did not give us this sub menu, whoops, will create an empty
+    one then*/
+  if (s_menu == NULL) {
+    s_menu = g_new0(AppletUserMenu, 1);
+    s_menu->name = g_strdup(t);
+    s_menu->gicon = NULL;
+    s_menu->text = g_strdup(_("???"));
+    s_menu->sensitive = TRUE;
+    s_menu->info = info;
+    s_menu->menuitem = NULL;
+    s_menu->submenu = NULL;
+    info->user_menu = g_list_append(info->user_menu, s_menu);
+    user_menu = info->user_menu;
+  }
 
-	if (s_menu->submenu == NULL) {
-		s_menu->submenu = gtk_menu_new ();
-		/*a more elegant way to do this should be done
-		  when I don't want to go to sleep */
-		if (s_menu->menuitem != NULL) {
-			gtk_widget_destroy (s_menu->menuitem);
-			s_menu->menuitem = NULL;
-		}
-	}
-	if (s_menu->menuitem == NULL)
-		setup_an_item (s_menu, submenu, TRUE);
+  if (s_menu->submenu == NULL) {
+    s_menu->submenu = gtk_menu_new();
+    /*a more elegant way to do this should be done
+      when I don't want to go to sleep */
+    if (s_menu->menuitem != NULL) {
+      gtk_widget_destroy(s_menu->menuitem);
+      s_menu->menuitem = NULL;
+    }
+  }
+  if (s_menu->menuitem == NULL) setup_an_item(s_menu, submenu, TRUE);
 
-	add_to_submenus (info, t, p, menu, s_menu->submenu, user_menu);
+  add_to_submenus(info, t, p, menu, s_menu->submenu, user_menu);
 
-	g_free(t);
-	g_free(n);
+  g_free(t);
+  g_free(n);
 }
 
-GtkWidget *
-mate_panel_applet_create_menu (AppletInfo *info)
-{
-	GtkWidget   *menu;
-	GtkWidget   *menuitem;
-	GList       *l;
-	PanelWidget *panel_widget;
-	gboolean     added_anything = FALSE;
+GtkWidget *mate_panel_applet_create_menu(AppletInfo *info) {
+  GtkWidget *menu;
+  GtkWidget *menuitem;
+  GList *l;
+  PanelWidget *panel_widget;
+  gboolean added_anything = FALSE;
 
-	panel_widget = mate_panel_applet_get_panel_widget (info);
+  panel_widget = mate_panel_applet_get_panel_widget(info);
 
-	menu = g_object_ref_sink (gtk_menu_new ());
+  menu = g_object_ref_sink(gtk_menu_new());
 
-	gtk_menu_set_reserve_toggle_size (GTK_MENU (menu), FALSE);
+  gtk_menu_set_reserve_toggle_size(GTK_MENU(menu), FALSE);
 
-	/* connect the show & deactivate signal, so that we can "disallow" and
-	 * "re-allow" autohide when the menu is shown/deactivated.
-	 */
-	g_signal_connect (menu, "show",
-			  G_CALLBACK (applet_menu_show), info);
-	g_signal_connect (menu, "deactivate",
-			  G_CALLBACK (applet_menu_deactivate), info);
+  /* connect the show & deactivate signal, so that we can "disallow" and
+   * "re-allow" autohide when the menu is shown/deactivated.
+   */
+  g_signal_connect(menu, "show", G_CALLBACK(applet_menu_show), info);
+  g_signal_connect(menu, "deactivate", G_CALLBACK(applet_menu_deactivate),
+                   info);
 
-	for (l = info->user_menu; l; l = l->next) {
-		AppletUserMenu *user_menu = l->data;
+  for (l = info->user_menu; l; l = l->next) {
+    AppletUserMenu *user_menu = l->data;
 
-		if (user_menu->is_enabled_func && !user_menu->is_enabled_func ())
-			continue;
+    if (user_menu->is_enabled_func && !user_menu->is_enabled_func()) continue;
 
-		add_to_submenus (info, "", user_menu->name, user_menu,
-				 menu, info->user_menu);
+    add_to_submenus(info, "", user_menu->name, user_menu, menu,
+                    info->user_menu);
 
-		added_anything = TRUE;
-	}
+    added_anything = TRUE;
+  }
 
-	if (!panel_lockdown_get_locked_down ()) {
-		gboolean   locked;
-		gboolean   lockable;
-		gboolean   movable;
-		gboolean   removable;
+  if (!panel_lockdown_get_locked_down()) {
+    gboolean locked;
+    gboolean lockable;
+    gboolean movable;
+    gboolean removable;
 
-		lockable = mate_panel_applet_lockable (info);
-		movable = mate_panel_applet_can_freely_move (info);
-		removable = panel_profile_id_lists_are_writable ();
+    lockable = mate_panel_applet_lockable(info);
+    movable = mate_panel_applet_can_freely_move(info);
+    removable = panel_profile_id_lists_are_writable();
 
-		locked = panel_widget_get_applet_locked (panel_widget, info->widget);
+    locked = panel_widget_get_applet_locked(panel_widget, info->widget);
 
-		if (added_anything) {
-			menuitem = gtk_separator_menu_item_new ();
-			gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-			gtk_widget_show (menuitem);
-		}
+    if (added_anything) {
+      menuitem = gtk_separator_menu_item_new();
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+      gtk_widget_show(menuitem);
+    }
 
-		menuitem = panel_image_menu_item_new_from_icon ("list-remove", _("_Remove From Panel"));
+    menuitem = panel_image_menu_item_new_from_icon("list-remove",
+                                                   _("_Remove From Panel"));
 
-		g_signal_connect (menuitem, "activate",
-				  G_CALLBACK (applet_remove_callback), info);
-		gtk_widget_show (menuitem);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-		gtk_widget_set_sensitive (menuitem, (!locked || lockable) && removable);
+    g_signal_connect(menuitem, "activate", G_CALLBACK(applet_remove_callback),
+                     info);
+    gtk_widget_show(menuitem);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+    gtk_widget_set_sensitive(menuitem, (!locked || lockable) && removable);
 
-		menuitem = panel_image_menu_item_new_from_icon (NULL, _("_Move"));
+    menuitem = panel_image_menu_item_new_from_icon(NULL, _("_Move"));
 
-		g_signal_connect (menuitem, "activate",
-				  G_CALLBACK (move_applet_callback), info);
-		gtk_widget_show (menuitem);
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-		gtk_widget_set_sensitive (menuitem, !locked && movable);
+    g_signal_connect(menuitem, "activate", G_CALLBACK(move_applet_callback),
+                     info);
+    gtk_widget_show(menuitem);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+    gtk_widget_set_sensitive(menuitem, !locked && movable);
 
-		g_assert (info->move_item == NULL);
+    g_assert(info->move_item == NULL);
 
-		info->move_item = menuitem;
-		g_object_add_weak_pointer (G_OBJECT (menuitem),
-					   (gpointer *) &info->move_item);
+    info->move_item = menuitem;
+    g_object_add_weak_pointer(G_OBJECT(menuitem), (gpointer *)&info->move_item);
 
-		menuitem = gtk_separator_menu_item_new ();
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-		gtk_widget_show (menuitem);
+    menuitem = gtk_separator_menu_item_new();
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+    gtk_widget_show(menuitem);
 
-		menuitem = gtk_check_menu_item_new_with_mnemonic (_("Loc_k To Panel"));
+    menuitem = gtk_check_menu_item_new_with_mnemonic(_("Loc_k To Panel"));
 
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (menuitem),
-						locked);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menuitem), locked);
 
-		g_signal_connect (menuitem, "map",
-				  G_CALLBACK (checkbox_status), info);
+    g_signal_connect(menuitem, "map", G_CALLBACK(checkbox_status), info);
 
-		menuitem = panel_check_menu_item_new (menuitem);
+    menuitem = panel_check_menu_item_new(menuitem);
 
-		g_signal_connect (menuitem, "activate",
-				  G_CALLBACK (mate_panel_applet_lock), info);
+    g_signal_connect(menuitem, "activate", G_CALLBACK(mate_panel_applet_lock),
+                     info);
 
-		gtk_widget_show (menuitem);
+    gtk_widget_show(menuitem);
 
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
-		gtk_widget_set_sensitive (menuitem, lockable);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+    gtk_widget_set_sensitive(menuitem, lockable);
 
-		added_anything = TRUE;
-	}
+    added_anything = TRUE;
+  }
 
-	if ( ! added_anything) {
-		g_object_unref (menu);
-		return NULL;
-	}
+  if (!added_anything) {
+    g_object_unref(menu);
+    return NULL;
+  }
 
-/* Set up theme and transparency support */
-	GtkWidget *toplevel = gtk_widget_get_toplevel (menu);
-/* Fix any failures of compiz/other wm's to communicate with gtk for transparency */
-	GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET(toplevel));
-	GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
-	gtk_widget_set_visual(GTK_WIDGET(toplevel), visual);
-/* Set menu and it's toplevel window to follow panel theme */
-	GtkStyleContext *context;
-	context = gtk_widget_get_style_context (GTK_WIDGET(toplevel));
-	gtk_style_context_add_class(context,"gnome-panel-menu-bar");
-	gtk_style_context_add_class(context,"mate-panel-menu-bar");
+  /* Set up theme and transparency support */
+  GtkWidget *toplevel = gtk_widget_get_toplevel(menu);
+  /* Fix any failures of compiz/other wm's to communicate with gtk for
+   * transparency */
+  GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET(toplevel));
+  GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
+  gtk_widget_set_visual(GTK_WIDGET(toplevel), visual);
+  /* Set menu and it's toplevel window to follow panel theme */
+  GtkStyleContext *context;
+  context = gtk_widget_get_style_context(GTK_WIDGET(toplevel));
+  gtk_style_context_add_class(context, "gnome-panel-menu-bar");
+  gtk_style_context_add_class(context, "mate-panel-menu-bar");
 
-	return menu;
+  return menu;
 }
 
-void
-mate_panel_applet_menu_set_recurse (GtkMenu     *menu,
-			       const gchar *key,
-			       gpointer     data)
-{
-	GList *children;
-	GList *l;
+void mate_panel_applet_menu_set_recurse(GtkMenu *menu, const gchar *key,
+                                        gpointer data) {
+  GList *children;
+  GList *l;
 
-	g_object_set_data (G_OBJECT (menu), key, data);
+  g_object_set_data(G_OBJECT(menu), key, data);
 
-	children = gtk_container_get_children (GTK_CONTAINER (menu));
+  children = gtk_container_get_children(GTK_CONTAINER(menu));
 
-	for (l = children; l; l = l->next) {
-		GtkWidget *submenu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (l->data));
+  for (l = children; l; l = l->next) {
+    GtkWidget *submenu = gtk_menu_item_get_submenu(GTK_MENU_ITEM(l->data));
 
-		if (submenu)
-			mate_panel_applet_menu_set_recurse (
-				GTK_MENU (submenu), key, data);
-	}
+    if (submenu)
+      mate_panel_applet_menu_set_recurse(GTK_MENU(submenu), key, data);
+  }
 
-	g_list_free (children);
+  g_list_free(children);
 }
 
-static void
-applet_show_menu (AppletInfo     *info,
-		  GdkEventButton *event)
-{
-	PanelWidget *panel_widget;
+static void applet_show_menu(AppletInfo *info, GdkEventButton *event) {
+  PanelWidget *panel_widget;
 
-	g_return_if_fail (info != NULL);
+  g_return_if_fail(info != NULL);
 
-	if ((info->menu == NULL) && ((info->menu = mate_panel_applet_create_menu (info)) == NULL))
-		return;
+  if ((info->menu == NULL) &&
+      ((info->menu = mate_panel_applet_create_menu(info)) == NULL))
+    return;
 
-	panel_widget = mate_panel_applet_get_panel_widget (info);
+  panel_widget = mate_panel_applet_get_panel_widget(info);
 
-	mate_panel_applet_menu_set_recurse (GTK_MENU (info->menu),
-				       "menu_panel",
-				       panel_widget);
+  mate_panel_applet_menu_set_recurse(GTK_MENU(info->menu), "menu_panel",
+                                     panel_widget);
 
-	gtk_menu_set_screen (GTK_MENU (info->menu),
-			     gtk_window_get_screen (GTK_WINDOW (panel_widget->toplevel)));
+  gtk_menu_set_screen(
+      GTK_MENU(info->menu),
+      gtk_window_get_screen(GTK_WINDOW(panel_widget->toplevel)));
 
-	if (!gtk_widget_get_realized (info->menu))
-		gtk_widget_show (info->menu);
+  if (!gtk_widget_get_realized(info->menu)) gtk_widget_show(info->menu);
 
-	gtk_menu_popup_at_pointer (GTK_MENU (info->menu), NULL);
+  gtk_menu_popup_at_pointer(GTK_MENU(info->menu), NULL);
 }
 
-static gboolean
-applet_do_popup_menu (GtkWidget      *widget,
-		      GdkEventButton *event,
-		      AppletInfo     *info)
-{
-	if (mate_panel_applet_is_in_drag ())
-		return FALSE;
+static gboolean applet_do_popup_menu(GtkWidget *widget, GdkEventButton *event,
+                                     AppletInfo *info) {
+  if (mate_panel_applet_is_in_drag()) return FALSE;
 
-	if (info->type == PANEL_OBJECT_APPLET)
-		return FALSE;
+  if (info->type == PANEL_OBJECT_APPLET) return FALSE;
 
-	applet_show_menu (info, event);
+  applet_show_menu(info, event);
 
-	return TRUE;
+  return TRUE;
 }
 
-static gboolean
-applet_popup_menu (GtkWidget      *widget,
-		   AppletInfo     *info)
-{
-	GdkEventButton event;
+static gboolean applet_popup_menu(GtkWidget *widget, AppletInfo *info) {
+  GdkEventButton event;
 
-	event.button = 3;
-	event.time = GDK_CURRENT_TIME;
+  event.button = 3;
+  event.time = GDK_CURRENT_TIME;
 
-	return applet_do_popup_menu (widget, &event, info);
+  return applet_do_popup_menu(widget, &event, info);
 }
 
-static gboolean
-applet_button_press (GtkWidget      *widget,
-		     GdkEventButton *event,
-		     AppletInfo     *info)
-{
-	gboolean     applet_locked;
-	PanelWidget *panel_widget;
+static gboolean applet_button_press(GtkWidget *widget, GdkEventButton *event,
+                                    AppletInfo *info) {
+  gboolean applet_locked;
+  PanelWidget *panel_widget;
 
-	panel_widget = mate_panel_applet_get_panel_widget (info);
-	applet_locked = panel_widget_get_applet_locked (panel_widget,
-							info->widget);
+  panel_widget = mate_panel_applet_get_panel_widget(info);
+  applet_locked = panel_widget_get_applet_locked(panel_widget, info->widget);
 
-	if (!applet_locked) mate_panel_applet_set_dnd_enabled (info, TRUE);
+  if (!applet_locked) mate_panel_applet_set_dnd_enabled(info, TRUE);
 
-	if (event->button == 3)
-		return applet_do_popup_menu (widget, event, info);
+  if (event->button == 3) return applet_do_popup_menu(widget, event, info);
 
-	return FALSE;
+  return FALSE;
 }
 
-static void
-mate_panel_applet_destroy (GtkWidget  *widget,
-		      AppletInfo *info)
-{
-	g_return_if_fail (info != NULL);
+static void mate_panel_applet_destroy(GtkWidget *widget, AppletInfo *info) {
+  g_return_if_fail(info != NULL);
 
-	g_signal_handlers_disconnect_by_data(info->settings,widget);
+  g_signal_handlers_disconnect_by_data(info->settings, widget);
 
-	info->widget = NULL;
+  info->widget = NULL;
 
-	if (info->settings) {
-		g_object_unref (info->settings);
-		info->settings = NULL;
-	}
+  if (info->settings) {
+    g_object_unref(info->settings);
+    info->settings = NULL;
+  }
 
-	registered_applets = g_slist_remove (registered_applets, info);
+  registered_applets = g_slist_remove(registered_applets, info);
 
-	queued_position_saves =
-		g_slist_remove (queued_position_saves, info);
+  queued_position_saves = g_slist_remove(queued_position_saves, info);
 
-	if (info->type == PANEL_OBJECT_DRAWER) {
-		Drawer *drawer = info->data;
+  if (info->type == PANEL_OBJECT_DRAWER) {
+    Drawer *drawer = info->data;
 
-		if (drawer->toplevel) {
-			PanelWidget *panel_widget;
+    if (drawer->toplevel) {
+      PanelWidget *panel_widget;
 
-			panel_widget = panel_toplevel_get_panel_widget (
-							drawer->toplevel);
-			panel_widget->master_widget = NULL;
+      panel_widget = panel_toplevel_get_panel_widget(drawer->toplevel);
+      panel_widget->master_widget = NULL;
 
-			gtk_widget_destroy (GTK_WIDGET (drawer->toplevel));
-			drawer->toplevel = NULL;
-		}
-	}
+      gtk_widget_destroy(GTK_WIDGET(drawer->toplevel));
+      drawer->toplevel = NULL;
+    }
+  }
 
-	if (info->type != PANEL_OBJECT_APPLET)
-		panel_lockdown_notify_remove (G_CALLBACK (mate_panel_applet_recreate_menu),
-					      info);
+  if (info->type != PANEL_OBJECT_APPLET)
+    panel_lockdown_notify_remove(G_CALLBACK(mate_panel_applet_recreate_menu),
+                                 info);
 
-	if (info->menu) {
-		g_signal_handlers_disconnect_by_func (info->menu, G_CALLBACK (applet_menu_show), info);
-		g_signal_handlers_disconnect_by_func (info->menu, G_CALLBACK (applet_menu_deactivate), info);
-		g_object_unref (info->menu);
-	}
-	info->menu = NULL;
+  if (info->menu) {
+    g_signal_handlers_disconnect_by_func(info->menu,
+                                         G_CALLBACK(applet_menu_show), info);
+    g_signal_handlers_disconnect_by_func(
+        info->menu, G_CALLBACK(applet_menu_deactivate), info);
+    g_object_unref(info->menu);
+  }
+  info->menu = NULL;
 
-	if (info->data_destroy)
-		info->data_destroy (info->data);
-	info->data = NULL;
+  if (info->data_destroy) info->data_destroy(info->data);
+  info->data = NULL;
 
-	mate_panel_applet_clear_user_menu (info);
+  mate_panel_applet_clear_user_menu(info);
 
-	g_free (info->id);
-	g_free (info);
+  g_free(info->id);
+  g_free(info);
 }
 
 typedef struct {
-	char                      *id;
-	PanelObjectType            type;
-	char                      *toplevel_id;
-	int                        position;
-	PanelObjectEdgeRelativity  edge_relativity;
-	guint                      locked : 1;
+  char *id;
+  PanelObjectType type;
+  char *toplevel_id;
+  int position;
+  PanelObjectEdgeRelativity edge_relativity;
+  guint locked : 1;
 } MatePanelAppletToLoad;
 
 /* Each time those lists get both empty,
  * mate_panel_applet_queue_initial_unhide_toplevels() should be called */
-static GSList  *mate_panel_applets_to_load = NULL;
-static GSList  *mate_panel_applets_loading = NULL;
+static GSList *mate_panel_applets_to_load = NULL;
+static GSList *mate_panel_applets_loading = NULL;
 /* We have a timeout to always unhide toplevels after a delay, in case of some
  * blocking applet */
-#define         UNHIDE_TOPLEVELS_TIMEOUT_SECONDS 5
-static guint    mate_panel_applet_unhide_toplevels_timeout = 0;
+#define UNHIDE_TOPLEVELS_TIMEOUT_SECONDS 5
+static guint mate_panel_applet_unhide_toplevels_timeout = 0;
 
 static gboolean mate_panel_applet_have_load_idle = FALSE;
 
-static void
-free_applet_to_load (MatePanelAppletToLoad *applet)
-{
-	g_free (applet->id);
-	g_free (applet->toplevel_id);
-	g_free (applet);
+static void free_applet_to_load(MatePanelAppletToLoad *applet) {
+  g_free(applet->id);
+  g_free(applet->toplevel_id);
+  g_free(applet);
 }
 
-gboolean
-mate_panel_applet_on_load_queue (const char *id)
-{
-	GSList *li;
-	for (li = mate_panel_applets_to_load; li != NULL; li = li->next) {
-		MatePanelAppletToLoad *applet = li->data;
-		if (strcmp (applet->id, id) == 0)
-			return TRUE;
-	}
-	for (li = mate_panel_applets_loading; li != NULL; li = li->next) {
-		MatePanelAppletToLoad *applet = li->data;
-		if (strcmp (applet->id, id) == 0)
-			return TRUE;
-	}
-	return FALSE;
+gboolean mate_panel_applet_on_load_queue(const char *id) {
+  GSList *li;
+  for (li = mate_panel_applets_to_load; li != NULL; li = li->next) {
+    MatePanelAppletToLoad *applet = li->data;
+    if (strcmp(applet->id, id) == 0) return TRUE;
+  }
+  for (li = mate_panel_applets_loading; li != NULL; li = li->next) {
+    MatePanelAppletToLoad *applet = li->data;
+    if (strcmp(applet->id, id) == 0) return TRUE;
+  }
+  return FALSE;
 }
 
 /* This doesn't do anything if the initial unhide already happened */
-static gboolean
-mate_panel_applet_queue_initial_unhide_toplevels (gpointer user_data)
-{
-	GSList *l;
+static gboolean mate_panel_applet_queue_initial_unhide_toplevels(
+    gpointer user_data) {
+  GSList *l;
 
-	if (mate_panel_applet_unhide_toplevels_timeout != 0) {
-		g_source_remove (mate_panel_applet_unhide_toplevels_timeout);
-		mate_panel_applet_unhide_toplevels_timeout = 0;
-	}
+  if (mate_panel_applet_unhide_toplevels_timeout != 0) {
+    g_source_remove(mate_panel_applet_unhide_toplevels_timeout);
+    mate_panel_applet_unhide_toplevels_timeout = 0;
+  }
 
-	for (l = panel_toplevel_list_toplevels (); l != NULL; l = l->next)
-		panel_toplevel_queue_initial_unhide ((PanelToplevel *) l->data);
+  for (l = panel_toplevel_list_toplevels(); l != NULL; l = l->next)
+    panel_toplevel_queue_initial_unhide((PanelToplevel *)l->data);
 
-	return FALSE;
+  return FALSE;
 }
 
-void
-mate_panel_applet_stop_loading (const char *id)
-{
-	MatePanelAppletToLoad *applet;
-	GSList *l;
+void mate_panel_applet_stop_loading(const char *id) {
+  MatePanelAppletToLoad *applet;
+  GSList *l;
 
-	for (l = mate_panel_applets_loading; l; l = l->next) {
-		applet = l->data;
+  for (l = mate_panel_applets_loading; l; l = l->next) {
+    applet = l->data;
 
-		if (strcmp (applet->id, id) == 0)
-			break;
-	}
+    if (strcmp(applet->id, id) == 0) break;
+  }
 
-	/* this can happen if we reload an applet after it crashed,
-	 * for example */
-	if (l != NULL) {
-		mate_panel_applets_loading = g_slist_delete_link (mate_panel_applets_loading, l);
-		free_applet_to_load (applet);
-	}
+  /* this can happen if we reload an applet after it crashed,
+   * for example */
+  if (l != NULL) {
+    mate_panel_applets_loading =
+        g_slist_delete_link(mate_panel_applets_loading, l);
+    free_applet_to_load(applet);
+  }
 
-	if (mate_panel_applets_loading == NULL && mate_panel_applets_to_load == NULL)
-		mate_panel_applet_queue_initial_unhide_toplevels (NULL);
+  if (mate_panel_applets_loading == NULL && mate_panel_applets_to_load == NULL)
+    mate_panel_applet_queue_initial_unhide_toplevels(NULL);
 }
 
-static gboolean
-mate_panel_applet_load_idle_handler (gpointer dummy)
-{
-	PanelObjectType    applet_type;
-	MatePanelAppletToLoad *applet = NULL;
-	PanelToplevel     *toplevel = NULL;
-	PanelWidget       *panel_widget;
-	GSList            *l;
+static gboolean mate_panel_applet_load_idle_handler(gpointer dummy) {
+  PanelObjectType applet_type;
+  MatePanelAppletToLoad *applet = NULL;
+  PanelToplevel *toplevel = NULL;
+  PanelWidget *panel_widget;
+  GSList *l;
 
-	if (!mate_panel_applets_to_load) {
-		mate_panel_applet_have_load_idle = FALSE;
-		return FALSE;
-	}
+  if (!mate_panel_applets_to_load) {
+    mate_panel_applet_have_load_idle = FALSE;
+    return FALSE;
+  }
 
-	for (l = mate_panel_applets_to_load; l; l = l->next) {
-		applet = l->data;
+  for (l = mate_panel_applets_to_load; l; l = l->next) {
+    applet = l->data;
 
-		toplevel = panel_profile_get_toplevel_by_id (applet->toplevel_id);
-		if (toplevel)
-			break;
-	}
+    toplevel = panel_profile_get_toplevel_by_id(applet->toplevel_id);
+    if (toplevel) break;
+  }
 
-	if (!l) {
-		/* All the remaining applets don't have a panel */
-		for (l = mate_panel_applets_to_load; l; l = l->next)
-			free_applet_to_load (l->data);
-		g_slist_free (mate_panel_applets_to_load);
-		mate_panel_applets_to_load = NULL;
-		mate_panel_applet_have_load_idle = FALSE;
+  if (!l) {
+    /* All the remaining applets don't have a panel */
+    for (l = mate_panel_applets_to_load; l; l = l->next)
+      free_applet_to_load(l->data);
+    g_slist_free(mate_panel_applets_to_load);
+    mate_panel_applets_to_load = NULL;
+    mate_panel_applet_have_load_idle = FALSE;
 
-		if (mate_panel_applets_loading == NULL) {
-			/* unhide any potential initially hidden toplevel */
-			mate_panel_applet_queue_initial_unhide_toplevels (NULL);
-		}
+    if (mate_panel_applets_loading == NULL) {
+      /* unhide any potential initially hidden toplevel */
+      mate_panel_applet_queue_initial_unhide_toplevels(NULL);
+    }
 
-		return FALSE;
-	}
+    return FALSE;
+  }
 
-	mate_panel_applets_to_load = g_slist_delete_link (mate_panel_applets_to_load, l);
-	mate_panel_applets_loading = g_slist_append (mate_panel_applets_loading, applet);
+  mate_panel_applets_to_load =
+      g_slist_delete_link(mate_panel_applets_to_load, l);
+  mate_panel_applets_loading =
+      g_slist_append(mate_panel_applets_loading, applet);
 
-	panel_widget = panel_toplevel_get_panel_widget (toplevel);
+  panel_widget = panel_toplevel_get_panel_widget(toplevel);
 
-	if (applet->edge_relativity == PANEL_EDGE_CENTER ||
-	    applet->edge_relativity == PANEL_EDGE_END) {
-		if (!panel_widget->packed) {
-			if (applet->edge_relativity == PANEL_EDGE_CENTER)
-				applet->position = panel_widget->size/2 + applet->position;
-			else if (applet->edge_relativity == PANEL_EDGE_END)
-				applet->position = panel_widget->size - applet->position;
-		}
-		else
-			applet->position = -1;
-	}
+  if (applet->edge_relativity == PANEL_EDGE_CENTER ||
+      applet->edge_relativity == PANEL_EDGE_END) {
+    if (!panel_widget->packed) {
+      if (applet->edge_relativity == PANEL_EDGE_CENTER)
+        applet->position = panel_widget->size / 2 + applet->position;
+      else if (applet->edge_relativity == PANEL_EDGE_END)
+        applet->position = panel_widget->size - applet->position;
+    } else
+      applet->position = -1;
+  }
 
-	/* We load applets asynchronously, so we specifically don't call
-	 * mate_panel_applet_stop_loading() for this type. However, in case of
-	 * failure during the load, we might call mate_panel_applet_stop_loading()
-	 * synchronously, which will make us lose the content of the applet
-	 * variable. So we save the type to be sure we always ignore the
-	 * applets. */
-	applet_type = applet->type;
+  /* We load applets asynchronously, so we specifically don't call
+   * mate_panel_applet_stop_loading() for this type. However, in case of
+   * failure during the load, we might call mate_panel_applet_stop_loading()
+   * synchronously, which will make us lose the content of the applet
+   * variable. So we save the type to be sure we always ignore the
+   * applets. */
+  applet_type = applet->type;
 
-	switch (applet_type) {
-	case PANEL_OBJECT_APPLET:
-		mate_panel_applet_frame_load_from_gsettings (
-					panel_widget,
-					applet->locked,
-					applet->position,
-					applet->id);
-		break;
-	case PANEL_OBJECT_DRAWER:
-		drawer_load_from_gsettings (panel_widget,
-					applet->locked,
-					applet->position,
-					applet->id);
-		break;
-	case PANEL_OBJECT_MENU:
-		panel_menu_button_load_from_gsettings (panel_widget,
-						   applet->locked,
-						   applet->position,
-						   TRUE,
-						   applet->id);
-		break;
-	case PANEL_OBJECT_LAUNCHER:
-		launcher_load_from_gsettings (panel_widget,
-					  applet->locked,
-					  applet->position,
-					  applet->id);
-		break;
-	case PANEL_OBJECT_ACTION:
-		panel_action_button_load_from_gsettings (
-				panel_widget,
-				applet->locked,
-				applet->position,
-				TRUE,
-				applet->id);
-		break;
-	case PANEL_OBJECT_MENU_BAR:
-		panel_menu_bar_load_from_gsettings (
-				panel_widget,
-				applet->locked,
-				applet->position,
-				TRUE,
-				applet->id);
-		break;
-	case PANEL_OBJECT_SEPARATOR:
-		panel_separator_load_from_gsettings (panel_widget,
-						 applet->locked,
-						 applet->position,
-						 applet->id);
-		break;
-	default:
-		g_assert_not_reached ();
-		break;
-	}
+  switch (applet_type) {
+    case PANEL_OBJECT_APPLET:
+      mate_panel_applet_frame_load_from_gsettings(panel_widget, applet->locked,
+                                                  applet->position, applet->id);
+      break;
+    case PANEL_OBJECT_DRAWER:
+      drawer_load_from_gsettings(panel_widget, applet->locked, applet->position,
+                                 applet->id);
+      break;
+    case PANEL_OBJECT_MENU:
+      panel_menu_button_load_from_gsettings(panel_widget, applet->locked,
+                                            applet->position, TRUE, applet->id);
+      break;
+    case PANEL_OBJECT_LAUNCHER:
+      launcher_load_from_gsettings(panel_widget, applet->locked,
+                                   applet->position, applet->id);
+      break;
+    case PANEL_OBJECT_ACTION:
+      panel_action_button_load_from_gsettings(
+          panel_widget, applet->locked, applet->position, TRUE, applet->id);
+      break;
+    case PANEL_OBJECT_MENU_BAR:
+      panel_menu_bar_load_from_gsettings(panel_widget, applet->locked,
+                                         applet->position, TRUE, applet->id);
+      break;
+    case PANEL_OBJECT_SEPARATOR:
+      panel_separator_load_from_gsettings(panel_widget, applet->locked,
+                                          applet->position, applet->id);
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+  }
 
-	/* Only the real applets will do a late stop_loading */
-	if (applet_type != PANEL_OBJECT_APPLET)
-		mate_panel_applet_stop_loading (applet->id);
+  /* Only the real applets will do a late stop_loading */
+  if (applet_type != PANEL_OBJECT_APPLET)
+    mate_panel_applet_stop_loading(applet->id);
 
-	return TRUE;
+  return TRUE;
 }
 
-void
-mate_panel_applet_queue_applet_to_load (const char                *id,
-					PanelObjectType            type,
-					const char                *toplevel_id,
-					int                        position,
-					PanelObjectEdgeRelativity  edge_relativity,
-					gboolean                   locked)
-{
-	MatePanelAppletToLoad *applet;
+void mate_panel_applet_queue_applet_to_load(
+    const char *id, PanelObjectType type, const char *toplevel_id, int position,
+    PanelObjectEdgeRelativity edge_relativity, gboolean locked) {
+  MatePanelAppletToLoad *applet;
 
-	if (!toplevel_id) {
-		g_warning ("No toplevel on which to load object '%s'\n", id);
-		return;
-	}
+  if (!toplevel_id) {
+    g_warning("No toplevel on which to load object '%s'\n", id);
+    return;
+  }
 
-	applet = g_new0 (MatePanelAppletToLoad, 1);
+  applet = g_new0(MatePanelAppletToLoad, 1);
 
-	applet->id              = g_strdup (id);
-	applet->type            = type;
-	applet->toplevel_id     = g_strdup (toplevel_id);
-	applet->position        = position;
-	applet->edge_relativity = edge_relativity;
-	applet->locked          = locked != FALSE;
+  applet->id = g_strdup(id);
+  applet->type = type;
+  applet->toplevel_id = g_strdup(toplevel_id);
+  applet->position = position;
+  applet->edge_relativity = edge_relativity;
+  applet->locked = locked != FALSE;
 
-	mate_panel_applets_to_load = g_slist_prepend (mate_panel_applets_to_load, applet);
+  mate_panel_applets_to_load =
+      g_slist_prepend(mate_panel_applets_to_load, applet);
 }
 
-static int
-mate_panel_applet_compare (const MatePanelAppletToLoad *a,
-		      const MatePanelAppletToLoad *b)
-{
-	int c;
+static int mate_panel_applet_compare(const MatePanelAppletToLoad *a,
+                                     const MatePanelAppletToLoad *b) {
+  int c;
 
-	if ((c = strcmp (a->toplevel_id, b->toplevel_id)))
-		return c;
-	else if (a->edge_relativity != b->edge_relativity)
-		return a->edge_relativity - b->edge_relativity;
-	else
-		return a->position - b->position;
+  if ((c = strcmp(a->toplevel_id, b->toplevel_id)))
+    return c;
+  else if (a->edge_relativity != b->edge_relativity)
+    return a->edge_relativity - b->edge_relativity;
+  else
+    return a->position - b->position;
 }
 
-void
-mate_panel_applet_load_queued_applets (gboolean initial_load)
-{
-	if (!mate_panel_applets_to_load) {
-		mate_panel_applet_queue_initial_unhide_toplevels (NULL);
-		return;
-	}
+void mate_panel_applet_load_queued_applets(gboolean initial_load) {
+  if (!mate_panel_applets_to_load) {
+    mate_panel_applet_queue_initial_unhide_toplevels(NULL);
+    return;
+  }
 
-	if (mate_panel_applets_to_load && mate_panel_applet_unhide_toplevels_timeout == 0) {
-		/* Install a timeout to make sure we don't block the
-		 * unhiding because of an applet that doesn't load */
-		mate_panel_applet_unhide_toplevels_timeout =
-			g_timeout_add_seconds (UNHIDE_TOPLEVELS_TIMEOUT_SECONDS,
-					       mate_panel_applet_queue_initial_unhide_toplevels,
-					       NULL);
-	}
+  if (mate_panel_applets_to_load &&
+      mate_panel_applet_unhide_toplevels_timeout == 0) {
+    /* Install a timeout to make sure we don't block the
+     * unhiding because of an applet that doesn't load */
+    mate_panel_applet_unhide_toplevels_timeout = g_timeout_add_seconds(
+        UNHIDE_TOPLEVELS_TIMEOUT_SECONDS,
+        mate_panel_applet_queue_initial_unhide_toplevels, NULL);
+  }
 
-	mate_panel_applets_to_load = g_slist_sort (mate_panel_applets_to_load,
-					      (GCompareFunc) mate_panel_applet_compare);
+  mate_panel_applets_to_load = g_slist_sort(
+      mate_panel_applets_to_load, (GCompareFunc)mate_panel_applet_compare);
 
-	if ( ! mate_panel_applet_have_load_idle) {
-		/* on panel startup, we don't care about redraws of the
-		 * toplevels since they are hidden, so we give a higher
-		 * priority to loading of applets */
-		if (initial_load)
-			g_idle_add_full (G_PRIORITY_HIGH_IDLE,
-					 mate_panel_applet_load_idle_handler,
-					 NULL, NULL);
-		else
-			g_idle_add (mate_panel_applet_load_idle_handler, NULL);
+  if (!mate_panel_applet_have_load_idle) {
+    /* on panel startup, we don't care about redraws of the
+     * toplevels since they are hidden, so we give a higher
+     * priority to loading of applets */
+    if (initial_load)
+      g_idle_add_full(G_PRIORITY_HIGH_IDLE, mate_panel_applet_load_idle_handler,
+                      NULL, NULL);
+    else
+      g_idle_add(mate_panel_applet_load_idle_handler, NULL);
 
-		mate_panel_applet_have_load_idle = TRUE;
-	}
+    mate_panel_applet_have_load_idle = TRUE;
+  }
 }
 
-static const char* mate_panel_applet_get_toplevel_id(AppletInfo* applet)
-{
-	PanelWidget* panel_widget;
+static const char *mate_panel_applet_get_toplevel_id(AppletInfo *applet) {
+  PanelWidget *panel_widget;
 
-	g_return_val_if_fail(applet != NULL, NULL);
-	g_return_val_if_fail(GTK_IS_WIDGET(applet->widget), NULL);
+  g_return_val_if_fail(applet != NULL, NULL);
+  g_return_val_if_fail(GTK_IS_WIDGET(applet->widget), NULL);
 
-	panel_widget = mate_panel_applet_get_panel_widget(applet);
+  panel_widget = mate_panel_applet_get_panel_widget(applet);
 
-	if (!panel_widget)
-	{
-		return NULL;
-	}
+  if (!panel_widget) {
+    return NULL;
+  }
 
-	return panel_profile_get_toplevel_id(panel_widget->toplevel);
+  return panel_profile_get_toplevel_id(panel_widget->toplevel);
 }
 
-static gboolean
-mate_panel_applet_position_save_timeout (gpointer dummy)
-{
-	GSList *l;
+static gboolean mate_panel_applet_position_save_timeout(gpointer dummy) {
+  GSList *l;
 
-	queued_position_source = 0;
+  queued_position_source = 0;
 
-	for (l = queued_position_saves; l; l = l->next) {
-		AppletInfo *info = l->data;
+  for (l = queued_position_saves; l; l = l->next) {
+    AppletInfo *info = l->data;
 
-		mate_panel_applet_save_position (info, info->id, TRUE);
-	}
+    mate_panel_applet_save_position(info, info->id, TRUE);
+  }
 
-	g_slist_free (queued_position_saves);
-	queued_position_saves = NULL;
+  g_slist_free(queued_position_saves);
+  queued_position_saves = NULL;
 
-	return FALSE;
+  return FALSE;
 }
 
-void
-mate_panel_applet_save_position (AppletInfo *applet_info,
-			    const char *id,
-			    gboolean    immediate)
-{
-	PanelWidget               *panel_widget;
-	const char                *toplevel_id;
-	char                      *old_toplevel_id;
-	PanelObjectEdgeRelativity  edge_relativity;
-	gboolean                   locked;
-	int                        position;
+void mate_panel_applet_save_position(AppletInfo *applet_info, const char *id,
+                                     gboolean immediate) {
+  PanelWidget *panel_widget;
+  const char *toplevel_id;
+  char *old_toplevel_id;
+  PanelObjectEdgeRelativity edge_relativity;
+  gboolean locked;
+  int position;
 
-	g_return_if_fail (applet_info != NULL);
+  g_return_if_fail(applet_info != NULL);
 
-	if (!immediate) {
-		if (!queued_position_source)
-			queued_position_source =
-				g_timeout_add_seconds (1,
-						       (GSourceFunc) mate_panel_applet_position_save_timeout,
-						       NULL);
+  if (!immediate) {
+    if (!queued_position_source)
+      queued_position_source = g_timeout_add_seconds(
+          1, (GSourceFunc)mate_panel_applet_position_save_timeout, NULL);
 
-		if (!g_slist_find (queued_position_saves, applet_info))
-			queued_position_saves =
-				g_slist_prepend (queued_position_saves, applet_info);
+    if (!g_slist_find(queued_position_saves, applet_info))
+      queued_position_saves =
+          g_slist_prepend(queued_position_saves, applet_info);
 
-		return;
-	}
+    return;
+  }
 
-	if (!(toplevel_id = mate_panel_applet_get_toplevel_id (applet_info)))
-		return;
+  if (!(toplevel_id = mate_panel_applet_get_toplevel_id(applet_info))) return;
 
-	panel_widget = mate_panel_applet_get_panel_widget (applet_info);
+  panel_widget = mate_panel_applet_get_panel_widget(applet_info);
 
-	/* FIXME: Instead of getting keys, comparing and setting, there
-	   should be a dirty flag */
+  /* FIXME: Instead of getting keys, comparing and setting, there
+     should be a dirty flag */
 
-	old_toplevel_id = g_settings_get_string (applet_info->settings, PANEL_OBJECT_TOPLEVEL_ID_KEY);
-	if (old_toplevel_id == NULL || strcmp (old_toplevel_id, toplevel_id) != 0)
-		g_settings_set_string (applet_info->settings, PANEL_OBJECT_TOPLEVEL_ID_KEY, toplevel_id);
-	g_free (old_toplevel_id);
+  old_toplevel_id = g_settings_get_string(applet_info->settings,
+                                          PANEL_OBJECT_TOPLEVEL_ID_KEY);
+  if (old_toplevel_id == NULL || strcmp(old_toplevel_id, toplevel_id) != 0)
+    g_settings_set_string(applet_info->settings, PANEL_OBJECT_TOPLEVEL_ID_KEY,
+                          toplevel_id);
+  g_free(old_toplevel_id);
 
-	/* Note: changing some properties of the panel that may not be locked down
-	   (e.g. background) can change the state of the "relative-to-edge" and
-	   "position" properties of an applet that may in fact be locked down.
-	   So check if these are writable before attempting to write them */
+  /* Note: changing some properties of the panel that may not be locked down
+     (e.g. background) can change the state of the "relative-to-edge" and
+     "position" properties of an applet that may in fact be locked down.
+     So check if these are writable before attempting to write them */
 
-	locked = panel_widget_get_applet_locked (panel_widget, applet_info->widget) ? 1 : 0;
-	if (g_settings_get_boolean (applet_info->settings, PANEL_OBJECT_LOCKED_KEY) ? 1 : 0 != locked)
-		g_settings_set_boolean (applet_info->settings, PANEL_OBJECT_LOCKED_KEY, locked);
+  locked =
+      panel_widget_get_applet_locked(panel_widget, applet_info->widget) ? 1 : 0;
+  if (g_settings_get_boolean(applet_info->settings, PANEL_OBJECT_LOCKED_KEY)
+          ? 1
+          : 0 != locked)
+    g_settings_set_boolean(applet_info->settings, PANEL_OBJECT_LOCKED_KEY,
+                           locked);
 
-	if (locked) {
-		/* Until position calculations are refactored to fix the issue of the panel applets
-		   getting reordered on resolution changes...
-		   .. don't save position/relative-to-edge on locked applets */
-		return;
-	}
+  if (locked) {
+    /* Until position calculations are refactored to fix the issue of the panel
+       applets getting reordered on resolution changes...
+       .. don't save position/relative-to-edge on locked applets */
+    return;
+  }
 
-	edge_relativity = panel_determine_applet_edge_relativity (applet_info->widget);
-	if (g_settings_is_writable (applet_info->settings, PANEL_OBJECT_RELATIVE_TO_EDGE_KEY) &&
-	    g_settings_get_enum (applet_info->settings, PANEL_OBJECT_RELATIVE_TO_EDGE_KEY) != edge_relativity)
-		g_settings_set_enum (applet_info->settings, PANEL_OBJECT_RELATIVE_TO_EDGE_KEY, edge_relativity);
+  edge_relativity = panel_determine_applet_edge_relativity(applet_info->widget);
+  if (g_settings_is_writable(applet_info->settings,
+                             PANEL_OBJECT_RELATIVE_TO_EDGE_KEY) &&
+      g_settings_get_enum(applet_info->settings,
+                          PANEL_OBJECT_RELATIVE_TO_EDGE_KEY) != edge_relativity)
+    g_settings_set_enum(applet_info->settings,
+                        PANEL_OBJECT_RELATIVE_TO_EDGE_KEY, edge_relativity);
 
-	/*
-	 * If the deprecated `panel-right-stick` setting is set, unset it.
-	 * See the `panel_profile_load_object ()` function in the file
-	 * `panel-profile.c` for a lengthy comment detailing why this is
-	 * done.
-	 */
-	if (g_settings_is_writable (applet_info->settings, PANEL_OBJECT_PANEL_RIGHT_STICK_KEY) &&
-	    g_settings_get_boolean (applet_info->settings, PANEL_OBJECT_PANEL_RIGHT_STICK_KEY))
-		g_settings_set_boolean (applet_info->settings, PANEL_OBJECT_PANEL_RIGHT_STICK_KEY, FALSE);
+  /*
+   * If the deprecated `panel-right-stick` setting is set, unset it.
+   * See the `panel_profile_load_object ()` function in the file
+   * `panel-profile.c` for a lengthy comment detailing why this is
+   * done.
+   */
+  if (g_settings_is_writable(applet_info->settings,
+                             PANEL_OBJECT_PANEL_RIGHT_STICK_KEY) &&
+      g_settings_get_boolean(applet_info->settings,
+                             PANEL_OBJECT_PANEL_RIGHT_STICK_KEY))
+    g_settings_set_boolean(applet_info->settings,
+                           PANEL_OBJECT_PANEL_RIGHT_STICK_KEY, FALSE);
 
-	position = mate_panel_applet_get_position (applet_info);
-	if (!panel_widget->packed) {
-		if (edge_relativity == PANEL_EDGE_CENTER)
-			position -= panel_widget->size/2;
-		else if (edge_relativity == PANEL_EDGE_END)
-			position = panel_widget->size - position;
-	}
+  position = mate_panel_applet_get_position(applet_info);
+  if (!panel_widget->packed) {
+    if (edge_relativity == PANEL_EDGE_CENTER)
+      position -= panel_widget->size / 2;
+    else if (edge_relativity == PANEL_EDGE_END)
+      position = panel_widget->size - position;
+  }
 
-	if (g_settings_is_writable (applet_info->settings, PANEL_OBJECT_POSITION_KEY) &&
-	    g_settings_get_int (applet_info->settings, PANEL_OBJECT_POSITION_KEY) != position)
-		g_settings_set_int (applet_info->settings, PANEL_OBJECT_POSITION_KEY, position);
+  if (g_settings_is_writable(applet_info->settings,
+                             PANEL_OBJECT_POSITION_KEY) &&
+      g_settings_get_int(applet_info->settings, PANEL_OBJECT_POSITION_KEY) !=
+          position)
+    g_settings_set_int(applet_info->settings, PANEL_OBJECT_POSITION_KEY,
+                       position);
 }
 
-const char *
-mate_panel_applet_get_id (AppletInfo *info)
-{
-	if (!info)
-		return NULL;
+const char *mate_panel_applet_get_id(AppletInfo *info) {
+  if (!info) return NULL;
 
-	return info->id;
+  return info->id;
 }
 
-const char *
-mate_panel_applet_get_id_by_widget (GtkWidget *applet_widget)
-{
-	GSList *l;
+const char *mate_panel_applet_get_id_by_widget(GtkWidget *applet_widget) {
+  GSList *l;
 
-	if (!applet_widget)
-		return NULL;
+  if (!applet_widget) return NULL;
 
-	for (l = registered_applets; l; l = l->next) {
-		AppletInfo *info = l->data;
+  for (l = registered_applets; l; l = l->next) {
+    AppletInfo *info = l->data;
 
-		if (info->widget == applet_widget)
-			return info->id;
-	}
+    if (info->widget == applet_widget) return info->id;
+  }
 
-	return NULL;
+  return NULL;
 }
 
-AppletInfo *
-mate_panel_applet_get_by_id (const char *id)
-{
-	GSList *l;
+AppletInfo *mate_panel_applet_get_by_id(const char *id) {
+  GSList *l;
 
-	for (l = registered_applets; l; l = l->next) {
-		AppletInfo *info = l->data;
+  for (l = registered_applets; l; l = l->next) {
+    AppletInfo *info = l->data;
 
-		if (!strcmp (info->id, id))
-			return info;
-	}
+    if (!strcmp(info->id, id)) return info;
+  }
 
-	return NULL;
+  return NULL;
 }
 
-GSList *
-mate_panel_applet_list_applets (void)
-{
-	return registered_applets;
+GSList *mate_panel_applet_list_applets(void) { return registered_applets; }
+
+AppletInfo *mate_panel_applet_get_by_type(PanelObjectType object_type,
+                                          GdkScreen *screen) {
+  GSList *l;
+
+  for (l = registered_applets; l; l = l->next) {
+    AppletInfo *info = l->data;
+
+    if (info->type == object_type) {
+      if (screen) {
+        if (screen == gtk_widget_get_screen(info->widget)) return info;
+      } else
+        return info;
+    }
+  }
+
+  return NULL;
 }
 
-AppletInfo *
-mate_panel_applet_get_by_type (PanelObjectType object_type, GdkScreen *screen)
-{
-	GSList *l;
+AppletInfo *mate_panel_applet_register(GtkWidget *applet, gpointer data,
+                                       GDestroyNotify data_destroy,
+                                       PanelWidget *panel, gboolean locked,
+                                       gint pos, gboolean exactpos,
+                                       PanelObjectType type, const char *id) {
+  AppletInfo *info;
+  gchar *path;
+  gchar *locked_changed;
 
-	for (l = registered_applets; l; l = l->next) {
-		AppletInfo *info = l->data;
+  g_return_val_if_fail(applet != NULL && panel != NULL, NULL);
 
-		if (info->type == object_type) {
-			if (screen) {
-				if (screen == gtk_widget_get_screen (info->widget))
-					return info;
-			} else
-				return info;
-		}
-	}
+  if (gtk_widget_get_has_window(applet))
+    gtk_widget_set_events(
+        applet, (gtk_widget_get_events(applet) | APPLET_EVENT_MASK) &
+                    ~(GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK));
 
-	return NULL;
+  info = g_new0(AppletInfo, 1);
+  info->type = type;
+  info->widget = applet;
+  info->menu = NULL;
+  info->data = data;
+  info->data_destroy = data_destroy;
+  info->user_menu = NULL;
+  info->move_item = NULL;
+  info->id = g_strdup(id);
+
+  path = g_strdup_printf(PANEL_OBJECT_PATH "%s/", id);
+  info->settings = g_settings_new_with_path(PANEL_OBJECT_SCHEMA, path);
+  g_free(path);
+
+  g_object_set_data(G_OBJECT(applet), "applet_info", info);
+
+  if (type != PANEL_OBJECT_APPLET)
+    panel_lockdown_notify_add(G_CALLBACK(mate_panel_applet_recreate_menu),
+                              info);
+
+  locked_changed = g_strdup_printf("changed::%s", PANEL_OBJECT_LOCKED_KEY);
+  g_signal_connect(info->settings, locked_changed,
+                   G_CALLBACK(mate_panel_applet_locked_change_notify),
+                   G_OBJECT(applet));
+  g_free(locked_changed);
+
+  if (type == PANEL_OBJECT_DRAWER) {
+    Drawer *drawer = data;
+    PanelWidget *assoc_panel;
+
+    assoc_panel = panel_toplevel_get_panel_widget(drawer->toplevel);
+
+    g_object_set_data(G_OBJECT(applet), MATE_PANEL_APPLET_ASSOC_PANEL_KEY,
+                      assoc_panel);
+    assoc_panel->master_widget = applet;
+    g_object_add_weak_pointer(G_OBJECT(applet),
+                              (gpointer *)&assoc_panel->master_widget);
+  }
+
+  g_object_set_data(G_OBJECT(applet), MATE_PANEL_APPLET_FORBIDDEN_PANELS, NULL);
+
+  registered_applets = g_slist_append(registered_applets, info);
+
+  if (panel_widget_add(panel, applet, locked, pos, exactpos) == -1 &&
+      panel_widget_add(panel, applet, locked, 0, TRUE) == -1) {
+    GSList *l;
+
+    for (l = panels; l; l = l->next) {
+      panel = PANEL_WIDGET(l->data);
+
+      if (panel_widget_add(panel, applet, locked, 0, TRUE) != -1) break;
+    }
+
+    if (!l) {
+      g_warning(_("Cannot find an empty spot"));
+      panel_profile_delete_object(info);
+      return NULL;
+    }
+  }
+
+  if (BUTTON_IS_WIDGET(applet) || gtk_widget_get_has_window(applet)) {
+    g_signal_connect(applet, "button-press-event",
+                     G_CALLBACK(applet_button_press), info);
+
+    g_signal_connect(applet, "popup-menu", G_CALLBACK(applet_popup_menu), info);
+  }
+
+  g_signal_connect(applet, "destroy", G_CALLBACK(mate_panel_applet_destroy),
+                   info);
+
+  mate_panel_applet_set_dnd_enabled(info, !locked);
+
+  gtk_widget_show_all(applet);
+
+  orientation_change(info, panel);
+  size_change(info, panel);
+  back_change(info, panel);
+
+  if (type != PANEL_OBJECT_APPLET)
+    gtk_widget_grab_focus(applet);
+  else
+    gtk_widget_child_focus(applet, GTK_DIR_TAB_FORWARD);
+
+  return info;
 }
 
-AppletInfo *
-mate_panel_applet_register (GtkWidget       *applet,
-		       gpointer         data,
-		       GDestroyNotify   data_destroy,
-		       PanelWidget     *panel,
-		       gboolean         locked,
-		       gint             pos,
-		       gboolean         exactpos,
-		       PanelObjectType  type,
-		       const char      *id)
-{
-	AppletInfo *info;
-	gchar *path;
-	gchar *locked_changed;
+int mate_panel_applet_get_position(AppletInfo *applet) {
+  AppletData *applet_data;
 
-	g_return_val_if_fail (applet != NULL && panel != NULL, NULL);
+  g_return_val_if_fail(applet != NULL, 0);
+  g_return_val_if_fail(G_IS_OBJECT(applet->widget), 0);
 
-	if (gtk_widget_get_has_window (applet))
-		gtk_widget_set_events (applet, (gtk_widget_get_events (applet) |
-						APPLET_EVENT_MASK) &
-				       ~( GDK_POINTER_MOTION_MASK |
-					  GDK_POINTER_MOTION_HINT_MASK));
+  applet_data =
+      g_object_get_data(G_OBJECT(applet->widget), MATE_PANEL_APPLET_DATA);
 
-	info = g_new0 (AppletInfo, 1);
-	info->type         = type;
-	info->widget       = applet;
-	info->menu         = NULL;
-	info->data         = data;
-	info->data_destroy = data_destroy;
-	info->user_menu    = NULL;
-	info->move_item    = NULL;
-	info->id           = g_strdup (id);
-
-	path = g_strdup_printf (PANEL_OBJECT_PATH "%s/", id);
-	info->settings = g_settings_new_with_path (PANEL_OBJECT_SCHEMA, path);
-	g_free (path);
-
-	g_object_set_data (G_OBJECT (applet), "applet_info", info);
-
-	if (type != PANEL_OBJECT_APPLET)
-		panel_lockdown_notify_add (G_CALLBACK (mate_panel_applet_recreate_menu),
-					   info);
-
-	locked_changed = g_strdup_printf ("changed::%s", PANEL_OBJECT_LOCKED_KEY);
-	g_signal_connect (info->settings,
-					  locked_changed,
-					  G_CALLBACK (mate_panel_applet_locked_change_notify),
-					  G_OBJECT (applet));
-	g_free (locked_changed);
-
-	if (type == PANEL_OBJECT_DRAWER) {
-		Drawer *drawer = data;
-		PanelWidget *assoc_panel;
-
-		assoc_panel = panel_toplevel_get_panel_widget (drawer->toplevel);
-
-		g_object_set_data (G_OBJECT (applet),
-				   MATE_PANEL_APPLET_ASSOC_PANEL_KEY, assoc_panel);
-		assoc_panel->master_widget = applet;
-		g_object_add_weak_pointer (
-			G_OBJECT (applet), (gpointer *) &assoc_panel->master_widget);
-	}
-
-	g_object_set_data (G_OBJECT (applet),
-			   MATE_PANEL_APPLET_FORBIDDEN_PANELS, NULL);
-
-	registered_applets = g_slist_append (registered_applets, info);
-
-	if (panel_widget_add (panel, applet, locked, pos, exactpos) == -1 &&
-	    panel_widget_add (panel, applet, locked, 0, TRUE) == -1) {
-		GSList *l;
-
-		for (l = panels; l; l = l->next) {
-			panel = PANEL_WIDGET (l->data);
-
-			if (panel_widget_add (panel, applet, locked, 0, TRUE) != -1)
-				break;
-		}
-
-		if (!l) {
-			g_warning (_("Cannot find an empty spot"));
-			panel_profile_delete_object (info);
-			return NULL;
-		}
-	}
-
-	if (BUTTON_IS_WIDGET (applet) ||
-	    gtk_widget_get_has_window (applet)) {
-		g_signal_connect (applet, "button-press-event",
-				  G_CALLBACK (applet_button_press),
-				  info);
-
-		g_signal_connect (applet, "popup-menu",
-				  G_CALLBACK (applet_popup_menu),
-				  info);
-	}
-
-	g_signal_connect (applet, "destroy",
-			  G_CALLBACK (mate_panel_applet_destroy),
-			  info);
-
-	mate_panel_applet_set_dnd_enabled (info, !locked);
-
-	gtk_widget_show_all (applet);
-
-	orientation_change (info, panel);
-	size_change (info, panel);
-	back_change (info, panel);
-
-	if (type != PANEL_OBJECT_APPLET)
-		gtk_widget_grab_focus (applet);
-	else
-		gtk_widget_child_focus (applet, GTK_DIR_TAB_FORWARD);
-
-	return info;
+  return applet_data->pos;
 }
 
-int
-mate_panel_applet_get_position (AppletInfo *applet)
-{
-	AppletData *applet_data;
+gboolean mate_panel_applet_can_freely_move(AppletInfo *applet) {
+  if (panel_lockdown_get_locked_down()) return FALSE;
 
-	g_return_val_if_fail (applet != NULL, 0);
-	g_return_val_if_fail (G_IS_OBJECT (applet->widget), 0);
+  if (!g_settings_is_writable(applet->settings, PANEL_OBJECT_POSITION_KEY))
+    return FALSE;
 
-	applet_data = g_object_get_data (G_OBJECT (applet->widget), MATE_PANEL_APPLET_DATA);
+  if (!g_settings_is_writable(applet->settings, PANEL_OBJECT_TOPLEVEL_ID_KEY))
+    return FALSE;
 
-	return applet_data->pos;
+  if (!g_settings_is_writable(applet->settings,
+                              PANEL_OBJECT_RELATIVE_TO_EDGE_KEY))
+    return FALSE;
+
+  return TRUE;
 }
 
-gboolean
-mate_panel_applet_can_freely_move (AppletInfo *applet)
-{
-	if (panel_lockdown_get_locked_down ())
-		return FALSE;
+gboolean mate_panel_applet_lockable(AppletInfo *applet) {
+  if (panel_lockdown_get_locked_down()) return FALSE;
 
-	if (!g_settings_is_writable (applet->settings, PANEL_OBJECT_POSITION_KEY))
-		return FALSE;
-
-	if (!g_settings_is_writable (applet->settings, PANEL_OBJECT_TOPLEVEL_ID_KEY))
-		return FALSE;
-
-	if (!g_settings_is_writable (applet->settings, PANEL_OBJECT_RELATIVE_TO_EDGE_KEY))
-		return FALSE;
-
-	return TRUE;
-}
-
-gboolean
-mate_panel_applet_lockable (AppletInfo *applet)
-{
-	if (panel_lockdown_get_locked_down ())
-		return FALSE;
-
-	return g_settings_is_writable (applet->settings, PANEL_OBJECT_LOCKED_KEY);
+  return g_settings_is_writable(applet->settings, PANEL_OBJECT_LOCKED_KEY);
 }

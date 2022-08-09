@@ -28,138 +28,117 @@
  *	Vincent Untz <vuntz@gnome.org>
  */
 
-#include <string.h>
-
-#include <glib.h>
-
 #include "panel-glib.h"
 
-typedef char * (*LookupInDir) (const char *basename, const char *dir);
+#include <glib.h>
+#include <string.h>
 
-static char *
-_lookup_in_dir (const char *basename,
-		const char *dir)
-{
-	char *path;
+typedef char *(*LookupInDir)(const char *basename, const char *dir);
 
-	path = g_build_filename (dir, basename, NULL);
-	if (!g_file_test (path, G_FILE_TEST_EXISTS)) {
-		g_free (path);
-		return NULL;
-	}
+static char *_lookup_in_dir(const char *basename, const char *dir) {
+  char *path;
 
-	return path;
+  path = g_build_filename(dir, basename, NULL);
+  if (!g_file_test(path, G_FILE_TEST_EXISTS)) {
+    g_free(path);
+    return NULL;
+  }
+
+  return path;
 }
 
-static char *
-_lookup_in_applications_subdir (const char *basename,
-				const char *dir)
-{
-	char *path;
+static char *_lookup_in_applications_subdir(const char *basename,
+                                            const char *dir) {
+  char *path;
 
-	path = g_build_filename (dir, "applications", basename, NULL);
-	if (!g_file_test (path, G_FILE_TEST_EXISTS)) {
-		g_free (path);
-		return NULL;
-	}
+  path = g_build_filename(dir, "applications", basename, NULL);
+  if (!g_file_test(path, G_FILE_TEST_EXISTS)) {
+    g_free(path);
+    return NULL;
+  }
 
-	return path;
+  return path;
 }
 
-static char *
-_panel_g_lookup_in_data_dirs_internal (const char *basename,
-				       LookupInDir lookup)
-{
-	const char * const *system_data_dirs;
-	const char          *user_data_dir;
-	char                *retval;
-	int                  i;
+static char *_panel_g_lookup_in_data_dirs_internal(const char *basename,
+                                                   LookupInDir lookup) {
+  const char *const *system_data_dirs;
+  const char *user_data_dir;
+  char *retval;
+  int i;
 
-	user_data_dir    = g_get_user_data_dir ();
-	system_data_dirs = g_get_system_data_dirs ();
+  user_data_dir = g_get_user_data_dir();
+  system_data_dirs = g_get_system_data_dirs();
 
-	if ((retval = lookup (basename, user_data_dir)))
-		return retval;
+  if ((retval = lookup(basename, user_data_dir))) return retval;
 
-	for (i = 0; system_data_dirs[i]; i++)
-		if ((retval = lookup (basename, system_data_dirs[i])))
-			return retval;
+  for (i = 0; system_data_dirs[i]; i++)
+    if ((retval = lookup(basename, system_data_dirs[i]))) return retval;
 
-	return NULL;
+  return NULL;
 }
 
-char *
-panel_g_lookup_in_data_dirs (const char *basename)
-{
-	return _panel_g_lookup_in_data_dirs_internal (basename,
-						      _lookup_in_dir);
+char *panel_g_lookup_in_data_dirs(const char *basename) {
+  return _panel_g_lookup_in_data_dirs_internal(basename, _lookup_in_dir);
 }
 
-char *
-panel_g_lookup_in_applications_dirs (const char *basename)
-{
-	return _panel_g_lookup_in_data_dirs_internal (basename,
-						      _lookup_in_applications_subdir);
+char *panel_g_lookup_in_applications_dirs(const char *basename) {
+  return _panel_g_lookup_in_data_dirs_internal(basename,
+                                               _lookup_in_applications_subdir);
 }
 
 /* Copied from evolution-data-server/libedataserver/e-util.c:
  * e_util_unicode_get_utf8() */
-static char *
-_unicode_get_utf8 (const char *text, gunichar *out)
-{
-	*out = g_utf8_get_char (text);
-	return (*out == (gunichar)-1) ? NULL : g_utf8_next_char (text);
+static char *_unicode_get_utf8(const char *text, gunichar *out) {
+  *out = g_utf8_get_char(text);
+  return (*out == (gunichar)-1) ? NULL : g_utf8_next_char(text);
 }
 
 /* Copied from evolution-data-server/libedataserver/e-util.c:
  * e_util_utf8_strstrcase() */
-const char *
-panel_g_utf8_strstrcase (const char *haystack, const char *needle)
-{
-	gunichar *nuni;
-	gunichar unival;
-	gint nlen;
-	const char *o, *p;
+const char *panel_g_utf8_strstrcase(const char *haystack, const char *needle) {
+  gunichar *nuni;
+  gunichar unival;
+  gint nlen;
+  const char *o, *p;
 
-	if (haystack == NULL) return NULL;
-	if (needle == NULL) return NULL;
-	if (strlen (needle) == 0) return haystack;
-	if (strlen (haystack) == 0) return NULL;
+  if (haystack == NULL) return NULL;
+  if (needle == NULL) return NULL;
+  if (strlen(needle) == 0) return haystack;
+  if (strlen(haystack) == 0) return NULL;
 
-	nuni = g_alloca (sizeof (gunichar) * strlen (needle));
+  nuni = g_alloca(sizeof(gunichar) * strlen(needle));
 
-	nlen = 0;
-	for (p = _unicode_get_utf8 (needle, &unival);
-	     p && unival;
-	     p = _unicode_get_utf8 (p, &unival)) {
-		nuni[nlen++] = g_unichar_tolower (unival);
-	}
-	/* NULL means there was illegal utf-8 sequence */
-	if (!p) return NULL;
+  nlen = 0;
+  for (p = _unicode_get_utf8(needle, &unival); p && unival;
+       p = _unicode_get_utf8(p, &unival)) {
+    nuni[nlen++] = g_unichar_tolower(unival);
+  }
+  /* NULL means there was illegal utf-8 sequence */
+  if (!p) return NULL;
 
-	o = haystack;
-	for (p = _unicode_get_utf8 (o, &unival);
-	     p && unival;
-	     p = _unicode_get_utf8 (p, &unival)) {
-		gint sc;
-		sc = g_unichar_tolower (unival);
-		/* We have valid stripped char */
-		if (sc == nuni[0]) {
-			const char *q = p;
-			gint npos = 1;
-			while (npos < nlen) {
-				q = _unicode_get_utf8 (q, &unival);
-				if (!q || !unival) return NULL;
-				sc = g_unichar_tolower (unival);
-				if (sc != nuni[npos]) break;
-				npos++;
-			}
-			if (npos == nlen) {
-				return o;
-			}
-		}
-		o = p;
-	}
+  o = haystack;
+  for (p = _unicode_get_utf8(o, &unival); p && unival;
+       p = _unicode_get_utf8(p, &unival)) {
+    gint sc;
+    sc = g_unichar_tolower(unival);
+    /* We have valid stripped char */
+    if (sc == nuni[0]) {
+      const char *q = p;
+      gint npos = 1;
+      while (npos < nlen) {
+        q = _unicode_get_utf8(q, &unival);
+        if (!q || !unival) return NULL;
+        sc = g_unichar_tolower(unival);
+        if (sc != nuni[npos]) break;
+        npos++;
+      }
+      if (npos == nlen) {
+        return o;
+      }
+    }
+    o = p;
+  }
 
-	return NULL;
+  return NULL;
 }

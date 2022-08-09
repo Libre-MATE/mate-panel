@@ -26,28 +26,26 @@
 #ifndef __PANEL_LOCKDOWN_H__
 #define __PANEL_LOCKDOWN_H__
 
-#include <glib.h>
 #include <glib-object.h>
+#include <glib.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void panel_lockdown_init     (void);
-void panel_lockdown_finalize (void);
+void panel_lockdown_init(void);
+void panel_lockdown_finalize(void);
 
-gboolean panel_lockdown_get_locked_down          (void);
-gboolean panel_lockdown_get_disable_command_line (void);
-gboolean panel_lockdown_get_disable_lock_screen  (void);
-gboolean panel_lockdown_get_disable_log_out      (void);
-gboolean panel_lockdown_get_disable_force_quit   (void);
+gboolean panel_lockdown_get_locked_down(void);
+gboolean panel_lockdown_get_disable_command_line(void);
+gboolean panel_lockdown_get_disable_lock_screen(void);
+gboolean panel_lockdown_get_disable_log_out(void);
+gboolean panel_lockdown_get_disable_force_quit(void);
 
-gboolean panel_lockdown_is_applet_disabled (const char *iid);
+gboolean panel_lockdown_is_applet_disabled(const char *iid);
 
-void panel_lockdown_notify_add    (GCallback callback_func,
-                                   gpointer  user_data);
-void panel_lockdown_notify_remove (GCallback callback_func,
-                                   gpointer  user_data);
+void panel_lockdown_notify_add(GCallback callback_func, gpointer user_data);
+void panel_lockdown_notify_remove(GCallback callback_func, gpointer user_data);
 
 #ifdef __cplusplus
 }

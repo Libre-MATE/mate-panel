@@ -23,31 +23,27 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_HOST            (na_host_get_type ())
-#define NA_HOST(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), NA_TYPE_HOST, NaHost))
-#define NA_IS_HOST(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), NA_TYPE_HOST))
-#define NA_HOST_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), NA_TYPE_HOST, NaHostInterface))
+#define NA_TYPE_HOST (na_host_get_type())
+#define NA_HOST(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), NA_TYPE_HOST, NaHost))
+#define NA_IS_HOST(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), NA_TYPE_HOST))
+#define NA_HOST_GET_IFACE(obj) \
+  (G_TYPE_INSTANCE_GET_INTERFACE((obj), NA_TYPE_HOST, NaHostInterface))
 
-typedef struct _NaHost          NaHost;
+typedef struct _NaHost NaHost;
 typedef struct _NaHostInterface NaHostInterface;
 
-struct _NaHostInterface
-{
+struct _NaHostInterface {
   GTypeInterface parent;
 
-  void (*force_redraw)         (NaHost          *host);
-  void (*style_updated)        (NaHost          *host,
-                                GtkStyleContext *context);
+  void (*force_redraw)(NaHost *host);
+  void (*style_updated)(NaHost *host, GtkStyleContext *context);
 };
 
-GType   na_host_get_type          (void);
-void    na_host_force_redraw      (NaHost          *host);
-void    na_host_style_updated     (NaHost          *host,
-                                   GtkStyleContext *context);
-void    na_host_emit_item_added   (NaHost          *host,
-                                   NaItem          *item);
-void    na_host_emit_item_removed (NaHost          *host,
-                                   NaItem          *item);
+GType na_host_get_type(void);
+void na_host_force_redraw(NaHost *host);
+void na_host_style_updated(NaHost *host, GtkStyleContext *context);
+void na_host_emit_item_added(NaHost *host, NaItem *item);
+void na_host_emit_item_removed(NaHost *host, NaItem *item);
 
 G_END_DECLS
 

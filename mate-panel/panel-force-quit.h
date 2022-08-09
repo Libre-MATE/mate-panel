@@ -38,8 +38,7 @@
 extern "C" {
 #endif
 
-void panel_force_quit (GdkScreen *screen,
-		       guint      time);
+void panel_force_quit(GdkScreen *screen, guint time);
 
 #ifdef __cplusplus
 }

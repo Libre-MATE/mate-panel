@@ -24,53 +24,46 @@
 #ifndef __MENU_H__
 #define __MENU_H__
 
-#include "panel-widget.h"
-#include "applet.h"
 #include <gio/gio.h>
+
+#include "applet.h"
+#include "panel-widget.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void		setup_menuitem		  (GtkWidget        *menuitem,
-					   GtkIconSize       icon_size,
-					   GtkWidget        *pixmap,
-					   const char       *title);
-void            setup_menuitem_with_icon (GtkWidget         *menuitem,
-					  GtkIconSize       icon_size,
-					  GIcon             *gicon,
-					  const char        *image_filename,
-					  const char        *title);
+void setup_menuitem(GtkWidget *menuitem, GtkIconSize icon_size,
+                    GtkWidget *pixmap, const char *title);
+void setup_menuitem_with_icon(GtkWidget *menuitem, GtkIconSize icon_size,
+                              GIcon *gicon, const char *image_filename,
+                              const char *title);
 
-GtkWidget      *create_empty_menu         (void);
-GtkWidget      *create_applications_menu  (const char  *menu_file,
-					   const char  *menu_path,
-					   gboolean    always_show_image);
-GtkWidget      *create_main_menu          (PanelWidget *panel);
+GtkWidget *create_empty_menu(void);
+GtkWidget *create_applications_menu(const char *menu_file,
+                                    const char *menu_path,
+                                    gboolean always_show_image);
+GtkWidget *create_main_menu(PanelWidget *panel);
 
-void		setup_internal_applet_drag (GtkWidget             *menuitem,
-					    PanelActionButtonType  type);
-void            setup_uri_drag             (GtkWidget  *menuitem,
-					    const char *uri,
-					    const char *icon,
-						GdkDragAction action);
+void setup_internal_applet_drag(GtkWidget *menuitem,
+                                PanelActionButtonType type);
+void setup_uri_drag(GtkWidget *menuitem, const char *uri, const char *icon,
+                    GdkDragAction action);
 
-GtkWidget *	panel_create_menu              (void);
+GtkWidget *panel_create_menu(void);
 
-GtkWidget *	panel_image_menu_item_new      (void);
+GtkWidget *panel_image_menu_item_new(void);
 
-GdkPixbuf *	panel_make_menu_icon (GtkIconTheme *icon_theme,
-				      const char   *icon,
-				      const char   *fallback,
-				      int           size,
-				      gboolean     *long_operation);
+GdkPixbuf *panel_make_menu_icon(GtkIconTheme *icon_theme, const char *icon,
+                                const char *fallback, int size,
+                                gboolean *long_operation);
 
-GdkScreen      *menuitem_to_screen   (GtkWidget *menuitem);
-PanelWidget    *menu_get_panel       (GtkWidget *menu);
-GtkWidget      *add_menu_separator   (GtkWidget *menu);
+GdkScreen *menuitem_to_screen(GtkWidget *menuitem);
+PanelWidget *menu_get_panel(GtkWidget *menu);
+GtkWidget *add_menu_separator(GtkWidget *menu);
 
-gboolean menu_dummy_button_press_event (GtkWidget      *menuitem,
-					GdkEventButton *event);
+gboolean menu_dummy_button_press_event(GtkWidget *menuitem,
+                                       GdkEventButton *event);
 
 #ifdef __cplusplus
 }

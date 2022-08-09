@@ -34,43 +34,36 @@
 extern "C" {
 #endif
 
-GKeyFile *panel_key_file_new_desktop  (void);
-gboolean  panel_key_file_to_file      (GKeyFile       *keyfile,
-				       const gchar    *file,
-				       GError        **error);
-gboolean panel_key_file_load_from_uri (GKeyFile       *keyfile,
-				       const gchar    *uri,
-				       GKeyFileFlags   flags,
-				       GError        **error);
+GKeyFile *panel_key_file_new_desktop(void);
+gboolean panel_key_file_to_file(GKeyFile *keyfile, const gchar *file,
+                                GError **error);
+gboolean panel_key_file_load_from_uri(GKeyFile *keyfile, const gchar *uri,
+                                      GKeyFileFlags flags, GError **error);
 
-gboolean panel_key_file_copy_and_mark_trusted (const char  *source_path,
-					       const char  *target_path,
-					       GError     **error);
+gboolean panel_key_file_copy_and_mark_trusted(const char *source_path,
+                                              const char *target_path,
+                                              GError **error);
 
-gboolean panel_key_file_get_boolean   (GKeyFile       *keyfile,
-				       const gchar    *key,
-				       gboolean        default_value);
+gboolean panel_key_file_get_boolean(GKeyFile *keyfile, const gchar *key,
+                                    gboolean default_value);
 #define panel_key_file_get_string(key_file, key) \
-	 g_key_file_get_string (key_file, G_KEY_FILE_DESKTOP_GROUP, key, NULL)
-#define panel_key_file_get_locale_string(key_file, key) \
-	 g_key_file_get_locale_string(key_file, G_KEY_FILE_DESKTOP_GROUP, key, NULL, NULL)
+  g_key_file_get_string(key_file, G_KEY_FILE_DESKTOP_GROUP, key, NULL)
+#define panel_key_file_get_locale_string(key_file, key)                       \
+  g_key_file_get_locale_string(key_file, G_KEY_FILE_DESKTOP_GROUP, key, NULL, \
+                               NULL)
 
 #define panel_key_file_set_boolean(key_file, key, value) \
-	 g_key_file_set_boolean (key_file, G_KEY_FILE_DESKTOP_GROUP, key, value)
+  g_key_file_set_boolean(key_file, G_KEY_FILE_DESKTOP_GROUP, key, value)
 #define panel_key_file_set_string(key_file, key, value) \
-	 g_key_file_set_string (key_file, G_KEY_FILE_DESKTOP_GROUP, key, value)
-void    panel_key_file_set_locale_string (GKeyFile    *keyfile,
-					  const gchar *key,
-					  const gchar *value);
+  g_key_file_set_string(key_file, G_KEY_FILE_DESKTOP_GROUP, key, value)
+void panel_key_file_set_locale_string(GKeyFile *keyfile, const gchar *key,
+                                      const gchar *value);
 
 #define panel_key_file_remove_key(key_file, key) \
-	g_key_file_remove_key (key_file, G_KEY_FILE_DESKTOP_GROUP, key, NULL)
-void panel_key_file_remove_locale_key (GKeyFile    *keyfile,
-				       const gchar *key);
-void panel_key_file_remove_all_locale_key (GKeyFile    *keyfile,
-					   const gchar *key);
-void panel_key_file_ensure_C_key      (GKeyFile   *keyfile,
-				       const char *key);
+  g_key_file_remove_key(key_file, G_KEY_FILE_DESKTOP_GROUP, key, NULL)
+void panel_key_file_remove_locale_key(GKeyFile *keyfile, const gchar *key);
+void panel_key_file_remove_all_locale_key(GKeyFile *keyfile, const gchar *key);
+void panel_key_file_ensure_C_key(GKeyFile *keyfile, const char *key);
 
 #ifdef __cplusplus
 }

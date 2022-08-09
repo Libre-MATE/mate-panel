@@ -31,30 +31,25 @@
 #endif
 
 #include <glib.h>
+
 #include "panel-toplevel.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-gboolean panel_struts_register_strut           (PanelToplevel    *toplevel,
-                                                GdkScreen        *screen,
-                                                int               monitor,
-                                                PanelOrientation  orientation,
-                                                int               strut_size,
-                                                int               strut_start,
-                                                int               strut_end);
+gboolean panel_struts_register_strut(PanelToplevel *toplevel, GdkScreen *screen,
+                                     int monitor, PanelOrientation orientation,
+                                     int strut_size, int strut_start,
+                                     int strut_end);
 
-void     panel_struts_unregister_strut         (PanelToplevel    *toplevel);
+void panel_struts_unregister_strut(PanelToplevel *toplevel);
 
-void     panel_struts_set_window_hint          (PanelToplevel    *toplevel);
-void     panel_struts_unset_window_hint        (PanelToplevel    *toplevel);
+void panel_struts_set_window_hint(PanelToplevel *toplevel);
+void panel_struts_unset_window_hint(PanelToplevel *toplevel);
 
-gboolean panel_struts_update_toplevel_geometry (PanelToplevel    *toplevel,
-                                                int              *x,
-                                                int              *y,
-                                                int              *w,
-                                                int              *h);
+gboolean panel_struts_update_toplevel_geometry(PanelToplevel *toplevel, int *x,
+                                               int *y, int *w, int *h);
 
 #ifdef __cplusplus
 }

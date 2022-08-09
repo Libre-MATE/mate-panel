@@ -32,8 +32,8 @@
 extern "C" {
 #endif
 
-extern GSList         *panels;
-extern GSList         *panel_list;
+extern GSList *panels;
+extern GSList *panel_list;
 
 #ifdef __cplusplus
 }

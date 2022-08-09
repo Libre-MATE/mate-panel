@@ -30,23 +30,25 @@
 
 G_BEGIN_DECLS
 
-#define PANEL_TYPE_SESSION_MANAGER		(panel_session_manager_get_type ())
-G_DECLARE_FINAL_TYPE (PanelSessionManager, panel_session_manager, PANEL, SESSION_MANAGER, GObject);
+#define PANEL_TYPE_SESSION_MANAGER (panel_session_manager_get_type())
+G_DECLARE_FINAL_TYPE(PanelSessionManager, panel_session_manager, PANEL,
+                     SESSION_MANAGER, GObject);
 
 /* Keep in sync with the values defined in mate-session/session.h */
 typedef enum {
-	PANEL_SESSION_MANAGER_LOGOUT_MODE_NORMAL = 0,
-	PANEL_SESSION_MANAGER_LOGOUT_MODE_NO_CONFIRMATION,
-	PANEL_SESSION_MANAGER_LOGOUT_MODE_FORCE
+  PANEL_SESSION_MANAGER_LOGOUT_MODE_NORMAL = 0,
+  PANEL_SESSION_MANAGER_LOGOUT_MODE_NO_CONFIRMATION,
+  PANEL_SESSION_MANAGER_LOGOUT_MODE_FORCE
 } PanelSessionManagerLogoutType;
 
-PanelSessionManager *panel_session_manager_get (void);
+PanelSessionManager *panel_session_manager_get(void);
 
-void panel_session_manager_request_logout   (PanelSessionManager           *session,
-					     PanelSessionManagerLogoutType  mode);
-void panel_session_manager_request_shutdown (PanelSessionManager *session);
+void panel_session_manager_request_logout(PanelSessionManager *session,
+                                          PanelSessionManagerLogoutType mode);
+void panel_session_manager_request_shutdown(PanelSessionManager *session);
 
-gboolean panel_session_manager_is_shutdown_available (PanelSessionManager *session);
+gboolean panel_session_manager_is_shutdown_available(
+    PanelSessionManager *session);
 
 G_END_DECLS
 

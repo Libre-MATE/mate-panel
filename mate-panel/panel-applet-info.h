@@ -32,23 +32,22 @@ extern "C" {
 
 typedef struct _MatePanelAppletInfo MatePanelAppletInfo;
 
-MatePanelAppletInfo *mate_panel_applet_info_new (const gchar  *iid,
-						 const gchar  *name,
-						 const gchar  *comment,
-						 const gchar  *icon,
-						 const gchar **old_ids,
-						 gboolean      x11_supported,
-						 gboolean      wayland_supported);
+MatePanelAppletInfo *mate_panel_applet_info_new(
+    const gchar *iid, const gchar *name, const gchar *comment,
+    const gchar *icon, const gchar **old_ids, gboolean x11_supported,
+    gboolean wayland_supported);
 
-void             mate_panel_applet_info_free                            (gpointer data);
+void mate_panel_applet_info_free(gpointer data);
 
-const gchar     *mate_panel_applet_info_get_iid                         (MatePanelAppletInfo *info);
-const gchar     *mate_panel_applet_info_get_name                        (MatePanelAppletInfo *info);
-const gchar     *mate_panel_applet_info_get_description                 (MatePanelAppletInfo *info);
-const gchar     *mate_panel_applet_info_get_icon                        (MatePanelAppletInfo *info);
-const gchar * const *mate_panel_applet_info_get_old_ids                 (MatePanelAppletInfo *info);
-gboolean         mate_panel_applet_info_get_x11_supported               (MatePanelAppletInfo *info);
-gboolean         mate_panel_applet_info_get_wayland_supported           (MatePanelAppletInfo *info);
+const gchar *mate_panel_applet_info_get_iid(MatePanelAppletInfo *info);
+const gchar *mate_panel_applet_info_get_name(MatePanelAppletInfo *info);
+const gchar *mate_panel_applet_info_get_description(MatePanelAppletInfo *info);
+const gchar *mate_panel_applet_info_get_icon(MatePanelAppletInfo *info);
+const gchar *const *mate_panel_applet_info_get_old_ids(
+    MatePanelAppletInfo *info);
+gboolean mate_panel_applet_info_get_x11_supported(MatePanelAppletInfo *info);
+gboolean mate_panel_applet_info_get_wayland_supported(
+    MatePanelAppletInfo *info);
 
 #ifdef __cplusplus
 }

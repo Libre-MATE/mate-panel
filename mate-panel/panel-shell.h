@@ -32,7 +32,7 @@
 
 #include <glib.h>
 
-gboolean panel_shell_register (gboolean replace);
-void     panel_shell_quit     (void);
+gboolean panel_shell_register(gboolean replace);
+void panel_shell_quit(void);
 
 #endif /* __PANEL_SHELL_H__ */

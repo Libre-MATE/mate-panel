@@ -33,21 +33,15 @@
 extern "C" {
 #endif
 
-gboolean panel_show_uri (GdkScreen    *screen,
-			 const gchar  *uri,
-			 guint32       timestamp,
-			 GError      **error);
+gboolean panel_show_uri(GdkScreen *screen, const gchar *uri, guint32 timestamp,
+                        GError **error);
 
-gboolean panel_show_uri_force_mime_type (GdkScreen    *screen,
-					 const gchar  *uri,
-					 const gchar  *mime_type,
-					 guint32       timestamp,
-					 GError      **error);
+gboolean panel_show_uri_force_mime_type(GdkScreen *screen, const gchar *uri,
+                                        const gchar *mime_type,
+                                        guint32 timestamp, GError **error);
 
-gboolean panel_show_help (GdkScreen    *screen,
-			  const gchar  *doc,
-			  const gchar  *link,
-			  GError      **error);
+gboolean panel_show_help(GdkScreen *screen, const gchar *doc, const gchar *link,
+                         GError **error);
 
 #ifdef __cplusplus
 }

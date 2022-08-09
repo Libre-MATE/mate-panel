@@ -32,9 +32,9 @@
 extern "C" {
 #endif
 
-void panel_recent_append_documents_menu (GtkWidget        *menu,
-					 GtkRecentManager *manager,
-					 int               recent_items_limit);
+void panel_recent_append_documents_menu(GtkWidget *menu,
+                                        GtkRecentManager *manager,
+                                        int recent_items_limit);
 
 #ifdef __cplusplus
 }

@@ -23,40 +23,37 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_ITEM            (na_item_get_type ())
-#define NA_ITEM(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), NA_TYPE_ITEM, NaItem))
-#define NA_IS_ITEM(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), NA_TYPE_ITEM))
-#define NA_ITEM_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), NA_TYPE_ITEM, NaItemInterface))
+#define NA_TYPE_ITEM (na_item_get_type())
+#define NA_ITEM(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), NA_TYPE_ITEM, NaItem))
+#define NA_IS_ITEM(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), NA_TYPE_ITEM))
+#define NA_ITEM_GET_IFACE(obj) \
+  (G_TYPE_INSTANCE_GET_INTERFACE((obj), NA_TYPE_ITEM, NaItemInterface))
 
-typedef struct _NaItem          NaItem;
+typedef struct _NaItem NaItem;
 typedef struct _NaItemInterface NaItemInterface;
 
-typedef enum
-{
+typedef enum {
   NA_ITEM_CATEGORY_APPLICATION_STATUS,
   NA_ITEM_CATEGORY_COMMUNICATIONS,
   NA_ITEM_CATEGORY_SYSTEM_SERVICES,
   NA_ITEM_CATEGORY_HARDWARE,
 } NaItemCategory;
 
-struct _NaItemInterface
-{
+struct _NaItemInterface {
   GTypeInterface g_iface;
 
-  const gchar *   (* get_id)              (NaItem *item);
-  NaItemCategory  (* get_category)        (NaItem *item);
+  const gchar *(*get_id)(NaItem *item);
+  NaItemCategory (*get_category)(NaItem *item);
 
-  gboolean        (* draw_on_parent)      (NaItem    *item,
-                                           GtkWidget *parent,
-                                           cairo_t   *parent_cr);
+  gboolean (*draw_on_parent)(NaItem *item, GtkWidget *parent,
+                             cairo_t *parent_cr);
 };
 
-GType           na_item_get_type        (void);
-const gchar    *na_item_get_id          (NaItem *item);
-NaItemCategory  na_item_get_category    (NaItem *item);
-gboolean        na_item_draw_on_parent  (NaItem    *item,
-                                         GtkWidget *parent,
-                                         cairo_t   *parent_cr);
+GType na_item_get_type(void);
+const gchar *na_item_get_id(NaItem *item);
+NaItemCategory na_item_get_category(NaItem *item);
+gboolean na_item_draw_on_parent(NaItem *item, GtkWidget *parent,
+                                cairo_t *parent_cr);
 
 G_END_DECLS
 

@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-void panel_properties_dialog_present (PanelToplevel *toplevel);
+void panel_properties_dialog_present(PanelToplevel *toplevel);
 
 #ifdef __cplusplus
 }

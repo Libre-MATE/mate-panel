@@ -35,20 +35,19 @@ extern "C" {
 
 /* Needs to match the indices in the combo of the prefs dialog */
 typedef enum {
-	CLOCK_FORMAT_INVALID = 0,
-	CLOCK_FORMAT_12,
-	CLOCK_FORMAT_24,
-	CLOCK_FORMAT_UNIX,
-	CLOCK_FORMAT_INTERNET,
-	CLOCK_FORMAT_CUSTOM
+  CLOCK_FORMAT_INVALID = 0,
+  CLOCK_FORMAT_12,
+  CLOCK_FORMAT_24,
+  CLOCK_FORMAT_UNIX,
+  CLOCK_FORMAT_INTERNET,
+  CLOCK_FORMAT_CUSTOM
 } ClockFormat;
 
-gboolean clock_locale_supports_am_pm (void);
-ClockFormat clock_locale_format (void);
+gboolean clock_locale_supports_am_pm(void);
+ClockFormat clock_locale_format(void);
 
-void clock_utils_display_help (GtkWidget  *widget,
-			       const char *doc_id,
-			       const char *link_id);
+void clock_utils_display_help(GtkWidget *widget, const char *doc_id,
+                              const char *link_id);
 
 #ifdef __cplusplus
 }

@@ -32,10 +32,9 @@
 extern "C" {
 #endif
 
-char *panel_xdg_icon_remove_extension (const char *icon);
+char *panel_xdg_icon_remove_extension(const char *icon);
 
-char *panel_xdg_icon_name_from_icon_path (const char *path,
-					  GdkScreen  *screen);
+char *panel_xdg_icon_name_from_icon_path(const char *path, GdkScreen *screen);
 
 #ifdef __cplusplus
 }

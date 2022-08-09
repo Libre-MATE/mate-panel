@@ -26,13 +26,13 @@
 #ifndef __PANEL_LAYOUT_H__
 #define __PANEL_LAYOUT_H__
 
-#include <glib.h>
-#include <gio/gio.h>
 #include <gdk/gdk.h>
+#include <gio/gio.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 
-void        panel_layout_apply_default_from_gkeyfile (GdkScreen *screen);
+void panel_layout_apply_default_from_gkeyfile(GdkScreen *screen);
 
 G_END_DECLS
 

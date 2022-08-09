@@ -37,36 +37,33 @@
 
 G_BEGIN_DECLS
 
-#define NA_TYPE_TRAY			(na_tray_get_type ())
-#define NA_TRAY(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), NA_TYPE_TRAY, NaTray))
-#define NA_TRAY_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), NA_TYPE_TRAY, NaTrayClass))
-#define NA_IS_TRAY(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), NA_TYPE_TRAY))
-#define NA_IS_TRAY_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE ((klass), NA_TYPE_TRAY))
-#define NA_TRAY_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), NA_TYPE_TRAY, NaTrayClass))
+#define NA_TYPE_TRAY (na_tray_get_type())
+#define NA_TRAY(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), NA_TYPE_TRAY, NaTray))
+#define NA_TRAY_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), NA_TYPE_TRAY, NaTrayClass))
+#define NA_IS_TRAY(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), NA_TYPE_TRAY))
+#define NA_IS_TRAY_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), NA_TYPE_TRAY))
+#define NA_TRAY_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), NA_TYPE_TRAY, NaTrayClass))
 
-typedef struct _NaTray		NaTray;
-typedef struct _NaTrayPrivate	NaTrayPrivate;
-typedef struct _NaTrayClass	NaTrayClass;
+typedef struct _NaTray NaTray;
+typedef struct _NaTrayPrivate NaTrayPrivate;
+typedef struct _NaTrayClass NaTrayClass;
 
-struct _NaTray
-{
+struct _NaTray {
   GObject parent_instance;
 
   NaTrayPrivate *priv;
 };
 
-struct _NaTrayClass
-{
+struct _NaTrayClass {
   GObjectClass parent_class;
 };
 
-GType           na_tray_get_type        (void);
-NaHost         *na_tray_new_for_screen  (GdkScreen     *screen,
-					 GtkOrientation orientation);
-void            na_tray_set_padding     (NaTray        *tray,
-					 gint           padding);
-void            na_tray_set_icon_size   (NaTray        *tray,
-					 gint           icon_size);
+GType na_tray_get_type(void);
+NaHost *na_tray_new_for_screen(GdkScreen *screen, GtkOrientation orientation);
+void na_tray_set_padding(NaTray *tray, gint padding);
+void na_tray_set_icon_size(NaTray *tray, gint icon_size);
 
 G_END_DECLS
 

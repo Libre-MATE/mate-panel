@@ -36,7 +36,7 @@
 
 G_BEGIN_DECLS
 
-void panel_action_protocol_init (void);
+void panel_action_protocol_init(void);
 
 G_END_DECLS
 

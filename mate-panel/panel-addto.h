@@ -27,14 +27,14 @@
 #define __PANEL_ADDTO_H__
 
 #include <gtk/gtk.h>
+
 #include "panel-widget.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void panel_addto_present                    (GtkMenuItem *item,
-					     PanelWidget *panel_widget);
+void panel_addto_present(GtkMenuItem *item, PanelWidget *panel_widget);
 
 #ifdef __cplusplus
 }

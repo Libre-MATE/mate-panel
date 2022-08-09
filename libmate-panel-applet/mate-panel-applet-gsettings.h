@@ -26,20 +26,22 @@
 #ifndef __MATE_PANEL_APPLET_GSETTINGS_H__
 #define __MATE_PANEL_APPLET_GSETTINGS_H__
 
-#include <glib.h>
 #include <gio/gio.h>
-
+#include <glib.h>
 #include <mate-panel-applet.h>
 
 #define PANEL_OBJECT_PREFS_PATH "/org/mate/panel/objects/%s/prefs"
 
 G_BEGIN_DECLS
 
-GSettings* mate_panel_applet_settings_new (MatePanelApplet *applet, gchar *schema);
-GList*     mate_panel_applet_settings_get_glist (GSettings *settings, gchar *key);
-void       mate_panel_applet_settings_set_glist (GSettings *settings, gchar *key, GList *list);
-GSList*    mate_panel_applet_settings_get_gslist (GSettings *settings, gchar *key);
-void       mate_panel_applet_settings_set_gslist (GSettings *settings, gchar *key, GSList *list);
+GSettings *mate_panel_applet_settings_new(MatePanelApplet *applet,
+                                          gchar *schema);
+GList *mate_panel_applet_settings_get_glist(GSettings *settings, gchar *key);
+void mate_panel_applet_settings_set_glist(GSettings *settings, gchar *key,
+                                          GList *list);
+GSList *mate_panel_applet_settings_get_gslist(GSettings *settings, gchar *key);
+void mate_panel_applet_settings_set_gslist(GSettings *settings, gchar *key,
+                                           GSList *list);
 
 G_END_DECLS
 

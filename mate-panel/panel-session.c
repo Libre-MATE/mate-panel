@@ -24,61 +24,53 @@
  */
 
 #include <config.h>
-#include <stdlib.h>
 #include <libegg/eggsmclient.h>
+#include <stdlib.h>
 
 #ifdef HAVE_X11
 #include "xstuff.h"
 #endif
 
-#include "panel-shell.h"
 #include "panel-session.h"
+#include "panel-shell.h"
 
 static gboolean do_not_restart = FALSE;
 
-static void
-panel_session_handle_quit (EggSMClient *client,
-			   gpointer     data)
-{
-	panel_shell_quit ();
+static void panel_session_handle_quit(EggSMClient *client, gpointer data) {
+  panel_shell_quit();
 }
 
-void
-panel_session_do_not_restart (void)
-{
-	do_not_restart = TRUE;
+void panel_session_do_not_restart(void) {
+  do_not_restart = TRUE;
 
-	if (egg_sm_client_get_mode () != EGG_SM_CLIENT_MODE_DISABLED)
-		egg_sm_client_set_mode (EGG_SM_CLIENT_MODE_NO_RESTART);
+  if (egg_sm_client_get_mode() != EGG_SM_CLIENT_MODE_DISABLED)
+    egg_sm_client_set_mode(EGG_SM_CLIENT_MODE_NO_RESTART);
 }
 
-void
-panel_session_init (void)
-{
-	EggSMClientMode  mode;
-	EggSMClient     *client;
+void panel_session_init(void) {
+  EggSMClientMode mode;
+  EggSMClient *client;
 
-	/* Explicitly tell the session manager we're ready -- we don't do it
-	 * before. Note: this depends on setting the mode to DISABLED early
-	 * during startup. */
+  /* Explicitly tell the session manager we're ready -- we don't do it
+   * before. Note: this depends on setting the mode to DISABLED early
+   * during startup. */
 
-        if (do_not_restart || getenv ("MATE_PANEL_DEBUG"))
-		mode = EGG_SM_CLIENT_MODE_NO_RESTART;
-	else
-		mode = EGG_SM_CLIENT_MODE_NORMAL;
+  if (do_not_restart || getenv("MATE_PANEL_DEBUG"))
+    mode = EGG_SM_CLIENT_MODE_NO_RESTART;
+  else
+    mode = EGG_SM_CLIENT_MODE_NORMAL;
 
-	egg_sm_client_set_mode (mode);
+  egg_sm_client_set_mode(mode);
 
-	client = egg_sm_client_get ();
+  client = egg_sm_client_get();
 
-	g_signal_connect (client, "quit",
-			  G_CALLBACK (panel_session_handle_quit), NULL);
+  g_signal_connect(client, "quit", G_CALLBACK(panel_session_handle_quit), NULL);
 
 #ifdef HAVE_X11
-	if (is_using_x11 ()) {
-		/* We don't want the X WM to try and save/restore our
-		* window position */
-		gdk_x11_set_sm_client_id (NULL);
-	}
+  if (is_using_x11()) {
+    /* We don't want the X WM to try and save/restore our
+     * window position */
+    gdk_x11_set_sm_client_id(NULL);
+  }
 #endif
 }

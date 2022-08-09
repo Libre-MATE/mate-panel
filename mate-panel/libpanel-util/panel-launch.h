@@ -26,40 +26,32 @@
 #ifndef PANEL_LAUNCH_H
 #define PANEL_LAUNCH_H
 
-#include <gio/gdesktopappinfo.h>
 #include <gdk/gdk.h>
+#include <gio/gdesktopappinfo.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-gboolean panel_app_info_launch_uris (GDesktopAppInfo   *appinfo,
-				     GList      *uris,
-				     GdkScreen  *screen,
-				     const gchar *action,
-				     guint32     timestamp,
-				     GError    **error);
+gboolean panel_app_info_launch_uris(GDesktopAppInfo *appinfo, GList *uris,
+                                    GdkScreen *screen, const gchar *action,
+                                    guint32 timestamp, GError **error);
 
-gboolean panel_app_info_launch_uri (GDesktopAppInfo     *appinfo,
-				    const gchar  *uri,
-				    GdkScreen    *screen,
-				    guint32       timestamp,
-				    GError      **error);
+gboolean panel_app_info_launch_uri(GDesktopAppInfo *appinfo, const gchar *uri,
+                                   GdkScreen *screen, guint32 timestamp,
+                                   GError **error);
 
-gboolean panel_launch_key_file (GKeyFile   *keyfile,
-				GList      *uri_list,
-				GdkScreen  *screen,
-				const gchar *action,
-				GError    **error);
+gboolean panel_launch_key_file(GKeyFile *keyfile, GList *uri_list,
+                               GdkScreen *screen, const gchar *action,
+                               GError **error);
 
-gboolean panel_launch_desktop_file (const char  *desktop_file,
-				    GdkScreen   *screen,
-				    GError     **error);
+gboolean panel_launch_desktop_file(const char *desktop_file, GdkScreen *screen,
+                                   GError **error);
 
-gboolean panel_launch_desktop_file_with_fallback (const char  *desktop_file,
-						  const char  *fallback_exec,
-						  GdkScreen   *screen,
-						  GError     **error);
+gboolean panel_launch_desktop_file_with_fallback(const char *desktop_file,
+                                                 const char *fallback_exec,
+                                                 GdkScreen *screen,
+                                                 GError **error);
 
 #ifdef __cplusplus
 }

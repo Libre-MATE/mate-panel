@@ -36,11 +36,14 @@ extern "C" {
 
 typedef struct _WnckScreen WnckScreen;
 
-void wncklet_display_help(GtkWidget* widget, const char* doc_id, const char* link_id, const char* icon_name);
+void wncklet_display_help(GtkWidget* widget, const char* doc_id,
+                          const char* link_id, const char* icon_name);
 
 WnckScreen* wncklet_get_screen(GtkWidget* applet);
 
-void wncklet_connect_while_alive(gpointer object, const char* signal, GCallback func, gpointer func_data, gpointer alive_object);
+void wncklet_connect_while_alive(gpointer object, const char* signal,
+                                 GCallback func, gpointer func_data,
+                                 gpointer alive_object);
 
 #ifdef __cplusplus
 }

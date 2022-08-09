@@ -8,22 +8,20 @@
 #endif
 
 #include <gdk/gdk.h>
-#include <gtk/gtk.h>
-
 #include <gdk/gdkx.h>
+#include <gtk/gtk.h>
 #include <gtk/gtkx.h>
 
 #include "panel-enums-gsettings.h"
 
-gboolean is_using_x11                   (void);
+gboolean is_using_x11(void);
 
-void xstuff_zoom_animate                (GtkWidget        *widget,
-					 cairo_surface_t  *surface,
-					 PanelOrientation  orientation,
-					 GdkRectangle     *opt_src_rect);
+void xstuff_zoom_animate(GtkWidget *widget, cairo_surface_t *surface,
+                         PanelOrientation orientation,
+                         GdkRectangle *opt_src_rect);
 
-gboolean xstuff_is_display_dead         (void);
+gboolean xstuff_is_display_dead(void);
 
-void xstuff_init                        (void);
+void xstuff_init(void);
 
 #endif /* __XSTUFF_H__ */

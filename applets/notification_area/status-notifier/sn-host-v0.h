@@ -23,20 +23,20 @@
 
 G_BEGIN_DECLS
 
-#define SN_TYPE_HOST_V0     (sn_host_v0_get_type ())
-#define SN_HOST_V0(obj)     (G_TYPE_CHECK_INSTANCE_CAST ((obj), SN_TYPE_HOST_V0, SnHostV0))
-#define SN_IS_HOST_V0(obj)  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), SN_TYPE_HOST_V0))
+#define SN_TYPE_HOST_V0 (sn_host_v0_get_type())
+#define SN_HOST_V0(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), SN_TYPE_HOST_V0, SnHostV0))
+#define SN_IS_HOST_V0(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), SN_TYPE_HOST_V0))
 
-typedef struct _SnHostV0      SnHostV0;
+typedef struct _SnHostV0 SnHostV0;
 typedef struct _SnHostV0Class SnHostV0Class;
 
-struct _SnHostV0Class
-{
+struct _SnHostV0Class {
   SnHostV0GenSkeletonClass parent_class;
 };
 
-GType sn_host_v0_get_type (void);
-NaHost *sn_host_v0_new (void);
+GType sn_host_v0_get_type(void);
+NaHost *sn_host_v0_new(void);
 
 G_END_DECLS
 

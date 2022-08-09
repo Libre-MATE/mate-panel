@@ -23,84 +23,78 @@
  *     Stefano Karapetsas <stefano@karapetsas.com>
  */
 
-#include <gtk/gtk.h>
-#include <gio/gio.h>
-
-#include "mate-panel-applet.h"
 #include "mate-panel-applet-gsettings.h"
 
-GSettings *
-mate_panel_applet_settings_new (MatePanelApplet *applet, gchar *schema)
-{
-    GSettings *settings = NULL;
-    gchar *path;
+#include <gio/gio.h>
+#include <gtk/gtk.h>
 
-    g_return_val_if_fail (MATE_PANEL_IS_APPLET (applet), NULL);
+#include "mate-panel-applet.h"
 
-    path = mate_panel_applet_get_preferences_path (applet);
+GSettings *mate_panel_applet_settings_new(MatePanelApplet *applet,
+                                          gchar *schema) {
+  GSettings *settings = NULL;
+  gchar *path;
 
-    if (path) {
-        settings = g_settings_new_with_path (schema, path);
-        g_free (path);
-    }
+  g_return_val_if_fail(MATE_PANEL_IS_APPLET(applet), NULL);
 
-    return settings;
+  path = mate_panel_applet_get_preferences_path(applet);
+
+  if (path) {
+    settings = g_settings_new_with_path(schema, path);
+    g_free(path);
+  }
+
+  return settings;
 }
 
-GList*
-mate_panel_applet_settings_get_glist (GSettings *settings, gchar *key)
-{
-    gchar **array;
-    GList *list = NULL;
-    gint i;
-    array = g_settings_get_strv (settings, key);
-    if (array != NULL) {
-        for (i = 0; array[i]; i++) {
-            list = g_list_append (list, g_strdup (array[i]));
-        }
+GList *mate_panel_applet_settings_get_glist(GSettings *settings, gchar *key) {
+  gchar **array;
+  GList *list = NULL;
+  gint i;
+  array = g_settings_get_strv(settings, key);
+  if (array != NULL) {
+    for (i = 0; array[i]; i++) {
+      list = g_list_append(list, g_strdup(array[i]));
     }
-    g_strfreev (array);
-    return list;
+  }
+  g_strfreev(array);
+  return list;
 }
 
-void
-mate_panel_applet_settings_set_glist (GSettings *settings, gchar *key, GList *list)
-{
-    GArray *array;
-    GList *l;
-    array = g_array_new (TRUE, TRUE, sizeof (gchar *));
-    for (l = list; l; l = l->next) {
-        array = g_array_append_val (array, l->data);
-    }
-    g_settings_set_strv (settings, key, (const gchar **) array->data);
-    g_array_free (array, TRUE);
+void mate_panel_applet_settings_set_glist(GSettings *settings, gchar *key,
+                                          GList *list) {
+  GArray *array;
+  GList *l;
+  array = g_array_new(TRUE, TRUE, sizeof(gchar *));
+  for (l = list; l; l = l->next) {
+    array = g_array_append_val(array, l->data);
+  }
+  g_settings_set_strv(settings, key, (const gchar **)array->data);
+  g_array_free(array, TRUE);
 }
 
-GSList*
-mate_panel_applet_settings_get_gslist (GSettings *settings, gchar *key)
-{
-    gchar **array;
-    GSList *list = NULL;
-    gint i;
-    array = g_settings_get_strv (settings, key);
-    if (array != NULL) {
-        for (i = 0; array[i]; i++) {
-            list = g_slist_append (list, g_strdup (array[i]));
-        }
+GSList *mate_panel_applet_settings_get_gslist(GSettings *settings, gchar *key) {
+  gchar **array;
+  GSList *list = NULL;
+  gint i;
+  array = g_settings_get_strv(settings, key);
+  if (array != NULL) {
+    for (i = 0; array[i]; i++) {
+      list = g_slist_append(list, g_strdup(array[i]));
     }
-    g_strfreev (array);
-    return list;
+  }
+  g_strfreev(array);
+  return list;
 }
 
-void
-mate_panel_applet_settings_set_gslist (GSettings *settings, gchar *key, GSList *list)
-{
-    GArray *array;
-    GSList *l;
-    array = g_array_new (TRUE, TRUE, sizeof (gchar *));
-    for (l = list; l; l = l->next) {
-        array = g_array_append_val (array, l->data);
-    }
-    g_settings_set_strv (settings, key, (const gchar **) array->data);
-    g_array_free (array, TRUE);
+void mate_panel_applet_settings_set_gslist(GSettings *settings, gchar *key,
+                                           GSList *list) {
+  GArray *array;
+  GSList *l;
+  array = g_array_new(TRUE, TRUE, sizeof(gchar *));
+  for (l = list; l; l = l->next) {
+    array = g_array_append_val(array, l->data);
+  }
+  g_settings_set_strv(settings, key, (const gchar **)array->data);
+  g_array_free(array, TRUE);
 }

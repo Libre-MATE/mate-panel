@@ -32,46 +32,50 @@
 extern "C" {
 #endif
 
-#define PANEL_TYPE_ICON_CHOOSER			(panel_icon_chooser_get_type ())
-#define PANEL_ICON_CHOOSER(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), PANEL_TYPE_ICON_CHOOSER, PanelIconChooser))
-#define PANEL_ICON_CHOOSER_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), PANEL_TYPE_ICON_CHOOSER, PanelIconChooserClass))
-#define PANEL_IS_ICON_CHOOSER(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), PANEL_TYPE_ICON_CHOOSER))
-#define PANEL_IS_ICON_CHOOSER_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), PANEL_TYPE_ICON_CHOOSER))
-#define PANEL_ICON_CHOOSER_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS ((obj), PANEL_TYPE_ICON_CHOOSER, PanelIconChooserClass))
+#define PANEL_TYPE_ICON_CHOOSER (panel_icon_chooser_get_type())
+#define PANEL_ICON_CHOOSER(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), PANEL_TYPE_ICON_CHOOSER, PanelIconChooser))
+#define PANEL_ICON_CHOOSER_CLASS(klass)                      \
+  (G_TYPE_CHECK_CLASS_CAST((klass), PANEL_TYPE_ICON_CHOOSER, \
+                           PanelIconChooserClass))
+#define PANEL_IS_ICON_CHOOSER(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), PANEL_TYPE_ICON_CHOOSER))
+#define PANEL_IS_ICON_CHOOSER_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), PANEL_TYPE_ICON_CHOOSER))
+#define PANEL_ICON_CHOOSER_GET_CLASS(obj)                    \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), PANEL_TYPE_ICON_CHOOSER, \
+                             PanelIconChooserClass))
 
-typedef struct _PanelIconChooser      PanelIconChooser;
+typedef struct _PanelIconChooser PanelIconChooser;
 typedef struct _PanelIconChooserClass PanelIconChooserClass;
 
 typedef struct _PanelIconChooserPrivate PanelIconChooserPrivate;
 
-struct _PanelIconChooserClass
-{
-	GtkButtonClass parent_class;
+struct _PanelIconChooserClass {
+  GtkButtonClass parent_class;
 
-	void (* changed)         (PanelIconChooser *chooser,
-				  const char       *icon);
+  void (*changed)(PanelIconChooser *chooser, const char *icon);
 };
 
-struct _PanelIconChooser
-{
-	GtkButton parent_instance;
+struct _PanelIconChooser {
+  GtkButton parent_instance;
 
-	PanelIconChooserPrivate *priv;
+  PanelIconChooserPrivate *priv;
 };
 
-GType       panel_icon_chooser_get_type (void);
+GType panel_icon_chooser_get_type(void);
 
-GtkWidget  *panel_icon_chooser_new                    (const char  *icon);
+GtkWidget *panel_icon_chooser_new(const char *icon);
 
-const char *panel_icon_chooser_get_fallback_icon_name (PanelIconChooser *chooser);
+const char *panel_icon_chooser_get_fallback_icon_name(
+    PanelIconChooser *chooser);
 
-void        panel_icon_chooser_set_fallback_icon_name (PanelIconChooser *chooser,
-						       const char       *fallback_icon_name);
+void panel_icon_chooser_set_fallback_icon_name(PanelIconChooser *chooser,
+                                               const char *fallback_icon_name);
 
-const char *panel_icon_chooser_get_icon               (PanelIconChooser *chooser);
+const char *panel_icon_chooser_get_icon(PanelIconChooser *chooser);
 
-void        panel_icon_chooser_set_icon               (PanelIconChooser *chooser,
-						       const char       *icon);
+void panel_icon_chooser_set_icon(PanelIconChooser *chooser, const char *icon);
 
 #ifdef __cplusplus
 }

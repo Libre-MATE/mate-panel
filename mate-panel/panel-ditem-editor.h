@@ -32,82 +32,78 @@
 extern "C" {
 #endif
 
-#define PANEL_TYPE_DITEM_EDITOR			(panel_ditem_editor_get_type ())
-#define PANEL_DITEM_EDITOR(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), PANEL_TYPE_DITEM_EDITOR, PanelDItemEditor))
-#define PANEL_DITEM_EDITOR_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), PANEL_TYPE_DITEM_EDITOR, PanelDItemEditorClass))
-#define PANEL_IS_DITEM_EDITOR(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), PANEL_TYPE_DITEM_EDITOR))
-#define PANEL_IS_DITEM_EDITOR_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), PANEL_TYPE_DITEM_EDITOR))
-#define PANEL_DITEM_EDITOR_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS ((obj), PANEL_TYPE_DITEM_EDITOR, PanelDItemEditorClass))
+#define PANEL_TYPE_DITEM_EDITOR (panel_ditem_editor_get_type())
+#define PANEL_DITEM_EDITOR(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), PANEL_TYPE_DITEM_EDITOR, PanelDItemEditor))
+#define PANEL_DITEM_EDITOR_CLASS(klass)                      \
+  (G_TYPE_CHECK_CLASS_CAST((klass), PANEL_TYPE_DITEM_EDITOR, \
+                           PanelDItemEditorClass))
+#define PANEL_IS_DITEM_EDITOR(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), PANEL_TYPE_DITEM_EDITOR))
+#define PANEL_IS_DITEM_EDITOR_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), PANEL_TYPE_DITEM_EDITOR))
+#define PANEL_DITEM_EDITOR_GET_CLASS(obj)                    \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), PANEL_TYPE_DITEM_EDITOR, \
+                             PanelDItemEditorClass))
 
-typedef struct _PanelDItemEditor      PanelDItemEditor;
+typedef struct _PanelDItemEditor PanelDItemEditor;
 typedef struct _PanelDItemEditorClass PanelDItemEditorClass;
 
 typedef struct _PanelDItemEditorPrivate PanelDItemEditorPrivate;
 
-struct _PanelDItemEditorClass
-{
-	GtkDialogClass parent_class;
+struct _PanelDItemEditorClass {
+  GtkDialogClass parent_class;
 
-	/* File has been saved */
-	void (* saved)           (PanelDItemEditor *dialog);
+  /* File has been saved */
+  void (*saved)(PanelDItemEditor *dialog);
 
-	/* Any information changed */
-	void (* changed)         (PanelDItemEditor *dialog);
+  /* Any information changed */
+  void (*changed)(PanelDItemEditor *dialog);
 
-	/* These more specific signals are provided since they
-	 * will likely require a display update */
-	/* The name of the item has changed. */
-	void (* name_changed)    (PanelDItemEditor *dialog,
-				  const char       *name);
-	/* The command of the item has changed. */
-	void (* command_changed) (PanelDItemEditor *dialog,
-				  const char       *command);
-	/* The comment of the item has changed. */
-	void (* comment_changed) (PanelDItemEditor *dialog,
-				  const char       *comment);
-	/* The icon in particular has changed. */
-	void (* icon_changed)    (PanelDItemEditor *dialog,
-				  const char       *icon);
+  /* These more specific signals are provided since they
+   * will likely require a display update */
+  /* The name of the item has changed. */
+  void (*name_changed)(PanelDItemEditor *dialog, const char *name);
+  /* The command of the item has changed. */
+  void (*command_changed)(PanelDItemEditor *dialog, const char *command);
+  /* The comment of the item has changed. */
+  void (*comment_changed)(PanelDItemEditor *dialog, const char *comment);
+  /* The icon in particular has changed. */
+  void (*icon_changed)(PanelDItemEditor *dialog, const char *icon);
 
-	/* An error is reported. */
-	void (* error_reported)  (PanelDItemEditor *dialog,
-				  const char       *error);
+  /* An error is reported. */
+  void (*error_reported)(PanelDItemEditor *dialog, const char *error);
 };
 
-struct _PanelDItemEditor
-{
-	GtkDialog parent_instance;
+struct _PanelDItemEditor {
+  GtkDialog parent_instance;
 
-	PanelDItemEditorPrivate *priv;
+  PanelDItemEditorPrivate *priv;
 };
 
-typedef char * (*PanelDitemSaveUri) (PanelDItemEditor *dialog, gpointer data);
+typedef char *(*PanelDitemSaveUri)(PanelDItemEditor *dialog, gpointer data);
 
-GType      panel_ditem_editor_get_type (void);
+GType panel_ditem_editor_get_type(void);
 
-GtkWidget *panel_ditem_editor_new (GtkWindow   *parent,
-				   GKeyFile    *key_file,
-				   const char  *uri,
-				   const char  *title);
+GtkWidget *panel_ditem_editor_new(GtkWindow *parent, GKeyFile *key_file,
+                                  const char *uri, const char *title);
 
-GtkWidget *panel_ditem_editor_new_directory (GtkWindow   *parent,
-					     GKeyFile    *key_file,
-					     const char  *uri,
-					     const char  *title);
+GtkWidget *panel_ditem_editor_new_directory(GtkWindow *parent,
+                                            GKeyFile *key_file, const char *uri,
+                                            const char *title);
 
-void panel_ditem_editor_sync_display (PanelDItemEditor *dialog);
+void panel_ditem_editor_sync_display(PanelDItemEditor *dialog);
 
-GKeyFile *panel_ditem_editor_get_key_file        (PanelDItemEditor *dialog);
-GKeyFile *panel_ditem_editor_get_revert_key_file (PanelDItemEditor *dialog);
+GKeyFile *panel_ditem_editor_get_key_file(PanelDItemEditor *dialog);
+GKeyFile *panel_ditem_editor_get_revert_key_file(PanelDItemEditor *dialog);
 
-void panel_ditem_editor_set_uri (PanelDItemEditor *dialog,
-				 const char       *uri);
+void panel_ditem_editor_set_uri(PanelDItemEditor *dialog, const char *uri);
 
-const char* panel_ditem_editor_get_uri(PanelDItemEditor* dialog);
+const char *panel_ditem_editor_get_uri(PanelDItemEditor *dialog);
 
-void panel_ditem_register_save_uri_func (PanelDItemEditor  *dialog,
-					 PanelDitemSaveUri  save_uri,
-					 gpointer           data);
+void panel_ditem_register_save_uri_func(PanelDItemEditor *dialog,
+                                        PanelDitemSaveUri save_uri,
+                                        gpointer data);
 
 #ifdef __cplusplus
 }

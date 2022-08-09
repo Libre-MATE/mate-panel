@@ -22,36 +22,39 @@
 
 G_BEGIN_DECLS
 
-#define SN_TYPE_FLAT_BUTTON            (sn_flat_button_get_type ())
-#define SN_FLAT_BUTTON(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), SN_TYPE_FLAT_BUTTON, SnFlatButton))
-#define SN_FLAT_BUTTON_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), SN_TYPE_FLAT_BUTTON, SnFlatButtonClass))
-#define SN_IS_FLAT_BUTTON(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), SN_TYPE_FLAT_BUTTON))
-#define SN_IS_FLAT_BUTTON_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), SN_TYPE_FLAT_BUTTON))
-#define SN_FLAT_BUTTON_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), SN_TYPE_FLAT_BUTTON, SnFlatButtonClass))
+#define SN_TYPE_FLAT_BUTTON (sn_flat_button_get_type())
+#define SN_FLAT_BUTTON(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), SN_TYPE_FLAT_BUTTON, SnFlatButton))
+#define SN_FLAT_BUTTON_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), SN_TYPE_FLAT_BUTTON, SnFlatButtonClass))
+#define SN_IS_FLAT_BUTTON(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), SN_TYPE_FLAT_BUTTON))
+#define SN_IS_FLAT_BUTTON_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), SN_TYPE_FLAT_BUTTON))
+#define SN_FLAT_BUTTON_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), SN_TYPE_FLAT_BUTTON, SnFlatButtonClass))
 
-typedef struct _SnFlatButton        SnFlatButton;
+typedef struct _SnFlatButton SnFlatButton;
 typedef struct _SnFlatButtonPrivate SnFlatButtonPrivate;
-typedef struct _SnFlatButtonClass   SnFlatButtonClass;
+typedef struct _SnFlatButtonClass SnFlatButtonClass;
 
-struct _SnFlatButton
-{
+struct _SnFlatButton {
   GtkButton parent_instance;
 
   SnFlatButtonPrivate *priv;
 };
 
-struct _SnFlatButtonClass
-{
+struct _SnFlatButtonClass {
   GtkButtonClass parent_class;
 };
 
-GType sn_flat_button_get_type (void);
-GtkWidget *sn_flat_button_new (void);
+GType sn_flat_button_get_type(void);
+GtkWidget *sn_flat_button_new(void);
 
 #if 0
 #ifndef SN_COMPAT_BUTTON_NODRAW_C
 /* replace GtkButton */
-# define gtk_button_get_type sn_compat_button_nodraw_get_type
+#define gtk_button_get_type sn_compat_button_nodraw_get_type
 #endif
 #endif
 

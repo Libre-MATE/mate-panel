@@ -16,7 +16,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+ * USA.
  */
 
 #ifndef __PANEL_A11Y_H__
@@ -28,14 +29,11 @@
 extern "C" {
 #endif
 
-gboolean panel_a11y_get_is_a11y_enabled          (GtkWidget  *widget);
-void     panel_a11y_set_atk_name_desc            (GtkWidget  *widget,
-						  const char *name,
-						  const char *desc);
-void     panel_a11y_set_atk_relation             (GtkWidget  *widget,
-						  GtkLabel   *label);
-GType    panel_a11y_query_accessible_parent_type (GType       type,
-						  GTypeInfo  *type_info);
+gboolean panel_a11y_get_is_a11y_enabled(GtkWidget *widget);
+void panel_a11y_set_atk_name_desc(GtkWidget *widget, const char *name,
+                                  const char *desc);
+void panel_a11y_set_atk_relation(GtkWidget *widget, GtkLabel *label);
+GType panel_a11y_query_accessible_parent_type(GType type, GTypeInfo *type_info);
 
 #ifdef __cplusplus
 }

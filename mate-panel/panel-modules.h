@@ -26,6 +26,6 @@
 #ifndef __PANEL_MODULES_H__
 #define __PANEL_MODULES_H__
 
-void     panel_modules_ensure_loaded     (void);
+void panel_modules_ensure_loaded(void);
 
 #endif /* __PANEL_MODULES_H__ */

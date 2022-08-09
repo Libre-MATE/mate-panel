@@ -29,41 +29,42 @@
 extern "C" {
 #endif
 
-#define NA_TYPE_FIXED_TIP			(na_fixed_tip_get_type ())
-#define NA_FIXED_TIP(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), NA_TYPE_FIXED_TIP, NaFixedTip))
-#define NA_FIXED_TIP_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), NA_TYPE_FIXED_TIP, NaFixedTipClass))
-#define NA_IS_FIXED_TIP(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), NA_TYPE_FIXED_TIP))
-#define NA_IS_FIXED_TIP_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE ((klass), NA_TYPE_FIXED_TIP))
-#define NA_FIXED_TIP_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), NA_TYPE_FIXED_TIP, NaFixedTipClass))
+#define NA_TYPE_FIXED_TIP (na_fixed_tip_get_type())
+#define NA_FIXED_TIP(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), NA_TYPE_FIXED_TIP, NaFixedTip))
+#define NA_FIXED_TIP_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST((klass), NA_TYPE_FIXED_TIP, NaFixedTipClass))
+#define NA_IS_FIXED_TIP(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((obj), NA_TYPE_FIXED_TIP))
+#define NA_IS_FIXED_TIP_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE((klass), NA_TYPE_FIXED_TIP))
+#define NA_FIXED_TIP_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS((obj), NA_TYPE_FIXED_TIP, NaFixedTipClass))
 
-typedef struct _NaFixedTip	  NaFixedTip;
+typedef struct _NaFixedTip NaFixedTip;
 typedef struct _NaFixedTipPrivate NaFixedTipPrivate;
-typedef struct _NaFixedTipClass   NaFixedTipClass;
+typedef struct _NaFixedTipClass NaFixedTipClass;
 
-struct _NaFixedTip
-{
+struct _NaFixedTip {
   GtkWindow parent_instance;
 
   NaFixedTipPrivate *priv;
 };
 
-struct _NaFixedTipClass
-{
+struct _NaFixedTipClass {
   GtkWindowClass parent_class;
 
-  void (* clicked)    (NaFixedTip *fixedtip);
+  void (*clicked)(NaFixedTip *fixedtip);
 };
 
-GType      na_fixed_tip_get_type (void);
+GType na_fixed_tip_get_type(void);
 
-GtkWidget *na_fixed_tip_new (GtkWidget      *parent,
-                             GtkOrientation  orientation);
+GtkWidget *na_fixed_tip_new(GtkWidget *parent, GtkOrientation orientation);
 
-void       na_fixed_tip_set_markup (GtkWidget  *widget,
-                                    const char *markup_text);
+void na_fixed_tip_set_markup(GtkWidget *widget, const char *markup_text);
 
-void       na_fixed_tip_set_orientation (GtkWidget      *widget,
-                                         GtkOrientation  orientation);
+void na_fixed_tip_set_orientation(GtkWidget *widget,
+                                  GtkOrientation orientation);
 
 #ifdef __cplusplus
 }

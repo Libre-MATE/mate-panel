@@ -23,61 +23,58 @@
  *      Vincent Untz <vuntz@gnome.org>
  */
 
+#include "panel-modules.h"
+
 #include <config.h>
 #include <gio/gio.h>
-
 #include <libmate-panel-applet-private/panel-applets-manager-dbus.h>
 
 #include "panel-applets-manager.h"
-#include "panel-modules.h"
 
-static void
-panel_modules_ensure_extension_points_registered (void)
-{
-	static gboolean registered_extensions = FALSE;
+static void panel_modules_ensure_extension_points_registered(void) {
+  static gboolean registered_extensions = FALSE;
 
-	if (!registered_extensions) {
-		registered_extensions = TRUE;
-		GIOExtensionPoint *ep = g_io_extension_point_register (MATE_PANEL_APPLETS_MANAGER_EXTENSION_POINT_NAME);
-		g_io_extension_point_set_required_type (ep, PANEL_TYPE_APPLETS_MANAGER);
-	}
- }
+  if (!registered_extensions) {
+    registered_extensions = TRUE;
+    GIOExtensionPoint *ep = g_io_extension_point_register(
+        MATE_PANEL_APPLETS_MANAGER_EXTENSION_POINT_NAME);
+    g_io_extension_point_set_required_type(ep, PANEL_TYPE_APPLETS_MANAGER);
+  }
+}
 
-void
-panel_modules_ensure_loaded (void)
-{
-	static gboolean loaded_dirs = FALSE;
+void panel_modules_ensure_loaded(void) {
+  static gboolean loaded_dirs = FALSE;
 
-	panel_modules_ensure_extension_points_registered ();
+  panel_modules_ensure_extension_points_registered();
 
-	if (!loaded_dirs) {
-		const char *module_path;
-		GList *modules;
-		loaded_dirs = TRUE;
+  if (!loaded_dirs) {
+    const char *module_path;
+    GList *modules;
+    loaded_dirs = TRUE;
 
-		/* We load the modules explicitly instead of using scan_all
-		 * so that we can leak a reference to them.  This prevents them
-		 * from getting unloaded later (something they aren't designed
-		 * to cope with) */
-		modules = g_io_modules_load_all_in_directory (PANEL_MODULES_DIR);
-		g_list_free (modules);
+    /* We load the modules explicitly instead of using scan_all
+     * so that we can leak a reference to them.  This prevents them
+     * from getting unloaded later (something they aren't designed
+     * to cope with) */
+    modules = g_io_modules_load_all_in_directory(PANEL_MODULES_DIR);
+    g_list_free(modules);
 
-		module_path = g_getenv ("MATE_PANEL_EXTRA_MODULES");
+    module_path = g_getenv("MATE_PANEL_EXTRA_MODULES");
 
-		if (module_path) {
-			gchar **paths;
-			int i;
+    if (module_path) {
+      gchar **paths;
+      int i;
 
-			paths = g_strsplit (module_path, ":", 0);
+      paths = g_strsplit(module_path, ":", 0);
 
-			for (i = 0; paths[i] != NULL; i++) {
-				modules = g_io_modules_load_all_in_directory (paths[i]);
-				g_list_free (modules);
-			}
+      for (i = 0; paths[i] != NULL; i++) {
+        modules = g_io_modules_load_all_in_directory(paths[i]);
+        g_list_free(modules);
+      }
 
-			g_strfreev (paths);
-		}
+      g_strfreev(paths);
+    }
 
-		mate_panel_applets_manager_dbus_get_type ();
-	}
+    mate_panel_applets_manager_dbus_get_type();
+  }
 }

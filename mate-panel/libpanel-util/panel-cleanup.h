@@ -32,18 +32,16 @@
 extern "C" {
 #endif
 
-#define PANEL_CLEAN_FUNC(f)     ((PanelCleanFunc) (f))
+#define PANEL_CLEAN_FUNC(f) ((PanelCleanFunc)(f))
 
-typedef void  (*PanelCleanFunc) (gpointer data);
+typedef void (*PanelCleanFunc)(gpointer data);
 
-void panel_cleanup_unref_and_nullify (gpointer data);
+void panel_cleanup_unref_and_nullify(gpointer data);
 
-void panel_cleanup_do         (void);
+void panel_cleanup_do(void);
 
-void panel_cleanup_register   (PanelCleanFunc func,
-			       gpointer       data);
-void panel_cleanup_unregister (PanelCleanFunc func,
-			       gpointer       data);
+void panel_cleanup_register(PanelCleanFunc func, gpointer data);
+void panel_cleanup_unregister(PanelCleanFunc func, gpointer data);
 
 #ifdef __cplusplus
 }

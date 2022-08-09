@@ -32,28 +32,25 @@
 extern "C" {
 #endif
 
-#define PANEL_GTK_BUILDER_GET(builder, name) GTK_WIDGET (gtk_builder_get_object (builder, name))
+#define PANEL_GTK_BUILDER_GET(builder, name) \
+  GTK_WIDGET(gtk_builder_get_object(builder, name))
 
-void panel_gtk_file_chooser_add_image_preview (GtkFileChooser *chooser);
+void panel_gtk_file_chooser_add_image_preview(GtkFileChooser *chooser);
 
-GtkWidget* panel_dialog_add_button (GtkDialog   *dialog,
-				    const gchar *button_text,
-				    const gchar *icon_name,
-				          gint   response_id);
+GtkWidget *panel_dialog_add_button(GtkDialog *dialog, const gchar *button_text,
+                                   const gchar *icon_name, gint response_id);
 
-GtkWidget* panel_file_chooser_dialog_new (const gchar          *title,
-					  GtkWindow            *parent,
-					  GtkFileChooserAction  action,
-					  const gchar          *first_button_text,
-					  ...);
+GtkWidget *panel_file_chooser_dialog_new(const gchar *title, GtkWindow *parent,
+                                         GtkFileChooserAction action,
+                                         const gchar *first_button_text, ...);
 
-GtkWidget* panel_image_menu_item_new_from_icon (const gchar *icon_name,
-						const gchar *label_name);
+GtkWidget *panel_image_menu_item_new_from_icon(const gchar *icon_name,
+                                               const gchar *label_name);
 
-GtkWidget* panel_image_menu_item_new_from_gicon (GIcon       *gicon,
-						 const gchar *label_name);
+GtkWidget *panel_image_menu_item_new_from_gicon(GIcon *gicon,
+                                                const gchar *label_name);
 
-GtkWidget* panel_check_menu_item_new (GtkWidget *widget_check);
+GtkWidget *panel_check_menu_item_new(GtkWidget *widget_check);
 
 #ifdef __cplusplus
 }

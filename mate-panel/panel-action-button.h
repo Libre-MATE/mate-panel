@@ -28,67 +28,72 @@
 #define __PANEL_ACTION_BUTTON_H__
 
 #include <gtk/gtk.h>
+
 #include "button-widget.h"
-#include "panel-widget.h"
 #include "panel-enums.h"
+#include "panel-widget.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define PANEL_TYPE_ACTION_BUTTON         (panel_action_button_get_type ())
-#define PANEL_ACTION_BUTTON(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), PANEL_TYPE_ACTION_BUTTON, PanelActionButton))
-#define PANEL_ACTION_BUTTON_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), PANEL_TYPE_ACTION_BUTTON, PanelActionButtonClass))
-#define PANEL_IS_ACTION_BUTTON(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), PANEL_TYPE_ACTION_BUTTON))
-#define PANEL_IS_ACTION_BUTTON_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), PANEL_TYPE_ACTION_BUTTON))
-#define PANEL_ACTION_BUTTON_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), PANEL_TYPE_ACTION_BUTTON, PanelActionButtonClass))
+#define PANEL_TYPE_ACTION_BUTTON (panel_action_button_get_type())
+#define PANEL_ACTION_BUTTON(o) \
+  (G_TYPE_CHECK_INSTANCE_CAST((o), PANEL_TYPE_ACTION_BUTTON, PanelActionButton))
+#define PANEL_ACTION_BUTTON_CLASS(k)                      \
+  (G_TYPE_CHECK_CLASS_CAST((k), PANEL_TYPE_ACTION_BUTTON, \
+                           PanelActionButtonClass))
+#define PANEL_IS_ACTION_BUTTON(o) \
+  (G_TYPE_CHECK_INSTANCE_TYPE((o), PANEL_TYPE_ACTION_BUTTON))
+#define PANEL_IS_ACTION_BUTTON_CLASS(k) \
+  (G_TYPE_CHECK_CLASS_TYPE((k), PANEL_TYPE_ACTION_BUTTON))
+#define PANEL_ACTION_BUTTON_GET_CLASS(o)                    \
+  (G_TYPE_INSTANCE_GET_CLASS((o), PANEL_TYPE_ACTION_BUTTON, \
+                             PanelActionButtonClass))
 
-typedef struct _PanelActionButton        PanelActionButton;
-typedef struct _PanelActionButtonClass   PanelActionButtonClass;
+typedef struct _PanelActionButton PanelActionButton;
+typedef struct _PanelActionButtonClass PanelActionButtonClass;
 typedef struct _PanelActionButtonPrivate PanelActionButtonPrivate;
 
-struct _PanelActionButton{
-	ButtonWidget               button;
+struct _PanelActionButton {
+  ButtonWidget button;
 
-	PanelActionButtonPrivate  *priv;
+  PanelActionButtonPrivate *priv;
 };
 
 struct _PanelActionButtonClass {
-	ButtonWidgetClass          button_class;
+  ButtonWidgetClass button_class;
 };
 
-GType      panel_action_button_get_type  (void) G_GNUC_CONST;
+GType panel_action_button_get_type(void) G_GNUC_CONST;
 
-void       panel_action_button_create           (PanelToplevel         *toplevel,
-						 int                    position,
-						 PanelActionButtonType  type);
+void panel_action_button_create(PanelToplevel *toplevel, int position,
+                                PanelActionButtonType type);
 
-void       panel_action_button_set_type         (PanelActionButton     *button,
-						 PanelActionButtonType  type);
+void panel_action_button_set_type(PanelActionButton *button,
+                                  PanelActionButtonType type);
 
-void       panel_action_button_load_from_gsettings  (PanelWidget            *panel,
-						 gboolean                locked,
-						 int                     position,
-						 gboolean                exactpos,
-						 const char             *id);
+void panel_action_button_load_from_gsettings(PanelWidget *panel,
+                                             gboolean locked, int position,
+                                             gboolean exactpos, const char *id);
 
-void       panel_action_button_invoke_menu      (PanelActionButton      *button,
-						 const char             *callback_name);
+void panel_action_button_invoke_menu(PanelActionButton *button,
+                                     const char *callback_name);
 
-void       panel_action_button_set_dnd_enabled  (PanelActionButton      *button,
-						 gboolean                dnd_enabled);
+void panel_action_button_set_dnd_enabled(PanelActionButton *button,
+                                         gboolean dnd_enabled);
 
-gboolean   panel_action_button_load_from_drag   (PanelToplevel          *toplevel,
-						 int                     position,
-						 const char             *drag_string,
-						 int                    *old_applet_idx);
+gboolean panel_action_button_load_from_drag(PanelToplevel *toplevel,
+                                            int position,
+                                            const char *drag_string,
+                                            int *old_applet_idx);
 
-gboolean             panel_action_get_is_disabled (PanelActionButtonType type);
-GCallback            panel_action_get_invoke      (PanelActionButtonType type);
-const char* panel_action_get_icon_name(PanelActionButtonType type);
-const char* panel_action_get_text(PanelActionButtonType type);
-const char* panel_action_get_tooltip(PanelActionButtonType type);
-const char* panel_action_get_drag_id(PanelActionButtonType type);
+gboolean panel_action_get_is_disabled(PanelActionButtonType type);
+GCallback panel_action_get_invoke(PanelActionButtonType type);
+const char *panel_action_get_icon_name(PanelActionButtonType type);
+const char *panel_action_get_text(PanelActionButtonType type);
+const char *panel_action_get_tooltip(PanelActionButtonType type);
+const char *panel_action_get_drag_id(PanelActionButtonType type);
 
 #ifdef __cplusplus
 }

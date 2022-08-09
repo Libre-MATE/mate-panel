@@ -36,10 +36,10 @@ G_BEGIN_DECLS
  * but GTK+ 3.18 already requires 2.45.8, so we're safe.
  */
 
-#define PANEL_TYPE_PLUG panel_plug_get_type ()
-G_DECLARE_FINAL_TYPE (PanelPlug, panel_plug, PANEL, PLUG, GtkPlug)
+#define PANEL_TYPE_PLUG panel_plug_get_type()
+G_DECLARE_FINAL_TYPE(PanelPlug, panel_plug, PANEL, PLUG, GtkPlug)
 
-GtkWidget *panel_plug_new (void);
+GtkWidget *panel_plug_new(void);
 
 G_END_DECLS
 

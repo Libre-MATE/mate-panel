@@ -22,14 +22,13 @@
  */
 
 #ifdef HAVE_CONFIG_H
-	#include <config.h>
+#include <config.h>
 #endif
-
-#include <string.h>
-#include <mate-panel-applet.h>
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <mate-panel-applet.h>
+#include <string.h>
 
 #ifdef HAVE_X11
 #include <gdk/gdkx.h>
@@ -37,119 +36,125 @@
 #include <libwnck/libwnck.h>
 #endif
 
-#include "wncklet.h"
-#include "window-menu.h"
-#include "workspace-switcher.h"
-#include "window-list.h"
 #include "showdesktop.h"
+#include "window-list.h"
+#include "window-menu.h"
+#include "wncklet.h"
+#include "workspace-switcher.h"
 
-void wncklet_display_help(GtkWidget* widget, const char* doc_id, const char* link_id, const char* icon_name)
-{
-	GError* error = NULL;
-	char* uri;
+void wncklet_display_help(GtkWidget* widget, const char* doc_id,
+                          const char* link_id, const char* icon_name) {
+  GError* error = NULL;
+  char* uri;
 
-	if (link_id)
-		uri = g_strdup_printf("help:%s/%s", doc_id, link_id);
-	else
-		uri = g_strdup_printf("help:%s", doc_id);
+  if (link_id)
+    uri = g_strdup_printf("help:%s/%s", doc_id, link_id);
+  else
+    uri = g_strdup_printf("help:%s", doc_id);
 
-	gtk_show_uri_on_window (NULL, uri, gtk_get_current_event_time (), &error);
-	g_free(uri);
+  gtk_show_uri_on_window(NULL, uri, gtk_get_current_event_time(), &error);
+  g_free(uri);
 
-	if (error && g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-	{
-		g_error_free(error);
-	}
-	else if (error)
-	{
-		GtkWidget* parent;
-		GtkWidget* dialog;
-		char* primary;
+  if (error && g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+    g_error_free(error);
+  } else if (error) {
+    GtkWidget* parent;
+    GtkWidget* dialog;
+    char* primary;
 
-		if (GTK_IS_WINDOW(widget))
-			parent = widget;
-		else
-			parent = NULL;
+    if (GTK_IS_WINDOW(widget))
+      parent = widget;
+    else
+      parent = NULL;
 
-		primary = g_markup_printf_escaped(_("Could not display help document '%s'"), doc_id);
-		dialog = gtk_message_dialog_new(parent ? GTK_WINDOW(parent) : NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", primary);
+    primary = g_markup_printf_escaped(_("Could not display help document '%s'"),
+                                      doc_id);
+    dialog = gtk_message_dialog_new(
+        parent ? GTK_WINDOW(parent) : NULL,
+        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR,
+        GTK_BUTTONS_CLOSE, "%s", primary);
 
-		gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s", error->message);
+    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "%s",
+                                             error->message);
 
-		g_error_free(error);
-		g_free(primary);
+    g_error_free(error);
+    g_free(primary);
 
-		g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), NULL);
+    g_signal_connect(dialog, "response", G_CALLBACK(gtk_widget_destroy), NULL);
 
-		gtk_window_set_icon_name(GTK_WINDOW(dialog), icon_name);
-		gtk_window_set_screen(GTK_WINDOW(dialog), gtk_widget_get_screen(widget));
+    gtk_window_set_icon_name(GTK_WINDOW(dialog), icon_name);
+    gtk_window_set_screen(GTK_WINDOW(dialog), gtk_widget_get_screen(widget));
 
-		if (parent == NULL)
-		{
-			/* we have no parent window */
-			gtk_window_set_skip_taskbar_hint(GTK_WINDOW(dialog), FALSE);
-			gtk_window_set_title(GTK_WINDOW(dialog), _("Error displaying help document"));
-		}
+    if (parent == NULL) {
+      /* we have no parent window */
+      gtk_window_set_skip_taskbar_hint(GTK_WINDOW(dialog), FALSE);
+      gtk_window_set_title(GTK_WINDOW(dialog),
+                           _("Error displaying help document"));
+    }
 
-		gtk_widget_show(dialog);
-	}
+    gtk_widget_show(dialog);
+  }
 }
 
 #ifdef HAVE_X11
-WnckScreen* wncklet_get_screen(GtkWidget* applet)
-{
-	g_return_val_if_fail (GDK_IS_X11_DISPLAY (gdk_display_get_default ()), NULL);
+WnckScreen* wncklet_get_screen(GtkWidget* applet) {
+  g_return_val_if_fail(GDK_IS_X11_DISPLAY(gdk_display_get_default()), NULL);
 
-	int screen_num;
+  int screen_num;
 
-	if (!gtk_widget_has_screen(applet))
-		return wnck_screen_get_default();
+  if (!gtk_widget_has_screen(applet)) return wnck_screen_get_default();
 
-	screen_num = gdk_x11_screen_get_screen_number(gtk_widget_get_screen(applet));
+  screen_num = gdk_x11_screen_get_screen_number(gtk_widget_get_screen(applet));
 
-	return wnck_screen_get(screen_num);
+  return wnck_screen_get(screen_num);
 }
 #endif /* HAVE_X11 */
 
-void wncklet_connect_while_alive(gpointer object, const char* signal, GCallback func, gpointer func_data, gpointer alive_object)
-{
-	GClosure* closure;
+void wncklet_connect_while_alive(gpointer object, const char* signal,
+                                 GCallback func, gpointer func_data,
+                                 gpointer alive_object) {
+  GClosure* closure;
 
-	closure = g_cclosure_new(func, func_data, NULL);
-	g_object_watch_closure(G_OBJECT(alive_object), closure);
-	g_signal_connect_closure_by_id(object, g_signal_lookup(signal, G_OBJECT_TYPE(object)), 0, closure, FALSE);
+  closure = g_cclosure_new(func, func_data, NULL);
+  g_object_watch_closure(G_OBJECT(alive_object), closure);
+  g_signal_connect_closure_by_id(object,
+                                 g_signal_lookup(signal, G_OBJECT_TYPE(object)),
+                                 0, closure, FALSE);
 }
 
-static gboolean wncklet_factory(MatePanelApplet* applet, const char* iid, gpointer data)
-{
-	gboolean retval = FALSE;
+static gboolean wncklet_factory(MatePanelApplet* applet, const char* iid,
+                                gpointer data) {
+  gboolean retval = FALSE;
 
 #ifdef HAVE_X11
-	if (GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
-	{
-		static gboolean type_registered = FALSE;
-		if (!type_registered)
-		{
-			wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER);
-			type_registered = TRUE;
-		}
-	}
+  if (GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+    static gboolean type_registered = FALSE;
+    if (!type_registered) {
+      wnck_set_client_type(WNCK_CLIENT_TYPE_PAGER);
+      type_registered = TRUE;
+    }
+  }
 #endif /* HAVE_X11 */
 
-	if (!strcmp(iid, "WindowMenuApplet"))
-		retval = window_menu_applet_fill(applet);
-	else if (!strcmp(iid, "WorkspaceSwitcherApplet") || !strcmp(iid, "PagerApplet"))
-		retval = workspace_switcher_applet_fill(applet);
-	else if (!strcmp(iid, "WindowListApplet") || !strcmp(iid, "TasklistApplet"))
-		retval = window_list_applet_fill(applet);
-	else if (!strcmp(iid, "ShowDesktopApplet"))
-		retval = show_desktop_applet_fill(applet);
+  if (!strcmp(iid, "WindowMenuApplet"))
+    retval = window_menu_applet_fill(applet);
+  else if (!strcmp(iid, "WorkspaceSwitcherApplet") ||
+           !strcmp(iid, "PagerApplet"))
+    retval = workspace_switcher_applet_fill(applet);
+  else if (!strcmp(iid, "WindowListApplet") || !strcmp(iid, "TasklistApplet"))
+    retval = window_list_applet_fill(applet);
+  else if (!strcmp(iid, "ShowDesktopApplet"))
+    retval = show_desktop_applet_fill(applet);
 
-	return retval;
+  return retval;
 }
 
 #ifdef WNCKLET_INPROCESS
-	MATE_PANEL_APPLET_IN_PROCESS_FACTORY("WnckletFactory", PANEL_TYPE_APPLET, "WindowNavigationApplets", wncklet_factory, NULL)
+MATE_PANEL_APPLET_IN_PROCESS_FACTORY("WnckletFactory", PANEL_TYPE_APPLET,
+                                     "WindowNavigationApplets", wncklet_factory,
+                                     NULL)
 #else
-	MATE_PANEL_APPLET_OUT_PROCESS_FACTORY("WnckletFactory", PANEL_TYPE_APPLET, "WindowNavigationApplets", wncklet_factory, NULL)
+MATE_PANEL_APPLET_OUT_PROCESS_FACTORY("WnckletFactory", PANEL_TYPE_APPLET,
+                                      "WindowNavigationApplets",
+                                      wncklet_factory, NULL)
 #endif

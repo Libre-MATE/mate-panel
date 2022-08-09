@@ -23,18 +23,14 @@
 #include <glib.h>
 #include <time.h>
 
-gint     can_set_system_timezone (void);
+gint can_set_system_timezone(void);
 
-gint     can_set_system_time     (void);
+gint can_set_system_time(void);
 
-void     set_system_time_async   (gint64         time,
-                                  GFunc          callback,
-                                  gpointer       data,
-                                  GDestroyNotify notify);
+void set_system_time_async(gint64 time, GFunc callback, gpointer data,
+                           GDestroyNotify notify);
 
-void     set_system_timezone_async   (const gchar    *filename,
-                                      GFunc           callback,
-                                      gpointer        data,
-                                      GDestroyNotify  notify);
+void set_system_timezone_async(const gchar *filename, GFunc callback,
+                               gpointer data, GDestroyNotify notify);
 
 #endif

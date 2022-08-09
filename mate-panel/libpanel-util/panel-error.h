@@ -36,12 +36,10 @@
 extern "C" {
 #endif
 
-GtkWidget *panel_error_dialog (GtkWindow  *parent,
-			       GdkScreen  *screen,
-			       const char *dialog_class,
-			       gboolean    auto_destroy,
-			       const char *primary_text,
-			       const char *secondary_text);
+GtkWidget *panel_error_dialog(GtkWindow *parent, GdkScreen *screen,
+                              const char *dialog_class, gboolean auto_destroy,
+                              const char *primary_text,
+                              const char *secondary_text);
 
 #ifdef __cplusplus
 }

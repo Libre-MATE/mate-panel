@@ -27,7 +27,6 @@
 #define __PANEL_BACKGROUND_H__
 
 #include <config.h>
-
 #include <glib.h>
 #include <gtk/gtk.h>
 
@@ -36,85 +35,73 @@
 
 typedef struct _PanelBackground PanelBackground;
 
-typedef void (*PanelBackgroundChangedNotify)
-				(PanelBackground *background,
-				 gpointer         user_data);
+typedef void (*PanelBackgroundChangedNotify)(PanelBackground *background,
+                                             gpointer user_data);
 
 struct _PanelBackground {
-	PanelBackgroundType     type;
+  PanelBackgroundType type;
 
-	PanelBackgroundChangedNotify notify_changed;
-	gpointer                user_data;
+  PanelBackgroundChangedNotify notify_changed;
+  gpointer user_data;
 
-	GdkRGBA                 color;
+  GdkRGBA color;
 
-	char                   *image;
-	GdkPixbuf              *loaded_image;
+  char *image;
+  GdkPixbuf *loaded_image;
 
-	GtkOrientation          orientation;
-	GdkRectangle            region;
-	GdkPixbuf              *transformed_image;
-	cairo_pattern_t        *composited_pattern;
+  GtkOrientation orientation;
+  GdkRectangle region;
+  GdkPixbuf *transformed_image;
+  cairo_pattern_t *composited_pattern;
 
-	GdkWindow              *window;
-	cairo_pattern_t        *default_pattern;
-	GdkRGBA                 default_color;
+  GdkWindow *window;
+  cairo_pattern_t *default_pattern;
+  GdkRGBA default_color;
 
-	guint                   fit_image : 1;
-	guint                   stretch_image : 1;
-	guint                   rotate_image : 1;
+  guint fit_image : 1;
+  guint stretch_image : 1;
+  guint rotate_image : 1;
 
-	guint                   has_alpha : 1;
+  guint has_alpha : 1;
 
-	guint                   loaded : 1;
-	guint                   transformed : 1;
-	guint                   composited : 1;
+  guint loaded : 1;
+  guint transformed : 1;
+  guint composited : 1;
 };
 
-void  panel_background_init              (PanelBackground     *background,
-					  PanelBackgroundChangedNotify notify_changed,
-					  gpointer             user_data);
-void  panel_background_free              (PanelBackground     *background);
-void  panel_background_set               (PanelBackground     *background,
-					  PanelBackgroundType  type,
-					  const GdkRGBA       *color,
-					  const char          *image,
-					  gboolean             fit_image,
-					  gboolean             stretch_image,
-					  gboolean             rotate_image);
-void  panel_background_set_type          (PanelBackground     *background,
-					  PanelBackgroundType  type);
-void  panel_background_set_color         (PanelBackground     *background,
-					  const GdkRGBA             *color);
-void  panel_background_set_image         (PanelBackground     *background,
-					  const char          *image);
-void  panel_background_set_fit           (PanelBackground     *background,
-					  gboolean             fit_image);
-void  panel_background_set_stretch       (PanelBackground     *background,
-					  gboolean             stretch_image);
-void  panel_background_set_rotate        (PanelBackground     *background,
-					  gboolean             rotate_image);
-void  panel_background_set_default_style (PanelBackground     *background,
-					  GdkRGBA             *color,
-					  cairo_pattern_t     *pattern);
-void  panel_background_realized          (PanelBackground     *background,
-					  GdkWindow           *window);
-void  panel_background_unrealized        (PanelBackground     *background);
-void  panel_background_change_region     (PanelBackground     *background,
-					  GtkOrientation       orientation,
-					  int                  x,
-					  int                  y,
-					  int                  width,
-					  int                  height);
-char *panel_background_make_string       (PanelBackground     *background,
-					  int                  x,
-					  int                  y);
+void panel_background_init(PanelBackground *background,
+                           PanelBackgroundChangedNotify notify_changed,
+                           gpointer user_data);
+void panel_background_free(PanelBackground *background);
+void panel_background_set(PanelBackground *background, PanelBackgroundType type,
+                          const GdkRGBA *color, const char *image,
+                          gboolean fit_image, gboolean stretch_image,
+                          gboolean rotate_image);
+void panel_background_set_type(PanelBackground *background,
+                               PanelBackgroundType type);
+void panel_background_set_color(PanelBackground *background,
+                                const GdkRGBA *color);
+void panel_background_set_image(PanelBackground *background, const char *image);
+void panel_background_set_fit(PanelBackground *background, gboolean fit_image);
+void panel_background_set_stretch(PanelBackground *background,
+                                  gboolean stretch_image);
+void panel_background_set_rotate(PanelBackground *background,
+                                 gboolean rotate_image);
+void panel_background_set_default_style(PanelBackground *background,
+                                        GdkRGBA *color,
+                                        cairo_pattern_t *pattern);
+void panel_background_realized(PanelBackground *background, GdkWindow *window);
+void panel_background_unrealized(PanelBackground *background);
+void panel_background_change_region(PanelBackground *background,
+                                    GtkOrientation orientation, int x, int y,
+                                    int width, int height);
+char *panel_background_make_string(PanelBackground *background, int x, int y);
 
-PanelBackgroundType  panel_background_get_type   (PanelBackground *background);
-const GdkRGBA       *panel_background_get_color  (PanelBackground *background);
+PanelBackgroundType panel_background_get_type(PanelBackground *background);
+const GdkRGBA *panel_background_get_color(PanelBackground *background);
 
-PanelBackgroundType
-      panel_background_effective_type    (PanelBackground     *background);
+PanelBackgroundType panel_background_effective_type(
+    PanelBackground *background);
 
 void panel_background_apply_css(PanelBackground *background, GtkWidget *widget);
 

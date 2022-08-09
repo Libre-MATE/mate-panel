@@ -30,8 +30,8 @@
 extern "C" {
 #endif
 
-void panel_session_init           (void);
-void panel_session_do_not_restart (void);
+void panel_session_init(void);
+void panel_session_do_not_restart(void);
 
 #ifdef __cplusplus
 }

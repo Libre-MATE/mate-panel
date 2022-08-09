@@ -32,11 +32,10 @@
 #endif
 #endif
 
-#include <glib.h>
+#include <X11/Xlib.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
-
-#include <X11/Xlib.h>
+#include <glib.h>
 
 #include "panel-enums.h"
 
@@ -44,21 +43,15 @@
 extern "C" {
 #endif
 
-void panel_xutils_set_strut       (GdkWindow             *gdk_window,
-                                   PanelOrientation       orientation,
-                                   guint32                strut,
-                                   guint32                strut_start,
-                                   guint32                strut_end,
-                                   GdkRectangle          *rect,
-                                   int                    scale);
+void panel_xutils_set_strut(GdkWindow *gdk_window, PanelOrientation orientation,
+                            guint32 strut, guint32 strut_start,
+                            guint32 strut_end, GdkRectangle *rect, int scale);
 
-void panel_xutils_unset_strut     (GdkWindow             *gdk_window);
+void panel_xutils_unset_strut(GdkWindow *gdk_window);
 
-void panel_warp_pointer           (GdkWindow             *gdk_window,
-                                   int                    x,
-                                   int                    y);
+void panel_warp_pointer(GdkWindow *gdk_window, int x, int y);
 
-guint panel_get_real_modifier_mask (guint modifier_mask);
+guint panel_get_real_modifier_mask(guint modifier_mask);
 
 #ifdef __cplusplus
 }

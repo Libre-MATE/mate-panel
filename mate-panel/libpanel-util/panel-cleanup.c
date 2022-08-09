@@ -23,88 +23,76 @@
  *	Vincent Untz <vuntz@gnome.org>
  */
 
-#include <glib.h>
-#include <glib-object.h>
-
 #include "panel-cleanup.h"
 
+#include <glib-object.h>
+#include <glib.h>
+
 typedef struct {
-	PanelCleanFunc func;
-	gpointer       data;
+  PanelCleanFunc func;
+  gpointer data;
 } PanelClean;
 
 static GSList *cleaner;
 
-void
-panel_cleanup_do (void)
-{
-	GSList *l;
+void panel_cleanup_do(void) {
+  GSList *l;
 
-	if (!cleaner)
-		return;
+  if (!cleaner) return;
 
-	for (l = cleaner; l; l = l->next) {
-		PanelClean *clean;
+  for (l = cleaner; l; l = l->next) {
+    PanelClean *clean;
 
-		clean = l->data;
-		clean->func (clean->data);
-		g_slice_free (PanelClean, clean);
-	}
+    clean = l->data;
+    clean->func(clean->data);
+    g_slice_free(PanelClean, clean);
+  }
 
-	g_slist_free (cleaner);
-	cleaner = NULL;
+  g_slist_free(cleaner);
+  cleaner = NULL;
 }
 
-void
-panel_cleanup_register (PanelCleanFunc func,
-			gpointer       data)
-{
-	PanelClean *clean;
+void panel_cleanup_register(PanelCleanFunc func, gpointer data) {
+  PanelClean *clean;
 
-	g_return_if_fail (func != NULL);
+  g_return_if_fail(func != NULL);
 
-	clean = g_slice_new (PanelClean);
-	clean->func = func;
-	clean->data = data;
+  clean = g_slice_new(PanelClean);
+  clean->func = func;
+  clean->data = data;
 
-	cleaner = g_slist_prepend (cleaner, clean);
+  cleaner = g_slist_prepend(cleaner, clean);
 }
 
-void
-panel_cleanup_unregister (PanelCleanFunc func,
-			  gpointer       data)
-{
-	GSList *l, *next;
+void panel_cleanup_unregister(PanelCleanFunc func, gpointer data) {
+  GSList *l, *next;
 
-	g_return_if_fail (func != NULL);
+  g_return_if_fail(func != NULL);
 
-	if (!cleaner)
-		return;
+  if (!cleaner) return;
 
-	l = cleaner;
+  l = cleaner;
 
-	do {
-		next = l->next;
+  do {
+    next = l->next;
 
-		PanelClean *clean = l->data;
-		if (clean->func == func && clean->data == data) {
-			g_slice_free (PanelClean, clean);
-			cleaner = g_slist_delete_link (cleaner, l);
-		}
+    PanelClean *clean = l->data;
+    if (clean->func == func && clean->data == data) {
+      g_slice_free(PanelClean, clean);
+      cleaner = g_slist_delete_link(cleaner, l);
+    }
 
-		l = next;
-	} while (l);
+    l = next;
+  } while (l);
 }
 
-void
-panel_cleanup_unref_and_nullify (gpointer data)
-{
-	GObject **obj;
+void panel_cleanup_unref_and_nullify(gpointer data) {
+  GObject **obj;
 
-	g_return_if_fail (data != NULL);
+  g_return_if_fail(data != NULL);
 
-	obj = data;
+  obj = data;
 
-	g_object_unref (*obj);
-	*obj = NULL;
+  g_object_unref(*obj);
+  *obj = NULL;
 }

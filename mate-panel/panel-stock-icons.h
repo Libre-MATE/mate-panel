@@ -34,30 +34,30 @@ extern "C" {
 #endif
 
 /* themeable size - "panel-menu" -- This is used for the icons in the menus */
-#define PANEL_DEFAULT_MENU_ICON_SIZE		24
+#define PANEL_DEFAULT_MENU_ICON_SIZE 24
 /* themeable size - "panel-foobar" -- This is only used for the icon of the
  * Applications item in the menu bar */
-#define PANEL_DEFAULT_MENU_BAR_ICON_SIZE	22
+#define PANEL_DEFAULT_MENU_BAR_ICON_SIZE 22
 
-#define PANEL_ADD_TO_DEFAULT_ICON_SIZE		32
+#define PANEL_ADD_TO_DEFAULT_ICON_SIZE 32
 
 /* stock icons */
-#define PANEL_STOCK_FORCE_QUIT          "mate-panel-force-quit"
+#define PANEL_STOCK_FORCE_QUIT "mate-panel-force-quit"
 
 /* stock items  - no point in theme the icons one these,
  * they use stock gtk icons and just modify the text
  * for the stock item.
  */
-#define PANEL_STOCK_EXECUTE             "panel-execute"
-#define PANEL_STOCK_CLEAR               "panel-clear"
-#define PANEL_STOCK_DONT_DELETE         "panel-dont-delete"
+#define PANEL_STOCK_EXECUTE "panel-execute"
+#define PANEL_STOCK_CLEAR "panel-clear"
+#define PANEL_STOCK_DONT_DELETE "panel-dont-delete"
 /* FIXME: put a more representative icon here */
-#define PANEL_STOCK_DEFAULT_ICON	"application-default-icon"
+#define PANEL_STOCK_DEFAULT_ICON "application-default-icon"
 
-void        panel_init_stock_icons_and_items (void);
-GtkIconSize panel_menu_icon_get_size         (void);
-GtkIconSize panel_menu_bar_icon_get_size     (void);
-GtkIconSize panel_add_to_icon_get_size       (void);
+void panel_init_stock_icons_and_items(void);
+GtkIconSize panel_menu_icon_get_size(void);
+GtkIconSize panel_menu_bar_icon_get_size(void);
+GtkIconSize panel_add_to_icon_get_size(void);
 
 #ifdef __cplusplus
 }

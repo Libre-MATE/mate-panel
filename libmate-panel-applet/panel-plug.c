@@ -26,80 +26,64 @@
 
 #include "panel-plug-private.h"
 
-struct _PanelPlug
-{
+struct _PanelPlug {
   GtkPlug parent;
 };
 
-G_DEFINE_TYPE (PanelPlug, panel_plug, GTK_TYPE_PLUG)
+G_DEFINE_TYPE(PanelPlug, panel_plug, GTK_TYPE_PLUG)
 
-static gboolean
-panel_plug_draw (GtkWidget *widget,
-                 cairo_t   *cr)
-{
+static gboolean panel_plug_draw(GtkWidget *widget, cairo_t *cr) {
   GdkWindow *window;
   cairo_pattern_t *pattern;
 
-  if (!gtk_widget_get_realized (widget))
-    return GTK_WIDGET_CLASS (panel_plug_parent_class)->draw (widget, cr);
+  if (!gtk_widget_get_realized(widget))
+    return GTK_WIDGET_CLASS(panel_plug_parent_class)->draw(widget, cr);
 
-  window = gtk_widget_get_window (widget);
-  pattern = gdk_window_get_background_pattern (window);
+  window = gtk_widget_get_window(widget);
+  pattern = gdk_window_get_background_pattern(window);
 
-  if (!pattern)
-    {
-      GtkStyleContext *context;
-      gint width;
-      gint height;
+  if (!pattern) {
+    GtkStyleContext *context;
+    gint width;
+    gint height;
 
-      context = gtk_widget_get_style_context (widget);
-      width = gtk_widget_get_allocated_width (widget);
-      height = gtk_widget_get_allocated_height (widget);
+    context = gtk_widget_get_style_context(widget);
+    width = gtk_widget_get_allocated_width(widget);
+    height = gtk_widget_get_allocated_height(widget);
 
-      gtk_render_background (context, cr, 0, 0, width, height);
-    }
+    gtk_render_background(context, cr, 0, 0, width, height);
+  }
 
-  return GTK_WIDGET_CLASS (panel_plug_parent_class)->draw (widget, cr);
+  return GTK_WIDGET_CLASS(panel_plug_parent_class)->draw(widget, cr);
 }
 
-static void
-panel_plug_realize (GtkWidget *widget)
-{
+static void panel_plug_realize(GtkWidget *widget) {
   GdkScreen *screen;
   GdkVisual *visual;
 
-  screen = gdk_screen_get_default ();
-  visual = gdk_screen_get_rgba_visual (screen);
+  screen = gdk_screen_get_default();
+  visual = gdk_screen_get_rgba_visual(screen);
 
-  if (!visual)
-    visual = gdk_screen_get_system_visual (screen);
+  if (!visual) visual = gdk_screen_get_system_visual(screen);
 
-  gtk_widget_set_visual (widget, visual);
+  gtk_widget_set_visual(widget, visual);
 
-  GTK_WIDGET_CLASS (panel_plug_parent_class)->realize (widget);
+  GTK_WIDGET_CLASS(panel_plug_parent_class)->realize(widget);
 }
 
-static void
-panel_plug_class_init (PanelPlugClass *plug_class)
-{
+static void panel_plug_class_init(PanelPlugClass *plug_class) {
   GtkWidgetClass *widget_class;
 
-  widget_class = GTK_WIDGET_CLASS (plug_class);
+  widget_class = GTK_WIDGET_CLASS(plug_class);
 
   widget_class->draw = panel_plug_draw;
   widget_class->realize = panel_plug_realize;
 
-  gtk_widget_class_set_css_name (widget_class, "PanelApplet");
+  gtk_widget_class_set_css_name(widget_class, "PanelApplet");
 }
 
-static void
-panel_plug_init (PanelPlug *plug)
-{
-  gtk_widget_set_app_paintable (GTK_WIDGET (plug), TRUE);
+static void panel_plug_init(PanelPlug *plug) {
+  gtk_widget_set_app_paintable(GTK_WIDGET(plug), TRUE);
 }
 
-GtkWidget *
-panel_plug_new (void)
-{
-  return g_object_new (PANEL_TYPE_PLUG, NULL);
-}
+GtkWidget *panel_plug_new(void) { return g_object_new(PANEL_TYPE_PLUG, NULL); }

@@ -32,23 +32,14 @@
 extern "C" {
 #endif
 
-GList *panel_g_list_insert_before (GList        *list,
-				   GList        *sibling,
-				   GList        *link);
-GList *panel_g_list_insert_after  (GList        *list,
-				   GList        *sibling,
-				   GList        *link);
-GList *panel_g_list_swap_next     (GList        *list,
-				   GList        *dl);
-GList *panel_g_list_swap_prev     (GList        *list,
-				   GList        *dl);
-GList *panel_g_list_resort_item   (GList        *list,
-				   gpointer      data,
-				   GCompareFunc  func);
+GList *panel_g_list_insert_before(GList *list, GList *sibling, GList *link);
+GList *panel_g_list_insert_after(GList *list, GList *sibling, GList *link);
+GList *panel_g_list_swap_next(GList *list, GList *dl);
+GList *panel_g_list_swap_prev(GList *list, GList *dl);
+GList *panel_g_list_resort_item(GList *list, gpointer data, GCompareFunc func);
 
-GSList *panel_g_slist_make_unique (GSList       *list,
-				   GCompareFunc  compare,
-				   gboolean      free_data);
+GSList *panel_g_slist_make_unique(GSList *list, GCompareFunc compare,
+                                  gboolean free_data);
 
 #ifdef __cplusplus
 }
