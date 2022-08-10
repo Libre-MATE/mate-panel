@@ -26,11 +26,10 @@
 #ifndef PANEL_ICON_CHOOSER_H
 #define PANEL_ICON_CHOOSER_H
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_ICON_CHOOSER (panel_icon_chooser_get_type())
 #define PANEL_ICON_CHOOSER(obj) \
@@ -77,8 +76,6 @@ const char *panel_icon_chooser_get_icon(PanelIconChooser *chooser);
 
 void panel_icon_chooser_set_icon(PanelIconChooser *chooser, const char *icon);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_ICON_CHOOSER_H */

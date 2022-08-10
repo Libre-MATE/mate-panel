@@ -29,9 +29,7 @@
 #include <glib-object.h>
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 void panel_lockdown_init(void);
 void panel_lockdown_finalize(void);
@@ -47,8 +45,6 @@ gboolean panel_lockdown_is_applet_disabled(const char *iid);
 void panel_lockdown_notify_add(GCallback callback_func, gpointer user_data);
 void panel_lockdown_notify_remove(GCallback callback_func, gpointer user_data);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_LOCKDOWN_H__ */

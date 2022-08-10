@@ -28,9 +28,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_GLIB_STR_EMPTY(x) ((x) == NULL || (x)[0] == '\0')
 
@@ -39,8 +37,6 @@ char *panel_g_lookup_in_applications_dirs(const char *basename);
 
 const char *panel_g_utf8_strstrcase(const char *haystack, const char *needle);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_GLIB_H */

@@ -27,15 +27,14 @@
 #ifndef __PANEL_ACTION_BUTTON_H__
 #define __PANEL_ACTION_BUTTON_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "button-widget.h"
 #include "panel-enums.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_ACTION_BUTTON (panel_action_button_get_type())
 #define PANEL_ACTION_BUTTON(o) \
@@ -95,8 +94,6 @@ const char *panel_action_get_text(PanelActionButtonType type);
 const char *panel_action_get_tooltip(PanelActionButtonType type);
 const char *panel_action_get_drag_id(PanelActionButtonType type);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_ACTION_BUTTON_H__ */

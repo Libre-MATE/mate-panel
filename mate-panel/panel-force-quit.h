@@ -26,22 +26,23 @@
 #ifndef __PANEL_FORCE_QUIT_H__
 #define __PANEL_FORCE_QUIT_H__
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #ifdef PACKAGE_NAME /* only check HAVE_X11 if config.h has been included */
 #ifndef HAVE_X11
 #error file should only be included when HAVE_X11 is enabled
-#endif
-#endif
+#endif /* ! HAVE_X11 */
+#endif /* PACKAGE_NAME */
 
+#include <glib.h>
 #include <gdk/gdk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 void panel_force_quit(GdkScreen *screen, guint time);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_FORCE_QUIT_H__ */

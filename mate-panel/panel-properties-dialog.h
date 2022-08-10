@@ -26,16 +26,14 @@
 #ifndef __PANEL_PROPERTIES_DIALOG_H__
 #define __PANEL_PROPERTIES_DIALOG_H__
 
+#include <glib.h>
+
 #include "panel-toplevel.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 void panel_properties_dialog_present(PanelToplevel *toplevel);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_PROPERTIES_DIALOG_H__ */

@@ -29,13 +29,12 @@
 #error file should only be included when HAVE_X11 is enabled
 #endif
 
+#include <glib.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <gtk/gtkx.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define NA_TYPE_TRAY_CHILD (na_tray_child_get_type())
 #define NA_TRAY_CHILD(obj) \
@@ -78,8 +77,6 @@ void na_tray_child_force_redraw(gpointer key, gpointer value,
 void na_tray_child_get_wm_class(NaTrayChild *child, char **res_name,
                                 char **res_class);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __NA_TRAY_CHILD_H__ */

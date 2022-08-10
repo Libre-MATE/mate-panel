@@ -1,15 +1,14 @@
 #ifndef PANEL_H
 #define PANEL_H
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "applet.h"
 #include "panel-toplevel.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 typedef struct _PanelData PanelData;
 struct _PanelData {
@@ -44,8 +43,6 @@ void panel_delete(PanelToplevel *toplevel);
 
 GtkWidget *panel_deletion_dialog(PanelToplevel *toplevel);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* PANEL_H */

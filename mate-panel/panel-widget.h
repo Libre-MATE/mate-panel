@@ -12,6 +12,7 @@
 #define PANEL_WIDGET_H
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "button-widget.h"
@@ -19,9 +20,7 @@
 #include "panel-toplevel.h"
 #include "panel-types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_WIDGET (panel_widget_get_type())
 #define PANEL_WIDGET(object) \
@@ -197,8 +196,7 @@ gboolean panel_widget_toggle_applet_locked(PanelWidget *panel,
                                            GtkWidget *applet);
 
 void panel_widget_register_open_dialog(PanelWidget *panel, GtkWidget *dialog);
-#ifdef __cplusplus
-}
-#endif
+
+G_END_DECLS
 
 #endif /* PANEL_WIDGET_H */

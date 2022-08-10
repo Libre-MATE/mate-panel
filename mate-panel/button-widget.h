@@ -1,13 +1,12 @@
 #ifndef BUTTON_WIDGET_H
 #define BUTTON_WIDGET_H
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "panel-enums.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define BUTTON_TYPE_WIDGET (button_widget_get_type())
 #define BUTTON_WIDGET(object) \
@@ -53,8 +52,6 @@ gboolean button_widget_get_ignore_leave(ButtonWidget *button);
 GtkIconTheme *button_widget_get_icon_theme(ButtonWidget *button);
 cairo_surface_t *button_widget_get_surface(ButtonWidget *button);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __BUTTON_WIDGET_H__ */

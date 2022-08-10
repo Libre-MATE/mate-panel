@@ -11,9 +11,9 @@
 #ifndef DRAWER_PRIVATE_H
 #define DRAWER_PRIVATE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <glib.h>
+
+G_BEGIN_DECLS
 
 /* Internal functions */
 /* event handlers */
@@ -103,8 +103,6 @@ static void panel_drawer_prepare(const char *drawer_id, GIcon *custom_icon,
                                  gboolean use_custom_icon, const char *tooltip,
                                  char **attached_toplevel_id);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* DRAWER_PRIVATE_H */

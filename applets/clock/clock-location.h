@@ -6,9 +6,7 @@
 #include <libmateweather/weather.h>
 #include <time.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define CLOCK_LOCATION_TYPE (clock_location_get_type())
 #define CLOCK_LOCATION(o) \
@@ -80,7 +78,6 @@ void clock_location_set_weather_prefs(ClockLocation *loc,
 
 glong clock_location_get_offset(ClockLocation *loc);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
+
 #endif /* __CLOCK_LOCATION_H__ */

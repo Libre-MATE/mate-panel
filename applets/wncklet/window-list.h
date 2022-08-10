@@ -12,14 +12,10 @@
 #include <glib.h>
 #include <mate-panel-applet.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 gboolean window_list_applet_fill(MatePanelApplet* applet);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* __WINDOW_LIST_H__ */

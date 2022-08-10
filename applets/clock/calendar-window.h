@@ -28,13 +28,12 @@
 #ifndef CALENDAR_WINDOW_H
 #define CALENDAR_WINDOW_H
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "clock-utils.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define CALENDAR_TYPE_WINDOW (calendar_window_get_type())
 #define CALENDAR_WINDOW(o) \
@@ -82,8 +81,6 @@ ClockFormat calendar_window_get_time_format(CalendarWindow *calwin);
 void calendar_window_set_time_format(CalendarWindow *calwin,
                                      ClockFormat time_format);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* CALENDAR_WINDOW_H */

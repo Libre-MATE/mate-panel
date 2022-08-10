@@ -23,11 +23,10 @@
 #ifndef __PANEL_A11Y_H__
 #define __PANEL_A11Y_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 gboolean panel_a11y_get_is_a11y_enabled(GtkWidget *widget);
 void panel_a11y_set_atk_name_desc(GtkWidget *widget, const char *name,
@@ -35,8 +34,6 @@ void panel_a11y_set_atk_name_desc(GtkWidget *widget, const char *name,
 void panel_a11y_set_atk_relation(GtkWidget *widget, GtkLabel *label);
 GType panel_a11y_query_accessible_parent_type(GType type, GTypeInfo *type_info);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_A11Y_H__ */

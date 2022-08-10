@@ -26,15 +26,13 @@
 #ifndef __PANEL_SESSION_H__
 #define __PANEL_SESSION_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <glib.h>
+
+G_BEGIN_DECLS
 
 void panel_session_init(void);
 void panel_session_do_not_restart(void);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_SESSION_H__ */

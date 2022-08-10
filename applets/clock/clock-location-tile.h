@@ -1,6 +1,7 @@
 #ifndef __CLOCK_LOCATION_TILE_H__
 #define __CLOCK_LOCATION_TILE_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "clock-face.h"
@@ -8,9 +9,7 @@
 #include "clock-utils.h"
 #include "clock.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define CLOCK_LOCATION_TILE_TYPE (clock_location_tile_get_type())
 #define CLOCK_LOCATION_TILE(o) \
@@ -50,7 +49,6 @@ void weather_info_setup_tooltip(WeatherInfo *info, ClockLocation *location,
 void clock_location_tile_refresh(ClockLocationTile *this,
                                  gboolean force_refresh);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
+
 #endif /* __CLOCK_H__ */

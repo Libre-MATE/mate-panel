@@ -30,18 +30,15 @@
 #endif
 
 #include <gdk/gdk.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 GtkWidget* wayland_tasklist_new(void);
 void wayland_tasklist_set_orientation(GtkWidget* tasklist_widget,
                                       GtkOrientation orient);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* _WNCKLET_APPLET_WAYLAND_BACKEND_H_ */

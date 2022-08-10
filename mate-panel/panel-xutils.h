@@ -26,11 +26,15 @@
 #ifndef __PANEL_XUTILS_H__
 #define __PANEL_XUTILS_H__
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #ifdef PACKAGE_NAME /* only check HAVE_X11 if config.h has been included */
 #ifndef HAVE_X11
 #error file should only be included when HAVE_X11 is enabled
-#endif
-#endif
+#endif /* ! HAVE_X11 */
+#endif /* PACKAGE_NAME */
 
 #include <X11/Xlib.h>
 #include <gdk/gdk.h>
@@ -39,9 +43,7 @@
 
 #include "panel-enums.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 void panel_xutils_set_strut(GdkWindow *gdk_window, PanelOrientation orientation,
                             guint32 strut, guint32 strut_start,
@@ -53,8 +55,6 @@ void panel_warp_pointer(GdkWindow *gdk_window, int x, int y);
 
 guint panel_get_real_modifier_mask(guint modifier_mask);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_XUTILS_H__ */

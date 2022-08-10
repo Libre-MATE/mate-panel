@@ -30,9 +30,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 GKeyFile *panel_key_file_new_desktop(void);
 gboolean panel_key_file_to_file(GKeyFile *keyfile, const gchar *file,
@@ -65,8 +63,6 @@ void panel_key_file_remove_locale_key(GKeyFile *keyfile, const gchar *key);
 void panel_key_file_remove_all_locale_key(GKeyFile *keyfile, const gchar *key);
 void panel_key_file_ensure_C_key(GKeyFile *keyfile, const char *key);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_KEYFILE_H */

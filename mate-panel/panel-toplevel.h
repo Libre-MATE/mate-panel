@@ -26,14 +26,13 @@
 #ifndef __PANEL_TOPLEVEL_H__
 #define __PANEL_TOPLEVEL_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "panel-background.h"
 #include "panel-enums.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 /* We need PanelWidget type but don't want to include
    the panel-widget.h */
@@ -164,8 +163,6 @@ int panel_toplevel_get_minimum_size(PanelToplevel *toplevel);
 int panel_toplevel_get_maximum_size(PanelToplevel *toplevel);
 GSList *panel_toplevel_list_toplevels(void);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_TOPLEVEL_H__ */

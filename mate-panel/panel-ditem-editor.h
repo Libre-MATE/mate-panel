@@ -26,11 +26,10 @@
 #ifndef PANEL_DITEM_EDITOR_H
 #define PANEL_DITEM_EDITOR_H
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_DITEM_EDITOR (panel_ditem_editor_get_type())
 #define PANEL_DITEM_EDITOR(obj) \
@@ -105,8 +104,6 @@ void panel_ditem_register_save_uri_func(PanelDItemEditor *dialog,
                                         PanelDitemSaveUri save_uri,
                                         gpointer data);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_DITEM_EDITOR_H */

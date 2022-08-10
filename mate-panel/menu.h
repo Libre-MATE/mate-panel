@@ -25,13 +25,12 @@
 #define __MENU_H__
 
 #include <gio/gio.h>
+#include <glib.h>
 
 #include "applet.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 void setup_menuitem(GtkWidget *menuitem, GtkIconSize icon_size,
                     GtkWidget *pixmap, const char *title);
@@ -65,8 +64,6 @@ GtkWidget *add_menu_separator(GtkWidget *menu);
 gboolean menu_dummy_button_press_event(GtkWidget *menuitem,
                                        GdkEventButton *event);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __MENU_H__ */

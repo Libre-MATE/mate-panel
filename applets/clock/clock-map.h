@@ -1,14 +1,13 @@
 #ifndef __CLOCK_MAP_H__
 #define __CLOCK_MAP_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "clock-location.h"
 #include "clock.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define CLOCK_MAP_TYPE (clock_map_get_type())
 #define CLOCK_MAP(o) (G_TYPE_CHECK_INSTANCE_CAST((o), CLOCK_MAP_TYPE, ClockMap))
@@ -36,7 +35,6 @@ void clock_map_refresh(ClockMap *this);
 void clock_map_update_time(ClockMap *this);
 void clock_map_blink_location(ClockMap *this, ClockLocation *loc);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
+
 #endif /* __CLOCK_MAP_H__ */

@@ -24,19 +24,21 @@
 #ifndef __PANEL_STRUTS_H__
 #define __PANEL_STRUTS_H__
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #ifdef PACKAGE_NAME /* only check HAVE_X11 if config.h has been included */
 #ifndef HAVE_X11
 #error file should only be included when HAVE_X11 is enabled
-#endif
-#endif
+#endif /* ! HAVE_X11 */
+#endif /* PACKAGE_NAME */
 
 #include <glib.h>
 
 #include "panel-toplevel.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 gboolean panel_struts_register_strut(PanelToplevel *toplevel, GdkScreen *screen,
                                      int monitor, PanelOrientation orientation,
@@ -51,8 +53,6 @@ void panel_struts_unset_window_hint(PanelToplevel *toplevel);
 gboolean panel_struts_update_toplevel_geometry(PanelToplevel *toplevel, int *x,
                                                int *y, int *w, int *h);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_STRUTS_H__ */

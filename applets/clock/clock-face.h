@@ -14,13 +14,12 @@
 #ifndef __INTL_CLOCK_FACE_H__
 #define __INTL_CLOCK_FACE_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "clock-location.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define INTL_TYPE_CLOCK_FACE (clock_face_get_type())
 #define CLOCK_FACE(obj) \
@@ -56,8 +55,6 @@ GtkWidget *clock_face_new_with_location(ClockFaceSize size, ClockLocation *loc,
                                         GtkWidget *size_widget);
 gboolean clock_face_refresh(ClockFace *this);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* __INTL_CLOCK_FACE_H__ */

@@ -26,12 +26,12 @@
 #ifndef PANEL_SEPARATOR_H
 #define PANEL_SEPARATOR_H
 
+#include <glib.h>
+
 #include "applet.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_SEPARATOR (panel_separator_get_type())
 #define PANEL_SEPARATOR(o) \
@@ -68,8 +68,6 @@ void panel_separator_set_orientation(PanelSeparator *separator,
                                      PanelOrientation orientation);
 void panel_separator_change_background(PanelSeparator *separator);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_SEPARATOR_H */

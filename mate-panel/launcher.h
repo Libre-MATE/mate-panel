@@ -12,12 +12,12 @@
 #ifndef LAUNCHER_H
 #define LAUNCHER_H
 
+#include <glib.h>
+
 #include "applet.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 typedef struct {
   AppletInfo *info;
@@ -62,8 +62,6 @@ void launcher_properties_destroy(Launcher *launcher);
 
 void panel_launcher_set_dnd_enabled(Launcher *launcher, gboolean dnd_enabled);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* LAUNCHER_H */

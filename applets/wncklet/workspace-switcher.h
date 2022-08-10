@@ -12,14 +12,10 @@
 #include <glib.h>
 #include <mate-panel-applet.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 gboolean workspace_switcher_applet_fill(MatePanelApplet* applet);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* __WORKSPACE_SWITCHER_APPLET_H__ */

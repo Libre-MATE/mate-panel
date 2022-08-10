@@ -27,11 +27,10 @@
 #define PANEL_LAUNCH_H
 
 #include <gdk/gdk.h>
+#include <glib.h>
 #include <gio/gdesktopappinfo.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 gboolean panel_app_info_launch_uris(GDesktopAppInfo *appinfo, GList *uris,
                                     GdkScreen *screen, const gchar *action,
@@ -53,8 +52,6 @@ gboolean panel_launch_desktop_file_with_fallback(const char *desktop_file,
                                                  GdkScreen *screen,
                                                  GError **error);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_LAUNCH_H */

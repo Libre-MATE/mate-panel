@@ -26,11 +26,15 @@
 #ifndef __PANEL_ACTION_PROTOCOL_H__
 #define __PANEL_ACTION_PROTOCOL_H__
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #ifdef PACKAGE_NAME /* only check HAVE_X11 if config.h has been included */
 #ifndef HAVE_X11
 #error file should only be included when HAVE_X11 is enabled
-#endif
-#endif
+#endif /* ! HAVE_X11 */
+#endif /* PACKAGE_NAME */
 
 #include <glib.h>
 

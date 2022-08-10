@@ -32,17 +32,13 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 GtkWidget *panel_error_dialog(GtkWindow *parent, GdkScreen *screen,
                               const char *dialog_class, gboolean auto_destroy,
                               const char *primary_text,
                               const char *secondary_text);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_ERROR_H */

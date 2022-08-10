@@ -26,13 +26,12 @@
 #ifndef __PANEL_MENU_BAR_H__
 #define __PANEL_MENU_BAR_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_MENU_BAR (panel_menu_bar_get_type())
 #define PANEL_MENU_BAR(o) \
@@ -79,8 +78,6 @@ void panel_menu_bar_set_orientation(PanelMenuBar *menubar,
                                     PanelOrientation orientation);
 PanelOrientation panel_menu_bar_get_orientation(PanelMenuBar *menubar);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_MENU_BAR_H__ */

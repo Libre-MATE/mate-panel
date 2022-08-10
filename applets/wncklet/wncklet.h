@@ -30,9 +30,7 @@
 
 #define WNCKLET_RESOURCE_PATH "/org/mate/panel/applet/wncklet/"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 typedef struct _WnckScreen WnckScreen;
 
@@ -45,8 +43,6 @@ void wncklet_connect_while_alive(gpointer object, const char* signal,
                                  GCallback func, gpointer func_data,
                                  gpointer alive_object);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* __WNCKLET_H__ */

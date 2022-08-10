@@ -27,11 +27,10 @@
 #ifndef __PANEL_APPLET_FRAME_DBUS_H__
 #define __PANEL_APPLET_FRAME_DBUS_H__
 
+#include <glib.h>
 #include <panel-applet-frame.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_APPLET_FRAME_DBUS (mate_panel_applet_frame_dbus_get_type())
 #define MATE_PANEL_APPLET_FRAME_DBUS(o)                          \
@@ -67,8 +66,6 @@ GType mate_panel_applet_frame_dbus_get_type(void) G_GNUC_CONST;
 gboolean mate_panel_applet_frame_dbus_load(
     const gchar *iid, MatePanelAppletFrameActivating *frame_act);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_APPLET_FRAME_DBUS_H__ */

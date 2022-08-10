@@ -26,12 +26,12 @@
 #ifndef __PANEL_MENU_BUTTON_H__
 #define __PANEL_MENU_BUTTON_H__
 
+#include <glib.h>
+
 #include "button-widget.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_MENU_BUTTON (panel_menu_button_get_type())
 #define PANEL_MENU_BUTTON(o) \
@@ -92,8 +92,6 @@ void panel_menu_button_popup_menu(PanelMenuButton *button, guint n_button,
 void panel_menu_button_set_dnd_enabled(PanelMenuButton *button,
                                        gboolean dnd_enabled);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_MENU_BUTTON_H__ */

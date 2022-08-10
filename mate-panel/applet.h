@@ -8,13 +8,12 @@
 #include "panel-enums.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define APPLET_EVENT_MASK                                                      \
   (GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | \
    GDK_POINTER_MOTION_HINT_MASK)
+
 typedef struct {
   PanelObjectType type;
   GtkWidget *widget;
@@ -100,8 +99,6 @@ void mate_panel_applet_menu_set_recurse(GtkMenu *menu, const gchar *key,
 
 gboolean mate_panel_applet_toggle_locked(AppletInfo *info);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* APPLET_H */

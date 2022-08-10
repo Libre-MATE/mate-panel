@@ -29,9 +29,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 /* themeable size - "panel-menu" -- This is used for the icons in the menus */
 #define PANEL_DEFAULT_MENU_ICON_SIZE 24
@@ -59,8 +57,6 @@ GtkIconSize panel_menu_icon_get_size(void);
 GtkIconSize panel_menu_bar_icon_get_size(void);
 GtkIconSize panel_add_to_icon_get_size(void);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_STOCK_ICONS_H__ */

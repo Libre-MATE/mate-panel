@@ -27,11 +27,10 @@
 #ifndef __CLOCK_UTILS_H__
 #define __CLOCK_UTILS_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 /* Needs to match the indices in the combo of the prefs dialog */
 typedef enum {
@@ -49,8 +48,6 @@ ClockFormat clock_locale_format(void);
 void clock_utils_display_help(GtkWidget *widget, const char *doc_id,
                               const char *link_id);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __CLOCK_UTILS_H__ */

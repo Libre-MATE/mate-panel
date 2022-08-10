@@ -27,14 +27,10 @@
 #include <glib.h>
 #include <mate-panel-applet.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 gboolean show_desktop_applet_fill(MatePanelApplet* applet);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* _SHOWDESKTOP_H_ */

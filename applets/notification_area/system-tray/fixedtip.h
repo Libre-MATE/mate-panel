@@ -23,11 +23,10 @@
 #ifndef FIXED_TIP_H
 #define FIXED_TIP_H
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define NA_TYPE_FIXED_TIP (na_fixed_tip_get_type())
 #define NA_FIXED_TIP(obj) \
@@ -66,8 +65,6 @@ void na_fixed_tip_set_markup(GtkWidget *widget, const char *markup_text);
 void na_fixed_tip_set_orientation(GtkWidget *widget,
                                   GtkOrientation orientation);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* FIXED_TIP_H */

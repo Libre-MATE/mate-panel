@@ -1,12 +1,11 @@
 #ifndef PANEL_UTIL_H
 #define PANEL_UTIL_H
 
+#include <glib.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define sure_string(s) ((const char *)((s) != NULL ? (s) : ""))
 
@@ -57,8 +56,6 @@ void panel_util_set_tooltip_text(GtkWidget *widget, const char *text);
 
 GFile *panel_util_get_file_optional_homedir(const char *location);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_UTIL_H */

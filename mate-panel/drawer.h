@@ -1,11 +1,10 @@
 #ifndef DRAWER_H
 #define DRAWER_H
 
+#include <glib.h>
 #include "panel.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 typedef struct {
   char *tooltip;
@@ -36,8 +35,6 @@ void panel_drawer_set_dnd_enabled(Drawer *drawer, gboolean dnd_enabled);
 
 void drawer_query_deletion(Drawer *drawer);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* DRAWER_H */

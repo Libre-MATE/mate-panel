@@ -5,12 +5,11 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <glib.h>
 
 #include "wayland-client-core.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 /**
  * @page page_wlr_foreign_toplevel_management_unstable_v1 The
@@ -599,8 +598,6 @@ static inline void zwlr_foreign_toplevel_handle_v1_unset_fullscreen(
                    ZWLR_FOREIGN_TOPLEVEL_HANDLE_V1_UNSET_FULLSCREEN);
 }
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
-#endif
+#endif /* WLR_FOREIGN_TOPLEVEL_MANAGEMENT_UNSTABLE_V1_CLIENT_PROTOCOL_H */

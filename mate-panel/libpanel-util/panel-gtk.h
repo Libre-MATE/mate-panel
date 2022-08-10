@@ -26,11 +26,10 @@
 #ifndef PANEL_GTK_H
 #define PANEL_GTK_H
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_GTK_BUILDER_GET(builder, name) \
   GTK_WIDGET(gtk_builder_get_object(builder, name))
@@ -52,8 +51,6 @@ GtkWidget *panel_image_menu_item_new_from_gicon(GIcon *gicon,
 
 GtkWidget *panel_check_menu_item_new(GtkWidget *widget_check);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_GTK_H */

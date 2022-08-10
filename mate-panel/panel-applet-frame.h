@@ -25,14 +25,13 @@
 #ifndef __PANEL_APPLET_FRAME_H__
 #define __PANEL_APPLET_FRAME_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "applet.h"
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_APPLET_FRAME (mate_panel_applet_frame_get_type())
 #define MATE_PANEL_APPLET_FRAME(o)                          \
@@ -144,8 +143,7 @@ void _mate_panel_applet_frame_applet_remove(MatePanelAppletFrame *frame);
 void _mate_panel_applet_frame_applet_move(MatePanelAppletFrame *frame);
 void _mate_panel_applet_frame_applet_lock(MatePanelAppletFrame *frame,
                                           gboolean locked);
-#ifdef __cplusplus
-}
-#endif
+
+G_END_DECLS
 
 #endif /* __PANEL_APPLET_FRAME_H__ */

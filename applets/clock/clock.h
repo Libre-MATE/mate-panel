@@ -27,16 +27,14 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <glib.h>
+
+G_BEGIN_DECLS
 
 #define CLOCK_ICON "mate-panel-clock"
 #define CLOCK_RESOURCE_PATH "/org/mate/panel/applet/clock/"
 #define CLOCK_SCHEMA "org.mate.panel.applet.clock"
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* CLOCK_H */

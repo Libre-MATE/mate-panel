@@ -26,9 +26,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 typedef struct _MatePanelAppletInfo MatePanelAppletInfo;
 
@@ -49,8 +47,6 @@ gboolean mate_panel_applet_info_get_x11_supported(MatePanelAppletInfo *info);
 gboolean mate_panel_applet_info_get_wayland_supported(
     MatePanelAppletInfo *info);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_APPLET_INFO_H__ */

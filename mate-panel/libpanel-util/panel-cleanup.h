@@ -28,9 +28,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_CLEAN_FUNC(f) ((PanelCleanFunc)(f))
 
@@ -43,8 +41,6 @@ void panel_cleanup_do(void);
 void panel_cleanup_register(PanelCleanFunc func, gpointer data);
 void panel_cleanup_unregister(PanelCleanFunc func, gpointer data);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_CLEANUP_H */

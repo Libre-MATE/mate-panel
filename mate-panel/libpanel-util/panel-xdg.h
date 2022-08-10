@@ -26,18 +26,15 @@
 #ifndef PANEL_XDG_H
 #define PANEL_XDG_H
 
+#include <glib.h>
 #include <gdk/gdk.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 char *panel_xdg_icon_remove_extension(const char *icon);
 
 char *panel_xdg_icon_name_from_icon_path(const char *path, GdkScreen *screen);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_XDG_H */

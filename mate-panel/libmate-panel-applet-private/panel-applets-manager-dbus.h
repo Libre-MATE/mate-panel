@@ -24,11 +24,10 @@
 #ifndef __PANEL_APPLETS_MANAGER_DBUS_H__
 #define __PANEL_APPLETS_MANAGER_DBUS_H__
 
+#include <glib.h>
 #include <panel-applets-manager.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_APPLETS_MANAGER_DBUS \
   (mate_panel_applets_manager_dbus_get_type())
@@ -65,8 +64,6 @@ struct _MatePanelAppletsManagerDBus {
 
 GType mate_panel_applets_manager_dbus_get_type(void);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_APPLETS_MANAGER_DBUS_H__ */

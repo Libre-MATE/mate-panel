@@ -26,13 +26,12 @@
 #ifndef __PANEL_FRAME_H__
 #define __PANEL_FRAME_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "panel-enums.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_FRAME (panel_frame_get_type())
 #define PANEL_FRAME(o) \
@@ -65,8 +64,6 @@ PanelFrameEdge panel_frame_get_edges(PanelFrame *toplevel);
 
 void panel_frame_draw(GtkWidget *widget, cairo_t *cr, PanelFrameEdge edges);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_FRAME_H__ */

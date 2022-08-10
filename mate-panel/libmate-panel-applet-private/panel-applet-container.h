@@ -25,13 +25,12 @@
 #define __PANEL_APPLET_CONTAINER_H__
 
 #include <glib-object.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "panel.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_APPLET_CONTAINER (mate_panel_applet_container_get_type())
 #define MATE_PANEL_APPLET_CONTAINER(obj)                          \
@@ -112,8 +111,6 @@ GVariant *mate_panel_applet_container_child_get_finish(
 void mate_panel_applet_container_cancel_operation(
     MatePanelAppletContainer *container, gconstpointer operation);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_APPLET_CONTAINER_H__ */

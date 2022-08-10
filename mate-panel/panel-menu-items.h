@@ -24,13 +24,12 @@
 #ifndef __PANEL_MENU_ITEMS_H__
 #define __PANEL_MENU_ITEMS_H__
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "panel-widget.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 #define PANEL_TYPE_PLACE_MENU_ITEM (panel_place_menu_item_get_type())
 #define PANEL_PLACE_MENU_ITEM(o)                               \
@@ -105,8 +104,6 @@ void panel_menu_items_append_lock_logout(GtkWidget *menu);
 void panel_menu_item_activate_desktop_file(GtkWidget *menuitem,
                                            const char *path);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* __PANEL_MENU_ITEMS_H__ */

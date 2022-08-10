@@ -28,9 +28,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+G_BEGIN_DECLS
 
 GList *panel_g_list_insert_before(GList *list, GList *sibling, GList *link);
 GList *panel_g_list_insert_after(GList *list, GList *sibling, GList *link);
@@ -41,8 +39,6 @@ GList *panel_g_list_resort_item(GList *list, gpointer data, GCompareFunc func);
 GSList *panel_g_slist_make_unique(GSList *list, GCompareFunc compare,
                                   gboolean free_data);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif /* PANEL_LIST_H */
