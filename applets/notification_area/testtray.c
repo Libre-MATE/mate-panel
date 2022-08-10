@@ -187,7 +187,7 @@ static TrayData *create_tray_on_screen(GdkScreen *screen, gboolean force) {
   return data;
 }
 
-static gboolean signal_handler(gpointer data G_GNUC_UNUSED) {
+static gboolean signal_handler(gpointer data) {
   gtk_main_quit();
 
   return FALSE;

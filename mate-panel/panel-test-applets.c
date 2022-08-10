@@ -21,7 +21,7 @@
 
 #include "panel-modules.h"
 
-G_GNUC_UNUSED void on_execute_button_clicked(GtkButton *button, gpointer dummy);
+void on_execute_button_clicked(GtkButton *button, gpointer dummy);
 
 static GtkWidget *win = NULL;
 static GtkWidget *applet_combo = NULL;
@@ -185,8 +185,7 @@ static void load_applet_from_command_line(void) {
   load_applet_into_window(cli_iid, cli_prefs_path, size, orient);
 }
 
-G_GNUC_UNUSED void on_execute_button_clicked(GtkButton *button,
-                                             gpointer dummy) {
+void on_execute_button_clicked(GtkButton *button, gpointer dummy) {
   char *title;
 
   title = get_combo_applet_id(applet_combo);
