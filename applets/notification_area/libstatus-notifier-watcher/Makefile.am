@@ -27,6 +27,7 @@ gf-sn-watcher-v0-gen.h:
 gf-sn-watcher-v0-gen.c: org.kde.StatusNotifierWatcher.xml
 	$(AM_V_GEN) $(GDBUS_CODEGEN) --c-namespace Gf \
 		--generate-c-code gf-sn-watcher-v0-gen \
+		--glib-min-required $(GLIB_REQUIRED) \
 		$(srcdir)/org.kde.StatusNotifierWatcher.xml
 
 BUILT_SOURCES = \

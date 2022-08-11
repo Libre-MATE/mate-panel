@@ -38,24 +38,28 @@ sn-dbus-menu-gen.h:
 sn-dbus-menu-gen.c: com.canonical.dbusmenu.xml
 	$(AM_V_GEN) $(GDBUS_CODEGEN) --c-namespace Sn \
 		--generate-c-code sn-dbus-menu-gen \
+		--glib-min-required $(GLIB_REQUIRED) \
 		$(srcdir)/com.canonical.dbusmenu.xml
 
 sn-host-v0-gen.h:
 sn-host-v0-gen.c: org.kde.StatusNotifierHost.xml
 	$(AM_V_GEN) $(GDBUS_CODEGEN) --c-namespace Sn \
 		--generate-c-code sn-host-v0-gen \
+		--glib-min-required $(GLIB_REQUIRED) \
 		$(srcdir)/org.kde.StatusNotifierHost.xml
 
 sn-item-v0-gen.h:
 sn-item-v0-gen.c: org.kde.StatusNotifierItem.xml
 	$(AM_V_GEN) $(GDBUS_CODEGEN) --c-namespace Sn \
 		--generate-c-code sn-item-v0-gen \
+		--glib-min-required $(GLIB_REQUIRED) \
 		$(srcdir)/org.kde.StatusNotifierItem.xml
 
 sn-watcher-v0-gen.h:
 sn-watcher-v0-gen.c: org.kde.StatusNotifierWatcher.xml
 	$(AM_V_GEN) $(GDBUS_CODEGEN) --c-namespace Sn \
 		--generate-c-code sn-watcher-v0-gen \
+		--glib-min-required $(GLIB_REQUIRED) \
 		$(srcdir)/org.kde.StatusNotifierWatcher.xml
 
 BUILT_SOURCES =			\
