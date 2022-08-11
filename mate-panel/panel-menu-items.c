@@ -1129,16 +1129,8 @@ static void panel_place_menu_item_finalize(GObject *object) {
   }
 
   for (i = 0; i < N_MENU_ITEM_SIGNALS; i++) {
-#if GLIB_CHECK_VERSION(2, 62, 0)
     g_clear_signal_handler(&menuitem->priv->signal_id[i],
                            menuitem->priv->volume_monitor);
-#else
-    if (menuitem->priv->signal_id[i] != 0) {
-      g_signal_handler_disconnect(menuitem->priv->volume_monitor,
-                                  menuitem->priv->signal_id[i]);
-      menuitem->priv->signal_id[i] = 0;
-    }
-#endif
   }
 
   g_clear_object(&menuitem->priv->volume_monitor);

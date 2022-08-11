@@ -2575,7 +2575,6 @@ static void panel_toplevel_reverse_arrows(PanelToplevel *toplevel) {
 static void panel_toplevel_disconnect_attached(PanelToplevel *toplevel) {
   guint i;
 
-#if GLIB_CHECK_VERSION(2, 62, 0)
   for (i = 0; i < N_ATTACH_TOPLEVEL_SIGNALS; i++) {
     g_clear_signal_handler(&toplevel->priv->attach_toplevel_signals[i],
                            toplevel->priv->attach_toplevel);
@@ -2585,23 +2584,6 @@ static void panel_toplevel_disconnect_attached(PanelToplevel *toplevel) {
     g_clear_signal_handler(&toplevel->priv->attach_widget_signals[i],
                            toplevel->priv->attach_widget);
   }
-#else
-  for (i = 0; i < N_ATTACH_TOPLEVEL_SIGNALS; i++) {
-    if (toplevel->priv->attach_toplevel_signals[i] != 0) {
-      g_signal_handler_disconnect(toplevel->priv->attach_toplevel,
-                                  toplevel->priv->attach_toplevel_signals[i]);
-      toplevel->priv->attach_toplevel_signals[i] = 0;
-    }
-  }
-
-  for (i = 0; i < N_ATTACH_WIDGET_SIGNALS; i++) {
-    if (toplevel->priv->attach_widget_signals[i] != 0) {
-      g_signal_handler_disconnect(toplevel->priv->attach_widget,
-                                  toplevel->priv->attach_widget_signals[i]);
-      toplevel->priv->attach_widget_signals[i] = 0;
-    }
-  }
-#endif
 }
 
 static void panel_toplevel_connect_attached(PanelToplevel *toplevel) {
