@@ -81,9 +81,6 @@ typedef void (*PanelProfileDestroyFunc)(const char *id);
 static GSettings *profile_settings = NULL;
 
 static GQuark toplevel_id_quark = 0;
-#if 0
-static GQuark queued_changes_quark = 0;
-#endif
 static GQuark commit_timeout_quark = 0;
 
 static void panel_profile_object_id_list_update(gchar **objects);

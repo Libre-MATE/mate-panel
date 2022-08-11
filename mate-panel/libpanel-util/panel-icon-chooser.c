@@ -232,20 +232,6 @@ static void _panel_icon_chooser_update(PanelIconChooser *chooser) {
      * When we'll remove the alternative code, we won't need the
      * style_set/screen_changed handlers anymore.
      */
-#if 0
-		GIcon *icon;
-		char  *names[2];
-
-		names[0] = panel_xdg_icon_remove_extension (chooser->priv->icon);
-		names[1] = chooser->priv->fallback_icon_name;
-		icon = g_themed_icon_new_from_names (names, 2);
-
-		gtk_image_set_from_gicon (GTK_IMAGE (chooser->priv->image),
-					  icon,
-					  PANEL_ICON_CHOOSER_ICON_SIZE);
-
-		g_free (names[0]);
-#endif
     GtkIconTheme *icon_theme;
     const char *icon;
     char *no_ext;

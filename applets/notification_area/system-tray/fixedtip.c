@@ -180,22 +180,7 @@ GtkWidget *na_fixed_tip_new(GtkWidget *parent, GtkOrientation orientation) {
   g_return_val_if_fail(parent != NULL, NULL);
 
   fixedtip = g_object_new(NA_TYPE_FIXED_TIP, "type", GTK_WINDOW_POPUP, NULL);
-
   fixedtip->priv->parent = parent;
-
-#if 0
-  /* FIXME: would be nice to be able to get the toplevel for the tip, but this
-   * doesn't work
-   */
-  GtkWidget  *toplevel;
-
-  toplevel = gtk_widget_get_toplevel (parent);
-  /*
-  if (toplevel && gtk_widget_is_toplevel (toplevel) && GTK_IS_WINDOW (toplevel))
-    gtk_window_set_transient_for (GTK_WINDOW (fixedtip), GTK_WINDOW (toplevel));
-   */
-#endif
-
   fixedtip->priv->orientation = orientation;
 
   /* FIXME: would be nice to move the tip when the notification area moves */

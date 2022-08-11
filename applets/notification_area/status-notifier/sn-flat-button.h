@@ -51,13 +51,6 @@ struct _SnFlatButtonClass {
 GType sn_flat_button_get_type(void);
 GtkWidget *sn_flat_button_new(void);
 
-#if 0
-#ifndef SN_COMPAT_BUTTON_NODRAW_C
-/* replace GtkButton */
-#define gtk_button_get_type sn_compat_button_nodraw_get_type
-#endif
-#endif
-
 G_END_DECLS
 
-#endif
+#endif /* SN_FLAT_BUTTON_H */

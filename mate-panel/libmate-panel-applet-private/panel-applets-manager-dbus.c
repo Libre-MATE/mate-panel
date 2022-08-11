@@ -528,10 +528,6 @@ static gboolean mate_panel_applets_manager_dbus_factory_deactivate(
   if (info->n_applets == 0) {
     /* FIXME: we should close the module here, however applet types
      * are registered static */
-#if 0
-		g_module_close (info->module);
-		info->module = NULL;
-#endif
   }
 
   return TRUE;

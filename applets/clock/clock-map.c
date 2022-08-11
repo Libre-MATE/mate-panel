@@ -371,30 +371,6 @@ static void clock_map_place_locations(ClockMap *this) {
     clock_map_place_location(this, loc, FALSE);
     locs = locs->next;
   }
-
-#if 0
-        /* map_mark test suite for the edge cases */
-
-        /* points around longitude 180 */
-        clock_map_mark (this, 0.0, 180.0);
-        clock_map_mark (this, -15.0, -178.0);
-        clock_map_mark (this, -30.0, -176.0);
-        clock_map_mark (this, 15.0, 178.0);
-        clock_map_mark (this, 30.0, 176.0);
-
-        clock_map_mark (this, 90.0, 180.0);
-        clock_map_mark (this, -90.0, 180.0);
-
-        /* north pole & friends */
-        clock_map_mark (this, 90.0, 0.0);
-        clock_map_mark (this, 88.0, -15.0);
-        clock_map_mark (this, 92.0, 15.0);
-
-        /* south pole & friends */
-        clock_map_mark (this, -90.0, 0.0);
-        clock_map_mark (this, -88.0, -15.0);
-        clock_map_mark (this, -92.0, 15.0);
-#endif
 }
 
 static void clock_map_compute_vector(gdouble lat, gdouble lon, gdouble *vec) {

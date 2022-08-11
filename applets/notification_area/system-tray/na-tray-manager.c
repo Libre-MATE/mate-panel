@@ -418,20 +418,6 @@ static GdkFilterReturn na_tray_manager_window_filter(GdkXEvent *xev,
 
   return GDK_FILTER_CONTINUE;
 }
-
-#if 0
-/* FIXME investigate why this doesn't work */
-static gboolean
-na_tray_manager_selection_clear_event (GtkWidget         *widget,
-                                       GdkEventSelection *event,
-                                       NaTrayManager     *manager)
-{
-  g_signal_emit (manager, manager_signals[LOST_SELECTION], 0);
-  na_tray_manager_unmanage (manager);
-
-  return FALSE;
-}
-#endif
 #endif
 
 static void na_tray_manager_unmanage(NaTrayManager *manager) {
@@ -629,10 +615,6 @@ static gboolean na_tray_manager_manage_screen_x11(NaTrayManager *manager,
   /* If there's already a manager running on the screen
    * we can't create another one.
    */
-#if 0
-  if (na_tray_manager_check_running_screen_x11 (screen))
-    return FALSE;
-#endif
 
   manager->screen = screen;
 
@@ -696,12 +678,6 @@ static gboolean na_tray_manager_manage_screen_x11(NaTrayManager *manager,
         gdk_x11_atom_to_xatom_for_display(display, message_data_atom);
 
     /* Add a window filter */
-#if 0
-      /* This is for when we lose the selection of _NET_SYSTEM_TRAY_Sx */
-      g_signal_connect (invisible, "selection-clear-event",
-                        G_CALLBACK (na_tray_manager_selection_clear_event),
-                        manager);
-#endif
     /* This is for SYSTEM_TRAY_REQUEST_DOCK and SelectionClear */
     gdk_window_add_filter(window, na_tray_manager_window_filter, manager);
     return TRUE;
