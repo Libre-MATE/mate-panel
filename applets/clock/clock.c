@@ -298,8 +298,7 @@ static int clock_timeout_callback(gpointer data) {
       (!cd->set_time_window || !gtk_widget_get_visible(cd->set_time_window)) &&
       cd->format != CLOCK_FORMAT_UNIX && cd->format != CLOCK_FORMAT_CUSTOM) {
     if (cd->format == CLOCK_FORMAT_INTERNET &&
-        (unsigned int)get_itime(new_time) !=
-            (unsigned int)get_itime(cd->current_time)) {
+        floorf(get_itime(new_time)) != floorf(get_itime(cd->current_time))) {
       update_clock(cd);
     } else if ((cd->format == CLOCK_FORMAT_12 ||
                 cd->format == CLOCK_FORMAT_24) &&
