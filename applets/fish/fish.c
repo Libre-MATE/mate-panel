@@ -503,7 +503,8 @@ static void display_about_dialog(GtkAction *action, FishApplet *fish) {
       authors, "comments", descr, "copyright",
       _("Copyright \xc2\xa9 1998-2002 Free Software Foundation, Inc.\n"
         "Copyright \xc2\xa9 2002-2005 Vincent Untz\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "documenters", documenters, "logo-icon-name", FISH_ICON,
       "translator-credits", _("translator-credits"), "version",
       VERSION, /* "3.4.7.4ac19" */

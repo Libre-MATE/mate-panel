@@ -3034,7 +3034,8 @@ static void display_about_dialog(GtkAction *action, ClockData *cd) {
       authors, "comments", _("The Clock displays the current time and date"),
       "copyright",
       _("Copyright \xc2\xa9 1998-2004 Free Software Foundation, Inc.\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "documenters", documenters, "logo-icon-name", CLOCK_ICON,
       "translator-credits", _("translator-credits"), "version", VERSION,
       "website", PACKAGE_URL, NULL);

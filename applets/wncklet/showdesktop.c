@@ -488,7 +488,8 @@ static void display_about_dialog(GtkAction* action, ShowDesktopData* sdd) {
       "copyright",
       _("Copyright \xc2\xa9 2002 Red Hat, Inc.\n"
         "Copyright \xc2\xa9 2011 Perberos\n"
-        "Copyright \xc2\xa9 2012-2021 MATE developers"),
+        "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+        "Copyright \xc2\xa9 2022 Libre MATE"),
       "documenters", documenters, "icon-name", SHOW_DESKTOP_ICON,
       "logo-icon-name", SHOW_DESKTOP_ICON, "translator-credits",
       _("translator-credits"), "version", VERSION, "website", PACKAGE_URL,

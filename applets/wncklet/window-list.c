@@ -867,7 +867,8 @@ static void display_about_dialog(GtkAction* action, TasklistData* tasklist) {
                         "copyright",
                         _("Copyright \xc2\xa9 2002 Red Hat, Inc.\n"
                           "Copyright \xc2\xa9 2011 Perberos\n"
-                          "Copyright \xc2\xa9 2012-2021 MATE developers"),
+                          "Copyright \xc2\xa9 2012-2021 MATE developers\n"
+                          "Copyright \xc2\xa9 2022 Libre MATE"),
                         "documenters", documenters, "icon-name",
                         WINDOW_LIST_ICON, "logo-icon-name", WINDOW_LIST_ICON,
                         "translator-credits", _("translator-credits"),
