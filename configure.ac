@@ -261,6 +261,8 @@ GETTEXT_PACKAGE=mate-panel
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Define the gettext package to be used])
 AC_SUBST(GETTEXT_PACKAGE)
 
+AM_CONDITIONAL([USE_NLS], [test "x${USE_NLS}" = "xyes"])
+
 dnl gtk-doc stuff
 
 GTK_DOC_CHECK([1.0])
@@ -385,5 +387,6 @@ echo "
         XRandr support:                ${have_randr}
         Build introspection support:   ${found_introspection}
         Build gtk-doc documentation:   ${enable_gtk_doc}
+        Native Language support:       $USE_NLS
 
 "
