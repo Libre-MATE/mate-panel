@@ -26,9 +26,12 @@
  *	Mark McLoughlin <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-applet-frame-dbus.h"
 
-#include <config.h>
 #include <panel-applet-frame.h>
 #include <panel-applets-manager.h>
 #include <string.h>

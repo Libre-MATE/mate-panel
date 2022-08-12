@@ -33,9 +33,12 @@
  *     disappear
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-menu-items.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <libmate-desktop/mate-gsettings.h>

@@ -21,9 +21,12 @@
  * 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-applets-manager-dbus.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <gmodule.h>
 #include <panel-applets-manager.h>

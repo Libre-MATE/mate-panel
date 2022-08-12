@@ -28,9 +28,12 @@
  *	Mark McLoughlin <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-run-dialog.h"
 
-#include <config.h>
 #include <dirent.h>
 #include <errno.h>
 #include <gdk/gdkkeysyms.h>

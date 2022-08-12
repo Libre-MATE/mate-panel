@@ -15,10 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gf-status-notifier-watcher.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
+#include "gf-status-notifier-watcher.h"
 #include "gf-sn-watcher-v0.h"
 
 struct _GfStatusNotifierWatcher {

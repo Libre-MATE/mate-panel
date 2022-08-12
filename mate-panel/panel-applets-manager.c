@@ -21,9 +21,12 @@
  * 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-applets-manager.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <libpanel-util/panel-cleanup.h>
 

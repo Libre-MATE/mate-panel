@@ -23,10 +23,13 @@
  *      Mark McLoughlin <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-background.h"
 
 #include <cairo.h>
-#include <config.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <string.h>

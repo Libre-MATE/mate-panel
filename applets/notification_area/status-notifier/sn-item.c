@@ -15,10 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sn-item.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
+#include "sn-item.h"
 #include "na-item.h"
 #include "sn-dbus-menu.h"
 

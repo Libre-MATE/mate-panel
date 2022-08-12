@@ -15,10 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sn-host-v0.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
+#include "sn-host-v0.h"
 #include "sn-item-v0.h"
 #include "sn-watcher-v0-gen.h"
 

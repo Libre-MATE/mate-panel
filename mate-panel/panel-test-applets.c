@@ -10,7 +10,10 @@
  * Copyright (C) 2012-2021 MATE Developers
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>

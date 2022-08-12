@@ -26,9 +26,12 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-context-menu.h"
 
-#include <config.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 #include <libpanel-util/panel-error.h>

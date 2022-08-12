@@ -25,9 +25,12 @@
  *	Vincent Untz <vincent@vuntz.net>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-menu-bar.h"
 
-#include <config.h>
 #include <glib/gi18n.h>
 #include <libpanel-util/panel-error.h>
 #include <libpanel-util/panel-launch.h>

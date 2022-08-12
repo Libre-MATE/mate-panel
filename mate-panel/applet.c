@@ -7,7 +7,10 @@
  *           Miguel de Icaza
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <libpanel-util/panel-gtk.h>

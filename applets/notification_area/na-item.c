@@ -16,9 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "na-item.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include "na-item.h"
 
 G_DEFINE_INTERFACE_WITH_CODE(
     NaItem, na_item, GTK_TYPE_WIDGET,

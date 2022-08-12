@@ -25,9 +25,12 @@
  * Most of the original code comes from clock.c
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "calendar-window.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>

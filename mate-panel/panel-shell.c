@@ -28,9 +28,12 @@
  *      Vincent Untz <vuntz@gnome.org>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-shell.h"
 
-#include <config.h>
 #include <glib/gi18n.h>
 #include <libpanel-util/panel-cleanup.h>
 

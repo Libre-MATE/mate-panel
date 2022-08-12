@@ -16,10 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "na-host.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
+#include "na-host.h"
 #include "na-item.h"
 
 enum {

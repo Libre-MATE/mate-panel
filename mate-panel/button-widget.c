@@ -1,6 +1,9 @@
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "button-widget.h"
 
-#include <config.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>

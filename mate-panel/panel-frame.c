@@ -23,9 +23,12 @@
  *	Mark McLoughlin <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-frame.h"
 
-#include <config.h>
 #include <libpanel-util/panel-color.h>
 
 #include "panel-typebuiltins.h"

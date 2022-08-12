@@ -23,9 +23,12 @@
  *      Vincent Untz <vuntz@gnome.org>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-modules.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <libmate-panel-applet-private/panel-applets-manager-dbus.h>
 

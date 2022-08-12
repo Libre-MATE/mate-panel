@@ -24,9 +24,12 @@
  * NaTray is already taken for the XEMBED part, so for now it's called NaGrid,
  * don't make a big deal out of it. */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "na-grid.h"
 
-#include <config.h>
 #include <gtk/gtk.h>
 
 #include "status-notifier/sn-host-v0.h"

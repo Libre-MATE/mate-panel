@@ -23,9 +23,12 @@
  *	William Wold <wm@wmww.sh>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "wayland-backend.h"
 
-#include <config.h>
 #include <gtk-layer-shell.h>
 
 void wayland_panel_toplevel_init(PanelToplevel* toplevel) {

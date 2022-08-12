@@ -11,9 +11,12 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "launcher.h"
 
-#include <config.h>
 #include <dirent.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>

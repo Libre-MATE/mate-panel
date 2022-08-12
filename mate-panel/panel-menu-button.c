@@ -23,9 +23,12 @@
  *	Mark McLoughlin <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-menu-button.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <libpanel-util/panel-error.h>

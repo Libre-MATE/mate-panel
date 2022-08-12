@@ -19,7 +19,9 @@
  * 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
 #ifndef HAVE_WAYLAND
 #error file should only be compiled when HAVE_WAYLAND is enabled

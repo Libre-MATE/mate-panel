@@ -13,9 +13,12 @@
  *          Mark McLoughlin
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-util.h"
 
-#include <config.h>
 #include <dirent.h>
 #include <errno.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>

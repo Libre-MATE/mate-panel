@@ -24,7 +24,9 @@
  * Most of the original code comes from clock.c
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
 #ifdef HAVE_LANGINFO_H
 #include <langinfo.h>

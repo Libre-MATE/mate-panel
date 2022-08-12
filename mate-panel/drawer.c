@@ -8,9 +8,12 @@
  *          George Lebl
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "drawer.h"
 
-#include <config.h>
 #include <dirent.h>
 #include <gdk/gdkkeysyms.h>
 #include <gio/gio.h>

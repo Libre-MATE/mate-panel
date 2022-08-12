@@ -24,7 +24,9 @@
  *          Mark McLoughlin <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
 #ifdef HAVE_X11
 #include <X11/Xatom.h>

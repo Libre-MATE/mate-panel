@@ -24,7 +24,10 @@
  *      Stefano Karapetsas <stefano@karapetsas.com>
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include <gio/gio.h>
 #include <glib.h>
 #include <string.h>

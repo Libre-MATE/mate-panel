@@ -25,8 +25,11 @@
  *      Stefano Karapetsas <stefano@karapetsas.com>
  */
 
-#include <cairo.h>
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include <cairo.h>
 #include <gdk/gdkkeysyms.h>
 #include <gio/gio.h>
 #include <glib-object.h>

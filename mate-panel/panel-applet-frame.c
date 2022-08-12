@@ -25,7 +25,10 @@
  *	Mark McLoughlin <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include <gdk/gdk.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>

@@ -15,10 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sn-dbus-menu.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
 
+#include "sn-dbus-menu.h"
 #include "sn-dbus-menu-gen.h"
 #include "sn-dbus-menu-item.h"
 

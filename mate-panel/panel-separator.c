@@ -23,9 +23,11 @@
  *      Carlos Garcia Campos <carlosgc@gnome.org>
  */
 
-#include "panel-separator.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include "panel-separator.h"
 
 #include "panel-background.h"
 #include "panel-profile.h"

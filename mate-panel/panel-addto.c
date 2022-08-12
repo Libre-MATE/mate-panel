@@ -23,9 +23,12 @@
  *	Vincent Untz <vincent@vuntz.net>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-addto.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <libpanel-util/panel-glib.h>

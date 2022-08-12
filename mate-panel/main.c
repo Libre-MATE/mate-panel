@@ -8,7 +8,10 @@
  *          George Lebl
  */
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include <glib/gi18n.h>
 #include <libegg/eggdesktopfile.h>
 #include <libegg/eggsmclient.h>

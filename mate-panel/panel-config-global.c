@@ -25,9 +25,12 @@
  *      Stefano Karapetsas <stefano@karapetsas.com>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-config-global.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <string.h>
 

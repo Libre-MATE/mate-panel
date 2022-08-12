@@ -21,9 +21,11 @@
  * 02110-1301, USA.
  */
 
-#include "panel-applet-info.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include "panel-applet-info.h"
 
 struct _MatePanelAppletInfo {
   gchar *iid;

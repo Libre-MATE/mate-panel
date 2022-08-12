@@ -23,9 +23,12 @@
  *      Mark McLoughlin  <mark@skynet.ie>
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "panel-lockdown.h"
 
-#include <config.h>
 #include <gio/gio.h>
 #include <string.h>
 

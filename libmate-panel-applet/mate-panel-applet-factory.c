@@ -20,9 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "mate-panel-applet-factory.h"
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
+#include "mate-panel-applet-factory.h"
 
 #include "mate-panel-applet.h"
 #include "panel-applet-private.h"
