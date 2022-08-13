@@ -15,10 +15,6 @@ several applets:
     List, the Window Selector, the Notification Area, the Clock and the
     infamous 'Wanda the Fish'.
 
-You may download updates to the package from:
-
-   http://pub.mate-desktop.org/releases/
-
 mate-panel is a fork of gnome-panel.
 
 Installation
@@ -61,16 +57,3 @@ On Fedora you must uninstall mate-screensaver and enable xscreensaver daemon:
     sudo dnf remove mate-screensaver
     sudo sed -i '/mate-screensaver/d' /usr/libexec/xscreensaver-autostart
     sudo sed -i '/OnlyShowIn/d' /etc/xdg/autostart/xscreensaver-autostart.desktop
-
-
-How to report bugs
-==================
-
-Bugs should be reported to the MATE bug tracking system:
-
-   https://github.com/mate-desktop/mate-panel/issues
-
-You will need to create an account for yourself.
-
-Please read the HACKING file for information on where to send changes or
-bugfixes for this package.
