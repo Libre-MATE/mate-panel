@@ -3,6 +3,7 @@ AC_INIT([mate-panel],
         [https://github.com/Libre-MATE/mate-panel/issues],
         [mate-panel],
         [https://github.com/Libre-MATE/mate-panel/])
+AC_COPYRIGHT([Copyright (C) 2022 Libre MATE])
 
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([1.9 no-dist-gzip dist-xz tar-ustar -Wno-portability check-news])
