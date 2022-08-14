@@ -21,12 +21,10 @@ AC_INIT([mate-panel],
         [mate-panel],
         [https://github.com/Libre-MATE/mate-panel/])
 AC_COPYRIGHT([Copyright (C) 2022 Libre MATE])
-
 AC_CONFIG_HEADERS(config.h)
-AM_INIT_AUTOMAKE([1.9 no-dist-gzip dist-xz tar-ustar -Wno-portability check-news])
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-
+AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz tar-ustar silent-rules -Wno-portability check-news])
 AC_CONFIG_MACRO_DIR([m4])
+
 MATE_COMMON_INIT
 
 # Before making a release, the LT_VERSION string should be modified.
