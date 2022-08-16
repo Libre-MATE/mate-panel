@@ -1,4 +1,4 @@
 [submodule "mate-panel/mate-submodules"]
 	path = mate-panel/mate-submodules
-	url = https://github.com/rbuj/mate-submodules.git
+	url = https://github.com/Libre-MATE/mate-submodules.git
 	ignore = untracked
