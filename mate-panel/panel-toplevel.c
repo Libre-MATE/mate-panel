@@ -2767,9 +2767,6 @@ static void panel_toplevel_move_resize_window(PanelToplevel *toplevel,
                                               gboolean move, gboolean resize) {
   GtkWidget *widget;
 
-  /*	GList *list;
-          PanelObjectEdgeRelativity edge_relativity;*/
-
   widget = GTK_WIDGET(toplevel);
 
   g_assert(gtk_widget_get_realized(widget));
