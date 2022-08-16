@@ -305,9 +305,6 @@ static void panel_run_dialog_set_icon(PanelRunDialog *dialog, GIcon *icon,
 static gboolean command_is_executable(const char *command, int *argcp,
                                       char ***argvp) {
   gboolean result;
-  GRegex *regex = NULL;
-  gsize argv_len;
-  g_autofree gchar *home_path = NULL;
   char **argv;
   char *path;
   int argc;
@@ -316,20 +313,7 @@ static gboolean command_is_executable(const char *command, int *argcp,
 
   if (!result) return FALSE;
 
-  regex = g_regex_new("^~/", 0, 0, NULL);
-  argv_len = g_strv_length(argv);
-  home_path = g_build_filename(g_get_home_dir(), "/", NULL);
-  for (gsize i = 0; i < argv_len; i++) {
-    gchar *tmp_argv = NULL;
-
-    tmp_argv =
-        g_regex_replace_literal(regex, argv[i], -1, 0, home_path, 0, NULL);
-    g_free(argv[i]);
-    argv[i] = tmp_argv;
-  }
-  g_regex_unref(regex);
   path = g_find_program_in_path(argv[0]);
-
   if (!path) {
     g_strfreev(argv);
     return FALSE;
