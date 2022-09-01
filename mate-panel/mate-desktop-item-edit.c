@@ -2,8 +2,12 @@
 #include <config.h>
 #endif
 
-#include <gio/gio.h>
 #include <glib/gi18n.h>
+#ifdef ENABLE_NLS
+#include <locale.h>
+#endif /* ENABLE_NLS */
+
+#include <gio/gio.h>
 #include <gtk/gtk.h>
 #include <libpanel-util/panel-error.h>
 #include <libpanel-util/panel-keyfile.h>
@@ -83,9 +87,12 @@ int main(int argc, char *argv[]) {
   GError *error = NULL;
   int i;
 
+#ifdef ENABLE_NLS
+  setlocale(LC_ALL, "");
   bindtextdomain(GETTEXT_PACKAGE, MATELOCALEDIR);
   bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
   textdomain(GETTEXT_PACKAGE);
+#endif /* ENABLE_NLS */
 
   if (!gtk_init_with_args(&argc, &argv, _("- Edit .desktop files"), options,
                           GETTEXT_PACKAGE, &error)) {

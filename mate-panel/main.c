@@ -13,6 +13,13 @@
 #endif
 
 #include <glib/gi18n.h>
+#ifdef ENABLE_NLS
+#include <locale.h>
+#endif /* ENABLE_NLS */
+
+#include <glib-object.h>
+#include <glib.h>
+#include <gtk/gtk.h>
 #include <libegg/eggdesktopfile.h>
 #include <libegg/eggsmclient.h>
 #include <libpanel-util/panel-cleanup.h>
@@ -82,9 +89,12 @@ int main(int argc, char **argv) {
   const gchar *resource;
   guint priority;
 
+#ifdef ENABLE_NLS
+  setlocale(LC_ALL, "");
   bindtextdomain(GETTEXT_PACKAGE, MATELOCALEDIR);
   bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
   textdomain(GETTEXT_PACKAGE);
+#endif /* ENABLE_NLS */
 
   /* We will register explicitly when we're ready -- see panel-session.c */
   egg_sm_client_set_mode(EGG_SM_CLIENT_MODE_DISABLED);
